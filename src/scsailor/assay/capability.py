@@ -13,7 +13,7 @@
                        model problem under those labels.
 
 The continuous read-outs are Q (``recovery`` in code), the reference and their ratio. The labels use
-thresholds frozen before the scores were seen and are not part of the reading. Rows keep the saved
+thresholds fixed before the scores were seen and are not part of the reading. Rows keep the saved
 column names (``design.BIT``, ``STATISTIC``, ``ROLE``; ``REFERENCE_COLUMN``).
 """
 from __future__ import annotations

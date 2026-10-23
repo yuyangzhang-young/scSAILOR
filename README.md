@@ -4,7 +4,7 @@
 
 Models that predict how cells respond to a perturbation usually receive a set of control cells as input. scSAILOR asks which statistics of that set a trained model actually uses, and whether using them helps it predict. It combines an *information ladder* of inputs that keep progressively more of the control cells' statistics with three components: the **synthetic-answer assay**, **information localization** and **origin resolution**.
 
-> **Status.** This is the first part of the public release that accompanies [paper reference to be added]. It contains the information ladder, the three models built for the study, the natural-task training stream and scores, and the synthetic-answer assay. The scripts that reproduce the paper's results, information localization and origin resolution will follow.
+> **Status.** This is the first part of the public release that accompanies [paper reference to be added]. It contains the information ladder, the three models built for the study, the natural-task training stream and scores, the synthetic-answer assay, and the code that trains, predicts and scores the three published models. Information localization, origin resolution and the remaining reproduction scripts will follow.
 
 ## Contents
 
@@ -16,6 +16,7 @@ Models that predict how cells respond to a perturbation usually receive a set of
 | `src/scsailor/assay/` | The synthetic-answer assay | Apache-2.0 |
 | `tests/` | Tests that need no study data | Apache-2.0 |
 | `docs/data_contract.md` | The files a dataset must provide | Apache-2.0 |
+| `reproduce/published_models/` | Training, prediction and scoring of the published models State, CPA and PrePR-CT on both tasks | Apache-2.0 |
 | `third_party/` | Unchanged upstream code of State (with its CPA implementation) and PrePR-CT, used to reproduce the published-model results | Each directory's own licence |
 
 ## Installation
@@ -94,11 +95,11 @@ Code and saved files keep short names; the paper's terms are listed in [`src/scs
 
 ## Third-party code
 
-The published models of the paper (State, CPA and PrePR-CT) were adapted from their authors' code. `third_party/` holds the upstream files that this needs, unchanged and pinned to the versions used: State repository commit `9bbfe78` (which also contains the CPA implementation used) and PrePR-CT release `v1.0.0`. Each directory carries its upstream licence and a `NOTICE.md` with the origin and the changes made: none for State, two one-line changes for CPA (`patches/cpa.patch`) and one removed seed statement for PrePR-CT (`patches/prepr_ct.patch`), each applied at run time to a copy. Nothing under `src/` imports these files.
+The published models of the paper (State, CPA and PrePR-CT) were adapted from their authors' code. `third_party/` holds the upstream files that this needs, unchanged and pinned to the versions used: State repository commit `9bbfe78` (which also contains the CPA implementation used) and PrePR-CT release `v1.0.0`. Each directory carries its upstream licence and a `NOTICE.md` with the origin and the changes made: none for State, two one-line changes for CPA (`patches/cpa.patch`) and one removed seed statement for PrePR-CT (`patches/prepr_ct.patch`), each applied at run time to a copy. Only `reproduce/published_models/` loads these files; nothing under `src/` imports them. How to run the published models is described in [`reproduce/published_models/README.md`](reproduce/published_models/README.md).
 
 ## Licence
 
-The code written for scSAILOR (`src/`, `tests/`, `docs/`) is released under the [Apache License 2.0](LICENSE). The files under `third_party/` are **not** covered by it: they keep their upstream licences, which include the non-commercial terms of State's licences (CC BY-NC-SA 4.0 and the Arc Research Institute State Model Non-Commercial License) and GPL v3.0 for PrePR-CT. See [`third_party/README.md`](third_party/README.md).
+The code written for scSAILOR (`src/`, `tests/`, `docs/`, `reproduce/`) is released under the [Apache License 2.0](LICENSE). The files under `third_party/` are **not** covered by it: they keep their upstream licences, which include the non-commercial terms of State's licences (CC BY-NC-SA 4.0 and the Arc Research Institute State Model Non-Commercial License) and GPL v3.0 for PrePR-CT. See [`third_party/README.md`](third_party/README.md).
 
 ## Citation
 

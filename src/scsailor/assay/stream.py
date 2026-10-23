@@ -1,4 +1,4 @@
-"""The training stream: eight known-answer bags per update, drawn from the training backgrounds only.
+"""The training stream: eight bags with their synthetic targets per update, drawn from the training backgrounds only.
 
 Update ``step`` of a stream with seed ``seed`` draws, from generators seeded by
 ``(seed, step, ...)``, eight backgrounds (with replacement, uniformly), eight

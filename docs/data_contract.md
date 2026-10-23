@@ -59,3 +59,22 @@ Read by `scsailor.assay.Instance`.
 | Replogle–Nadig | cell line | K562 | 1,966 | 3 / 1 |
 
 For Replogle–Nadig, `truth.h5` stores the states only, because one context's table would hold about 3.3 GB; its synthetic targets are computed one base state at a time.
+
+## Published models
+
+The published models (`reproduce/published_models/`) learn from cells. A natural-task fold for them is one directory with the files of the natural task above, under these names, plus the treated cells:
+
+| File | Must hold |
+|---|---|
+| `training_targets.npz` | as above (`target`, `parent`, `p_code`, `weight`, `intercept`, `p_ids`) |
+| `training_constants.npz` | `context_keys`, `r_input` |
+| `controls.h5` | as above |
+| `heldout_prediction_units.npz` | `context`, `p_code`: the held-out units to predict |
+| `evaluation_inputs.h5` | as above |
+| `treated_cells.npy` | treated cells, float32, cells × 2000 (an array of units × cells per unit × 2000 is read as the same rows) |
+| `treated_index.npz` | `start`, `count`: the rows of `treated_cells.npy` that belong to each training unit, in the order of `training_targets.npz` |
+| `drug_features.npz` (PrePR-CT) | `p_ids` (in the order of `training_targets.npz`), `normalized` (perturbations × 124 molecular descriptors), `applicable` (false for perturbations without a molecular structure; PrePR-CT leaves their units out of training and prediction) |
+
+Each update pairs a unit's 256 control cells with 256 of its treated cells, drawn without replacement (with replacement when the unit has fewer than 256).
+
+A synthetic-task instance is the assay's instance directory. Replogle–Nadig's instance adds `EVALUATION_SUBSET.json` (`codes`: the perturbations that are replayed and scored; `n`, `N`, `rule`, `seed`), because its full table of synthetic targets would be too large to store.

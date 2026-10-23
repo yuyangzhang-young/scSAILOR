@@ -1,0 +1,12 @@
+# Removes the fixed seed from GNN.__init__ so that the caller's seed sets the initialization.
+# The adapter applies this change at run time to the extracted definition; model.py itself stays unchanged.
+--- a/model.py
++++ b/model.py
+@@ -38,7 +38,6 @@
+ class GNN(torch.nn.Module):
+     def __init__(self, total_genes,num_perts, hidden_channels,in_head, output_channels = 1, act_fct = None, multi_pert = True):
+         super().__init__()
+-        torch.manual_seed(42) 
+ 
+         self.total_genes = total_genes
+         self.in_head = in_head

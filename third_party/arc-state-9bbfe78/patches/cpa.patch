@@ -1,0 +1,22 @@
+--- a/src/state/tx/models/cpa/_module.py
++++ b/src/state/tx/models/cpa/_module.py
+@@ -283,7 +283,7 @@
+                 library = library.unsqueeze(0).expand((n_samples, library.size(0), library.size(1)))
+ 
+         z_covs = self.cell_type_embeddings(cell_types.long())
+-        z_batch = self.batch_embeddings(batch_ids.long())
++        z_batch = self.batch_embeddings(batch_ids.long()) if hasattr(self, "batch_embeddings") else 0.0
+         z_pert = self.pert_embeddings(perts.long())
+ 
+         if self.encode_dosage and pert_dosages is not None:
+--- a/src/state/tx/models/cpa/_model.py
++++ b/src/state/tx/models/cpa/_model.py
+@@ -693,7 +693,7 @@
+                     self.module.cell_type_embeddings.parameters(),
+                 )
+             )
+-            + list(filter(lambda p: p.requires_grad, self.module.batch_embeddings.parameters()))
++            + (list(filter(lambda p: p.requires_grad, self.module.batch_embeddings.parameters())) if self.n_batches > 1 else [])
+         )
+ 
+         if self.module.recon_loss in ["zinb", "nb"]:

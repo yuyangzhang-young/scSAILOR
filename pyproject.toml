@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scsailor"
+dynamic = ["version"]
+description = "Diagnose which information from control cells a perturbation-response model reads"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = ["numpy>=1.26", "h5py>=3.9", "scipy>=1.11"]
+
+[project.optional-dependencies]
+torch = ["torch>=2.4"]
+test = ["pytest>=7"]
+
+[project.urls]
+Repository = "https://github.com/yuyangzhang-young/scSAILOR"
+
+[tool.setuptools.dynamic]
+version = {attr = "scsailor.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

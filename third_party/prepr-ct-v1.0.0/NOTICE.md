@@ -6,7 +6,7 @@ Files from PrePR-CT, unchanged.
 
 - Repository: https://github.com/reem12345/Cell-Type-Specific-Graphs
 - Release `v1.0.0`, commit `b7b5b195a0227418b0893e4316c68430386c2ca8` (2025-04-21); archived as Zenodo record 15255075
-- PrePR-CT: Alsulami et al. [complete the reference]
+- PrePR-CT: Alsulami R, et al. Predicting and interpreting cell-type-specific drug responses in the small-data regime using inductive priors. *Nature Machine Intelligence* 8(3), 461–473 (2026). https://doi.org/10.1038/s42256-026-01202-2
 
 ## Files
 

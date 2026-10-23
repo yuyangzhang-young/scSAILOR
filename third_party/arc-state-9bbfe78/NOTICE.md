@@ -6,8 +6,8 @@ Files from the State repository by Arc Institute, used for the official State mo
 
 - Repository: https://github.com/ArcInstitute/state
 - Commit: `9bbfe78a434a55205e4de834e1ea99f85f7a3add` (2026-07-23), package `arc-state` 0.11.3
-- State: Adduri et al. [complete the reference]
-- CPA: Lotfollahi et al. [complete the reference]
+- State: Adduri AK, et al. Predicting cellular responses to perturbation across diverse contexts with State. *Cell* 189(19), 5914–5931.e20 (2026). https://doi.org/10.1016/j.cell.2026.07.052
+- CPA: Lotfollahi M, et al. Predicting cellular responses to complex perturbations in high-throughput screens. *Molecular Systems Biology* 19(6), e11517 (2023). https://doi.org/10.15252/msb.202211517
 
 ## Files
 

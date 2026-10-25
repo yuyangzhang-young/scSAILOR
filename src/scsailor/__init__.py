@@ -8,5 +8,7 @@ Modules:
 - ``natural``: training on measured responses and scoring held-out predictions;
 - ``assay``: the synthetic-answer assay, which plants known states into control cells and measures how
   much of each a trained model recovers.
+- ``localization``: information localization, which finds where inside a trained model learning of a missed
+  planted state is obstructed.
 """
 __version__ = "0.2.0.dev0"

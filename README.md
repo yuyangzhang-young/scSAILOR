@@ -4,7 +4,7 @@
 
 Models that predict how cells respond to a perturbation usually receive a set of control cells as input. scSAILOR asks which statistics of that set a trained model actually uses, and whether using them helps it predict. It combines an *information ladder* of inputs that keep progressively more of the control cells' statistics with three components: the **synthetic-answer assay**, **information localization** and **origin resolution**.
 
-> **Status.** This is the first part of the public release that accompanies [paper reference to be added]. It contains the information ladder, the three models built for the study, the natural-task training stream and scores, the synthetic-answer assay, and the code that trains, predicts and scores the three published models. Information localization, origin resolution and the remaining reproduction scripts will follow.
+> **Status.** This is the first part of the public release that accompanies [paper reference to be added]. It contains the information ladder, the three models built for the study, the natural-task training stream and scores, the synthetic-answer assay, information localization, and the code that trains, predicts and scores the three published models. Origin resolution, information localization on the published models and the remaining reproduction scripts will follow.
 
 ## Contents
 
@@ -14,6 +14,7 @@ Models that predict how cells respond to a perturbation usually receive a set of
 | `src/scsailor/models/` | The three built models: attention, DeepSets, summary statistics | Apache-2.0 |
 | `src/scsailor/natural/` | The natural task: training stream on measured responses, and held-out scores | Apache-2.0 |
 | `src/scsailor/assay/` | The synthetic-answer assay | Apache-2.0 |
+| `src/scsailor/localization/` | Information localization | Apache-2.0 |
 | `tests/` | Tests that need no study data | Apache-2.0 |
 | `docs/data_contract.md` | The files a dataset must provide | Apache-2.0 |
 | `reproduce/published_models/` | Training, prediction and scoring of the published models State, CPA and PrePR-CT on both tasks | Apache-2.0 |
@@ -92,6 +93,12 @@ The assay plants 25 known states into measured control cells. Each planted state
 `scsailor.assay` holds one module per step: `generator` (the synthetic target), `carrier` (the model input), `stream` and `train` (training), `replay` (predictions on the evaluation support), `score` (recovery), `probe` (linear readers on internal features) and `capability` (the table of what each model reads). An instance is a directory of five files, described in [`docs/data_contract.md`](docs/data_contract.md). [`tests/assay/test_tiny_instance.py`](tests/assay/test_tiny_instance.py) builds a tiny instance from random arrays and runs it end to end.
 
 Code and saved files keep short names; the paper's terms are listed in [`src/scsailor/assay/__init__.py`](src/scsailor/assay/__init__.py) (for example, a *bit* is a planted state and the *known answer* is the synthetic target).
+
+## Information localization
+
+When a trained model misses a planted state, information localization asks where inside the model learning it is obstructed. A cut divides the network into a front and the part behind it, and the part behind the cut is trained on the synthetic targets from several starting points: fine-tuning, a reset of the part behind the cut, of the front or of the perturbation embedding, and training from scratch. Which starting point learns the state says where learning is obstructed. Planted faults with a known site set the reading rules. The change that restores the state is then applied unchanged to the model trained on measured responses.
+
+`scsailor.localization` holds one module per step: `starts` (one starting point at one cut, with exact resume), `readings` (the reading rules over finished runs), `presence` (how strongly a planted state still moves each cut, without training), `training_time` (recovery along the model's own saved checkpoints) and `real_task` (the restoring change on measured responses). `task.Task` reads an assay instance as these steps draw from it, and `contract` gives the cuts of the three built models. The study's settings, such as seeds, panels and planted faults, are passed in as arguments. The paper's terms are listed in [`src/scsailor/localization/__init__.py`](src/scsailor/localization/__init__.py).
 
 ## Third-party code
 

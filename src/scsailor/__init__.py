@@ -10,5 +10,7 @@ Modules:
   much of each a trained model recovers.
 - ``localization``: information localization, which finds where inside a trained model learning of a missed
   planted state is obstructed.
+- ``resolution``: origin resolution, which asks whether a model's correction pays on held-out lines and, if not,
+  attributes the remaining error to the model, the data or the task set-up.
 """
 __version__ = "0.2.0.dev0"

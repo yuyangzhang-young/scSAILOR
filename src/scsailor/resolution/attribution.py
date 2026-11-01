@@ -295,5 +295,5 @@ def d2_parts(units, twin, pool=None):
 
 def gene_floor(floor, share):
     """Per-gene floor vectors per part: each part's unit floor spread over genes by a per-gene variance share (an
-    approximation, stated on the card)."""
+    approximation, stated in the output)."""
     return {part: float(v.sum()) * share for part, v in floor.items()}

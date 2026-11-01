@@ -103,9 +103,14 @@ When a trained model misses a planted state, information localization asks where
 
 ## Origin resolution
 
-A model's prediction is its anchor (the input bag's mean plus the transferred response) plus its correction. Origin resolution asks whether the correction, or the restoring change that information localization hands on, pays on held-out lines, and if not, why. It chooses what to keep of the correction on calibration lines that no model of the nested chain has seen, and verifies the choice on the held-out lines. Where nothing beats the cheap alternatives, it attributes the remaining error to the model, the data or the task set-up.
+A model's prediction is its anchor (the input bag's mean plus the transferred response) plus its correction. Origin resolution asks whether the correction, or the restoring change that information localization hands on, pays on held-out lines, and if not, why. It has four steps:
 
-`scsailor.resolution` holds the candidates and their kept fractions (`policies`, `card`, `menu`), the held-out test (`comparison`), where the error sits and which origin it points to (`attribution`, `origins`), the datasets' references computed from cells (`references`), the card's stages over one dataset's case (`stages`) and the four questions for a cell that information localization hands on (`il_cells`). A dataset enters as a *case*, whose contract is given in `stages`. Its facts, such as the names of its replicate plates, are passed in as arguments. The paper's terms are listed in [`src/scsailor/resolution/__init__.py`](src/scsailor/resolution/__init__.py).
+1. **Recovery and cost** sets the change against the original model, on planted and on measured responses.
+2. **Attribution** assigns the error to the model, the data or the task set-up.
+3. **Calibration** recommends a kept fraction, or refuses, on calibration lines that no model of the nested chain has seen.
+4. **The held-out check** reads the margins of that choice on the held-out lines.
+
+`scsailor.resolution` holds the candidates and their kept fractions (`policies`, `card`, `menu`), the held-out test (`comparison`), where the error sits and which origin it points to (`attribution`, `origins`), the datasets' references computed from cells (`references`), the stages over one dataset's case (`stages`), and the recovery and cost of a cell that information localization hands on (`il_cells`). A dataset enters as a *case*, whose contract is given in `stages`. Its facts, such as the names of its replicate plates, are passed in as arguments. The paper's terms are listed in [`src/scsailor/resolution/__init__.py`](src/scsailor/resolution/__init__.py).
 
 ## Third-party code
 

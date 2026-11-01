@@ -1,4 +1,4 @@
-"""The attribution card's model contrasts: the parent decomposed into removable parts, their calibrated amounts, the
+"""The model contrasts of attribution and calibration: the parent decomposed into removable parts, their calibrated amounts, the
 recommendation condition, Shapley shares and the alignment of a correction.
 
 The parent is written p = b + r + d: b the anchor's base (the input bag's mean, "no change"), r = a - b the anchor's
@@ -109,7 +109,7 @@ def shapley(value, players):
 
 
 def line_one(detections, separation):
-    """Line 1 of the card's headline. detections: 'M5'/'M7' -> comparison.detect against the parent; separation:
+    """Line 1 of the headline. detections: 'M5'/'M7' -> comparison.detect against the parent; separation:
     detect of M5's removal against M7's (negative: M5 removes more error), with M7's against M5's as 'reverse'."""
     any_case = any(d['level'] == 'case-level' for d in detections.values())
     if any_case:

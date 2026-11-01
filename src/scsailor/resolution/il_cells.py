@@ -1,10 +1,10 @@
-"""Origin resolution's four questions for one cell that information localization hands on, from loaded predictions.
+"""Recovery and cost of one cell that information localization hands on, from loaded predictions.
 
 A cell is IL's map recipe behind a cut (``<cut>/<arm>/x<rate multiple>``), handed on for one or more planted targets.
 Its real-task runs give, per seed, the parent trained on real labels and the cell's end on the same lines (the parent
 on every training line; the nested parent's runs give the calibration entries). Over the seeds:
 
-  Q1 Did the planted target recover?  IL's synthetic card: setting 1 (synthetic parent) and setting 2 (natural parent,
+  Q1 Did the planted target recover?  IL's synthetic reading: setting 1 (synthetic parent) and setting 2 (natural parent,
      the bridge), every seed (``recovery``, ``q1_text``).
   Q2 Did real error on new lines improve?  The cell's end against its own parent, pooled over seeds (paired line
      bootstrap, margin 0.2 points) with the seed rule beside it (``change``); training lines beside it.
@@ -133,7 +133,7 @@ def score(fold, model, cell, record, held, train, seed_inputs, seeds, saved, mis
     held-out units ``held``, ``continuation`` there where ``paired``, and under ``train`` functions that read the
     parent's, the cell's and (where paired) continued training's predictions on the training units ``train``.
     ``saved``: the cell's saved selection, or None (``missing`` says why); ``continued``: what continued training is,
-    or why it is missing. Returns the card's answers, Q2's reading, and the per-seed and per-line rows."""
+    or why it is missing. Returns the answers, Q2's reading, and the per-seed and per-line rows."""
     seed_rows, line_rows = [], []
     action = saved['current_action'] if saved else None
     parts, cont_lam, outer_labels = {}, {x: [] for x in G}, []

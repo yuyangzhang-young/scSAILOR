@@ -1,4 +1,4 @@
-"""The attribution card's stages over one dataset's case: what the card computes, without reading or writing files.
+"""Origin resolution's stages over one dataset's case: what they compute, without reading or writing files.
 
 A *case* is one model on one fold of a dataset, as a dataset's binding builds it:
 
@@ -35,7 +35,7 @@ Stages:
   per origin; the "where", the references and the three readings of the nested parent.
 
 ``repair_entry`` and ``parent_entry`` are the per-seed calibration entries of the earlier selections (a model with a
-repair, such as an IL cell's; a parent-only menu), which the card reads as its saved selection.
+repair, such as an IL cell's; a parent-only menu), which the stages read as their saved selection.
 """
 import numpy as np
 
@@ -214,7 +214,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
     ``t7`` and ``d2_by_context``, and its ``reference_rows`` and ``where_rows``; ``genes``: ``gene_groups`` of the
     training data; ``mapping``: the declared perturbation grouping, or None.
 
-    Returns the headline, origin rows, "where" rows, reference rows and readings (the card's five tables) and the run
+    Returns the headline, origin rows, "where" rows, reference rows and readings (the five output tables) and the run
     record's contents without the dataset's labels and files."""
     held = case['units']['outer']
     b, C = bag_of(case['bags']['heldout'], held)
@@ -257,7 +257,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
     recommended = saved['branch']['recommendation']
     verified = recommended and all(v['seed_rule'] == 'holds' for v in verification.values())
     option_verification = None
-    if option:   # the published model corrected by one in-house model: the same references, and the card's own action
+    if option:   # the published model corrected by one in-house model: the same references, and the chosen action
         option_verification = {ref: comparison.detect(R['option'], R[key]) for ref, key in references + (('action', 'action'),)
                                if ref != option['action']}
 
@@ -326,7 +326,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
     # two replicates, the square root of the true correction's split-half reliability between them is the cosine that a
     # predictor blind to the replicate can reach with one replicate's target. It is a
     # reference, not a ceiling: a model that reads the replicate from its input (Tahoe's plate from the bag) can exceed
-    # it. The input bag's ceiling of the first cards stands beside it.
+    # it. The input bag's ceiling stands beside it.
     unmatch = {'common': float(gap['common'].sum()), 'differential': float(floor['differential'].sum()) if floor is not None else 0.}
     align = [card.alignment(preds['parent'][i], preds['anchor'][i], held, unmatch) for i in range(len(seeds))]
     mean_al = lambda part, k: float(np.mean([x[part][k] for x in align]))

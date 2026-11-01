@@ -1,4 +1,4 @@
-"""The attribution card's rows: one per candidate origin of a failure to transfer, and the headline's line 3.
+"""Attribution's rows: one per candidate origin of a failure to transfer, and the headline's line 3.
 
 Origins are coded by kind: M (the model: M5 its cell-line-level correction, M7 its perturbation correction), D (the
 data: D1 cell sampling of the scored targets, D2 the between-replicate discrepancy, D7 a systematic plate or campaign
@@ -30,8 +30,8 @@ def contrast_row(origin, d, kind=None, share=None):
 
 
 def rows(ev, static, fold1_only=(), seed_permutation='not tested (precondition unavailable)'):
-    """All origin rows for one card. ``ev`` holds the stage's computed evidence; ``static`` the dataset's documented
-    rows; ``fold1_only`` the documented rows to mark as read on fold 1 (on a card of another fold);
+    """All origin rows of one model on one fold. ``ev`` holds the stage's computed evidence; ``static`` the dataset's documented
+    rows; ``fold1_only`` the documented rows to mark as read on fold 1 (on another fold);
     ``seed_permutation`` what O1 says of the seed-permutation statistic."""
     out = []
     for origin in ORIGINS:

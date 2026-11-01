@@ -1,4 +1,4 @@
-"""Dataset references that origin resolution's card reads beside a model's error, computed from loaded arrays.
+"""Dataset references that origin resolution reads beside a model's error, computed from loaded arrays.
 
 A reference says how much of the error the data and the task set, whatever the model: the cell sampling of the
 scored targets (D1), the discrepancy between replicate measurements of the same unit (D2) and its split into a part

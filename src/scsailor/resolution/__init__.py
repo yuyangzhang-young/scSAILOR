@@ -1,10 +1,10 @@
 """Origin resolution: whether a model's correction, or a restoring change, pays on held-out lines, and why not.
 
 A model's prediction is its anchor (the input bag's mean plus the transferred response) plus its correction.
-Origin resolution chooses what to keep of the correction on calibration lines that no model of the nested chain has
-seen, verifies the choice on the held-out lines, and, where nothing beats the cheap alternatives, attributes the
-remaining error to the model, the data or the task set-up. Information localization's restoring change enters as a
-candidate and gets its own four questions.
+Origin resolution has four steps. Recovery and cost: a restoring change from information localization against the
+original model, on planted and on measured responses. Attribution: the error assigned to the model, the data or the
+task set-up. Calibration: on lines that no model of the nested chain has seen, a kept fraction is recommended, or the
+candidates are refused. The held-out check: the margins of that choice on the held-out lines.
 
 Steps, one module each:
 
@@ -18,8 +18,9 @@ Steps, one module each:
 3. ``attribution``, ``origins``     where the error sits and which origin it points to, with the references that add
                                     like the error (cell sampling of the targets, the between-plate discrepancy, the
                                     input bag's sampling);
-4. ``stages``                       the card's stages over one dataset's case (selection, calibration, attribution);
-5. ``il_cells``                     the four questions for a cell that information localization hands on.
+4. ``stages``                       the stages over one dataset's case (selection, calibration, attribution);
+5. ``il_cells``                     recovery and cost of a cell that information localization hands on, against continued
+                                    training and simple calibration.
 
 ``scoring`` holds the natural task's risk on the clipped scale and its additive parts, ``grids`` reads prediction
 grids, and ``references`` computes the datasets' references from cells. A dataset enters through its *case*
@@ -54,6 +55,12 @@ cosine, best scale below one                                    alignment; over-
 model ``summary``, ``deepsets``, ``attention``                  summary-statistics model, DeepSets model, attention
                                                                 model
 model ``official_state``                                        State
+module ``card``, files ``CARD_*``                                attribution and calibration
+``card.branch``, recommendation                                 recommend or refuse
+verification, "verified"                                        held-out check
+``il_cells`` Q1, Q2                                             recovery and cost
+``il_cells`` Q3                                                 attribution of the change
+``il_cells`` Q4                                                 continued training and calibration
 ==============================================================  ==================================================
 """
 __all__ = ["attribution", "card", "comparison", "grids", "il_cells", "menu", "origins", "policies", "references",

@@ -2,7 +2,10 @@
 
     python -m pytest tests/localization/test_readings.py
 """
+import json
+import tempfile
 import unittest
+from pathlib import Path
 
 from scsailor.localization import readings
 
@@ -32,6 +35,21 @@ def cell(seed, cut, arm, rate=30.0, validation_q=0.0, validation_margins=True, m
             "run": f"{model}-{half}-{seed}-{cut}-{arm}-x{rate:g}", "outcome": outcome, "parent_start": start,
             "target_Q": 0.5, "target_low": 0.4, "target_high": 0.6, "validation_target_Q": validation_q,
             "validation_margins_met": validation_margins}
+
+
+class SavedRuns(unittest.TestCase):
+    def test_a_seed_saved_as_text_reads_as_a_map_seed(self):
+        row = {"model": "summary", "half": "synthetic", "seed": "31002", "cut": "projections", "arm": "a",
+               "rate_multiple": 1}
+        losses = [{"context": "L1|plate", "contrast_error": 1., "truth_energy": 2.}]
+        with tempfile.TemporaryDirectory() as folder:
+            run = Path(folder)
+            (run / "RUN_RECORD.json").write_text(json.dumps({"row": row}))
+            (run / "EVAL_PARENT.json").write_text(
+                json.dumps({"supports": {"heldout": {"bits": {"1": {"pair_losses": losses}}}}}))
+            (run / "DIVERGED.json").write_text("{}")
+            found = readings.cell(run, "1")
+        self.assertIn(found["seed"], SETTINGS.map_seeds)
 
 
 class Recovery(unittest.TestCase):

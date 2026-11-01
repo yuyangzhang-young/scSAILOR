@@ -192,7 +192,7 @@ def cell(run, target):
     """One map run: its held-out outcome, its costs on both panels and the parent's starting reading."""
     run = Path(run)
     row = json.loads((run / "RUN_RECORD.json").read_text())["row"]
-    keys = {"model": row["model"], "half": row["half"], "seed": row["seed"], "case": row.get("case", "parent"),
+    keys = {"model": row["model"], "half": row["half"], "seed": int(row["seed"]), "case": row.get("case", "parent"),
             "cut": row["cut"], "arm": row["arm"], "rate": float(row["rate_multiple"]), "run": str(run)}
     parent = json.loads((run / "EVAL_PARENT.json").read_text())["supports"]   # written before any training
     start = interval_reading(*line_interval(parent["heldout"]["bits"][target])[1:])

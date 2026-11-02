@@ -30,7 +30,7 @@ __all__ = ["Fit", "learning_rate", "train", "save_checkpoint"]
 @dataclass(frozen=True)
 class Fit:
     """One training run."""
-    model: str              # "state" (the attention network), "deepsets" or "summary"
+    model: str              # "attention_model", "deepsets" or "summary"
     seed: int               # model initialization and training stream
     level: str              # information level of the inputs
     peak_lr: float

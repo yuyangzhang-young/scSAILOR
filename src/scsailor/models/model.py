@@ -30,7 +30,7 @@ class RawModel(nn.Module):
         nn.init.normal_(self.backbone.pert.weight, std=.02)
         self.register_buffer('r_pool', torch.as_tensor(r_input, dtype=torch.float32))
         self.register_buffer('c_train', torch.as_tensor(c_train, dtype=torch.float32))
-        heads = ([self.backbone.head[-1]] if name == 'state' else
+        heads = ([self.backbone.head[-1]] if name == 'attention_model' else
                  [self.backbone.rho[-1]] if name == 'deepsets' else
                  [self.backbone.w0, self.backbone.w1])
         for head in heads:

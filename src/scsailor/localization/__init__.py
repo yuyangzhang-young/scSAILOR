@@ -44,8 +44,8 @@ Q                                                          recovery
 parent                                                     original model
 half ``synthetic`` / ``natural``                           model trained on the synthetic task / on real responses
 time axis                                                  training longer
-model ``summary``, ``deepsets``, ``state``                 summary-statistics model, DeepSets model, attention model
-model ``official_state``, ``cpa``, ``prepr``               State, CPA, PrePR-CT
+model ``summary``, ``deepsets``, ``attention_model``       summary-statistics model, DeepSets model, attention model
+model ``state``, ``cpa``, ``prepr``                        State, CPA, PrePR-CT
 drug embedding (``backbone.pert``)                         perturbation embedding
 =========================================================  ==========================================================
 """

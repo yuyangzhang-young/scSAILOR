@@ -1,4 +1,4 @@
-"""Official State for the paper's tasks.
+"""State for the paper's tasks.
 
 The model is the State transition model, loaded unchanged from ``third_party/arc-state-9bbfe78``; two
 imports it does not use at run time are stubbed (``FinetuneVCICountsDecoder`` and ``anndata``).

@@ -70,7 +70,7 @@ KEY_CUTS = {"deepsets": ["input_cells:mean", "input_cells:second", "input_cells:
                          "pooled", "backbone.rho.0", "backbone.rho.1", "backbone.rho.2"],
             "summary": ["input_cells:mean", "input_cells:second", "input_cells:kernel", "backbone.sproj",
                         "backbone.hproj", "backbone.common_hidden", "backbone.inter_hidden", "backbone.w0", "backbone.w1"],
-            "state": ["input_cells:mean", "input_cells:second", "input_cells:kernel", "backbone.input:kernel",
+            "attention_model": ["input_cells:mean", "input_cells:second", "input_cells:kernel", "backbone.input:kernel",
                       "backbone.blocks.0:kernel", "backbone.blocks.3:kernel", "backbone.blocks.7:kernel",
                       "backbone.head.input", "backbone.head.1", "backbone.head.2"]}
 NULL = {0: 4, 1: 4, 3: 4, 4: 4, 5: 9, 6: 9, 8: 9, 9: 9}

@@ -1,6 +1,6 @@
 # State repository, commit 9bbfe78
 
-Files from the State repository by Arc Institute, used for the official State model and for CPA as implemented in that repository. The files are unchanged.
+Files from the State repository by Arc Institute, used for the State model and for CPA as implemented in that repository. The files are unchanged.
 
 ## Origin
 

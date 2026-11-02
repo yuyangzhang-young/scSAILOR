@@ -69,7 +69,7 @@ The study's three models share one form: the prediction is a baseline (the input
 
 | Model | Code key | How it combines cells |
 |---|---|---|
-| Attention model | `state` | Self-attention across the cells (8 blocks, width 768, 12 heads, after State's published sizes; it is not the published State model) |
+| Attention model | `attention_model` | Self-attention across the cells (8 blocks, width 768, 12 heads, after State's published sizes; it is not the published State model) |
 | DeepSets model | `deepsets` | Encodes each cell, then averages |
 | Summary-statistics model | `summary` | Reads means, variances, sorted marginals, depth-stratified marginals and a learned pairwise term, each from its first level on |
 

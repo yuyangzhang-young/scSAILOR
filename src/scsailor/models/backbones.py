@@ -2,7 +2,7 @@
 
 All three read the carrier rows (expression divided by ``U``, plus log sequencing depth), a learned
 perturbation embedding and depth features, and return a profile over 2,000 genes. ``build(name, intercept)``
-selects one by its saved key: ``state`` (the attention model, designed after State's published sizes:
+selects one by its key: ``attention_model`` (the attention model, designed after State's published sizes:
 8 blocks, width 768, 12 heads; it is not the published State model), ``deepsets`` or ``summary``.
 """
 import math
@@ -178,4 +178,4 @@ class SummaryStatistics(Base):
 
 
 def build(name,intercept):
-    return {'deepsets':DeepSets,'summary':SummaryStatistics,'state':AttentionModel}[name](intercept)
+    return {'deepsets':DeepSets,'summary':SummaryStatistics,'attention_model':AttentionModel}[name](intercept)

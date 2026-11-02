@@ -2,13 +2,13 @@
 
 Every call the method makes on a network, with its shapes, is the assay's (``scsailor.assay.contract``).
 Localization adds, for the built models of ``scsailor.models`` (``summary``, the summary-statistics model;
-``deepsets``; ``state``, the attention model):
+``deepsets``; ``attention_model``, the attention model):
 
 ``CUTS[name][cut]``
     A cut divides a network into a front and the part behind it, as parameter-name prefixes:
     ``(front, trained)``. A start trains the part behind the cut with the front frozen; ``trained`` None trains
     every parameter (the cut ``input``, whose front is empty). The cuts: ``summary`` ``projections`` (behind
-    the mean and variance projections), ``deepsets`` ``phi`` (behind the per-cell encoder), ``state``
+    the mean and variance projections), ``deepsets`` ``phi`` (behind the per-cell encoder), ``attention_model``
     ``block3`` (behind the fourth of eight blocks) and ``head`` (behind the last block).
 ``FRONT_PARTS``, ``BRANCH_ARMS``
     The summary-statistics model's parts that single arms reset or train alone: the mean projection
@@ -47,7 +47,7 @@ CUTS = {
                 "projections": (("backbone.sproj", "backbone.hproj"),
                                 ("backbone.common_hidden", "backbone.w0", "backbone.inter_hidden", "backbone.w1",
                                  "backbone.pert", "backbone.depth"))},
-    "state": {"input": ((), None),
+    "attention_model": {"input": ((), None),
               "block3": (("backbone.input", "backbone.task_to_token", "backbone.pert") + BLOCKS[:4],
                          BLOCKS[4:] + ("backbone.head", "backbone.depth")),
               "head": (("backbone.input", "backbone.task_to_token", "backbone.pert") + BLOCKS,
@@ -61,7 +61,7 @@ BRANCH_ARMS = {"interaction": ("interaction", ("backbone.inter_hidden", "backbon
                "common": ("common", ("backbone.common_hidden", "backbone.w0"))}
 # Models whose frozen front also reads the drug embedding at every cut behind the input: where the trained part reads
 # its own copy.
-FRONT_READS_EMBEDDING = {"state": "attention_head"}
+FRONT_READS_EMBEDDING = {"attention_model": "attention_head"}
 
 
 class PresenceSites(NamedTuple):
@@ -82,7 +82,7 @@ PRESENCE_SITES = {
         capture=("backbone.sproj", "backbone.hproj", "backbone.common_hidden", "backbone.inter_hidden",
                  "backbone.pert", "backbone.depth", "backbone.w0", "backbone.w1"),
         products={"inter_x_e": ("backbone.inter_hidden", "backbone.pert")}),
-    "state": PresenceSites(
+    "attention_model": PresenceSites(
         capture=("backbone.input", *(f"backbone.blocks.{i}" for i in range(8)), "backbone.head.0", "backbone.head.1",
                  "backbone.head.2", "backbone.pert", "backbone.depth"),
         input_cuts={"backbone.head.input": ("backbone.head.0", None)}),

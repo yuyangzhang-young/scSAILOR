@@ -22,7 +22,7 @@ the model as an argument. B is the number of bags; one bag is 512 rows by 2,000 
 ``READOUT_MODULES[name]``
     Submodules whose outputs the probe reads through forward hooks: outputs with three dimensions
     (bag x row x feature) are averaged over rows, then all are concatenated in the listed order.
-    ``state`` (the attention network): ``backbone.blocks.7`` -> B x 512 x 768; ``deepsets``:
+    ``attention_model``: ``backbone.blocks.7`` -> B x 512 x 768; ``deepsets``:
     ``backbone.phi`` -> B x 512 x 128; ``summary``: ``backbone.common_hidden`` -> B x 256 and
     ``backbone.inter_hidden`` -> B x 128.
 ``parameters()``, ``train()``, ``state_dict()``, ``load_state_dict()``, ``eval()``
@@ -33,7 +33,7 @@ The built models pass all 512 carrier rows to their backbone, together with ``m 
 of distinct cells (each written twice); no input rows are cut
 (``scsailor.models.model.RawModel.forward``).
 """
-READOUT_MODULES = {"state": ("backbone.blocks.7",), "deepsets": ("backbone.phi",),
+READOUT_MODULES = {"attention_model": ("backbone.blocks.7",), "deepsets": ("backbone.phi",),
                    "summary": ("backbone.common_hidden", "backbone.inter_hidden")}
 
 __all__ = ["READOUT_MODULES"]

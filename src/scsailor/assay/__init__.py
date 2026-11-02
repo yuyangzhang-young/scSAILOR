@@ -31,7 +31,7 @@ Code                            Paper
 bit                             planted state (25 = 5 cues x 5 responses)
 known answer                    synthetic target
 levels L1, L2, L3, L3d, L4      Mean, +Var, +Dist, +DepCp, Cells (L0: sequencing depth only)
-model ``state``                 the attention model (built for this study; not the published State)
+model ``attention_model``       the attention model (built for this study; not the published State)
 model ``deepsets``, ``summary`` the DeepSets model, the summary-statistics model
 ``anchor``                      the model's baseline: the input set's mean (L0: the training
                                 controls' mean) plus the perturbation's mean offset

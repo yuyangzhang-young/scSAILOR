@@ -78,7 +78,7 @@ def repair_alpha(saved):
 
 
 def selection(case, seeds):
-    """The action of a model with no earlier selection (official State), chosen once before its calibration stage:
+    """The action of a model with no earlier selection (State), chosen once before its calibration stage:
     the earlier decision-table rule without repair candidates (``policies.diagnose``), the cell-line-level shrink when
     its calibration total is below the parent's in every seed, else the parent. Returns the per-seed entries and the
     action."""

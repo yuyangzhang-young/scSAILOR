@@ -5,7 +5,7 @@ mean plus the model's transferred response, unclipped) per unit. Three layouts o
 
 - origin resolution's grid: ``side_context`` (``"train/<context>"`` or ``"heldout/<context>"``), ``p_code`` and the
   members, over every context of both sides;
-- a scorer's file with its own keys: ``<side>_context``, ``<side>_p_code`` and ``<side>_<member>`` (official State);
+- a scorer's file with its own keys: ``<side>_context``, ``<side>_p_code`` and ``<side>_<member>`` (State);
 - a scorer's file already in the scoring units' order: ``<side>_<member>`` only (the built models' fits).
 
 ``side`` is ``"train"`` (training units) or ``"outer"`` (held-out units).

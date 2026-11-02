@@ -52,9 +52,9 @@ amount ``lam``, ``(lam_c, lam_d)``, ``kappa``                   kept fraction $\
 repair, IL cell, ``size_fix``                                   restoring change; its kept fraction
 continuation                                                    continued training
 cosine, best scale below one                                    alignment; over-sized
-model ``summary``, ``deepsets``, ``attention``                  summary-statistics model, DeepSets model, attention
+model ``summary``, ``deepsets``, ``attention_model``            summary-statistics model, DeepSets model, attention
                                                                 model
-model ``official_state``                                        State
+model ``state``                                                 State
 module ``card``, files ``CARD_*``                                attribution and calibration
 ``card.branch``, recommendation                                 recommend or refuse
 verification, "verified"                                        held-out check

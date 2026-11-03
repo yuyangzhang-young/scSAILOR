@@ -12,8 +12,8 @@ A *case* is one model on one fold of a dataset, as a dataset's binding builds it
 - ``bags``: side (``'train'``, ``'heldout'``) -> context -> (the input bag's mean, the control pool's mean);
 - ``noise``: unit set -> each unit's cell-sampling variance of the scored target (D1), or None where not computed;
 - ``meta``: ``coincident`` (factors that coincide with identity by design, or None), ``type_variable`` and
-  ``composition`` (notes the rows and readings print), and ``target_note`` (what the headline adds when a verified
-  recommendation shrinks toward a design-aware target, or None);
+  ``composition`` (notes the rows and readings print), and ``target_note`` (what the headline adds when a
+  recommendation that holds on held-out lines shrinks toward a design-aware target, or None);
 - ``gene_variance``: the per-gene cell variance of the training units' scored targets (their treated cells), averaged
   over units, which spreads the cell-sampling floor over genes; or None;
 - ``static_rows``: the dataset's documented origin rows (``static``), those whose evidence is fold 1's
@@ -30,7 +30,7 @@ Stages:
 - ``calibration``: every removal and cheap alternative calibrated on the calibration units, the menu's items added
   and the full-menu rule applied, the recommendation condition decided, and, where perturbation groups are declared,
   the group to be tested chosen. Nothing here reads held-out truth;
-- ``attribution``: the parent, the action and every removal on the held-out units; verification against the cheap
+- ``attribution``: the parent, the action and every removal on the held-out units; the held-out check against the cheap
   alternatives; the contrasts M5, M7 and N by the unit-level test and their Shapley shares; the headline; one row
   per origin; the "where", the references and the three readings of the nested parent.
 
@@ -214,7 +214,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
     ``t7`` and ``d2_by_context``, and its ``reference_rows`` and ``where_rows``; ``genes``: ``gene_groups`` of the
     training data; ``mapping``: the declared perturbation grouping, or None.
 
-    Returns the headline, origin rows, "where" rows, reference rows and readings (the five output tables) and the run
+    Returns the headline, origin rows, "where" rows, reference rows and readings (five tables) and the run
     record's contents without the dataset's labels and files."""
     held = case['units']['outer']
     b, C = bag_of(case['bags']['heldout'], held)
@@ -247,7 +247,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
     seeds_mean = lambda f: float(np.mean([f(i) for i in range(len(seeds))]))
     part_mean = lambda xs, key: seeds_mean(lambda i: scores(xs[i], held)[key])
 
-    # verification of the action
+    # the held-out check of the action
     verification = {}
     references = ((('parent', 'parent'), ('cheapest_fix', 'M5'), ('global_parent_shrink', 'uniform'), ('nochange_shrink', 'nochange_alt'))
                   + tuple((ref, ref) for ref in menu.PLATE_ALTERNATIVES if ref in preds))
@@ -257,7 +257,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
     recommended = saved['branch']['recommendation']
     verified = recommended and all(v['seed_rule'] == 'holds' for v in verification.values())
     option_verification = None
-    if option:   # the published model corrected by one in-house model: the same references, and the chosen action
+    if option:   # the published model corrected by one in-house model: the same references, and the model's own action
         option_verification = {ref: comparison.detect(R['option'], R[key]) for ref, key in references + (('action', 'action'),)
                                if ref != option['action']}
 

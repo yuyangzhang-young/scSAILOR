@@ -6,9 +6,10 @@ Differences are reported in points (percent) of the scale.
 
 - ``compare``: seeds averaged within a line, lines resampled (``bootstrap``), a call with the 0.2-point margin, and
   the call's rate of "different" when the per-line differences are centred and sign-flipped (its null rate).
-- ``detect``: the test on the held-out lines. Each held-out line is one unit; a contrast is detected when the exact one-sided
-  sign-flip p over the units is at most ``ALPHA``, the summed difference is below minus the margin and every seed
-  agrees in sign. With too few units for that p (the design floor), the result is case-level: signs per unit and seed.
+- ``detect``: the test of attribution and of the held-out check. Each held-out line is one unit; a contrast is detected
+  when the exact one-sided sign-flip p over the units is at most ``ALPHA``, the summed difference is below minus the
+  margin and every seed agrees in sign. With too few units for that p (the design floor), the result is case-level:
+  signs per unit and seed.
 """
 import itertools
 

@@ -30,8 +30,8 @@ def contrast_row(origin, d, kind=None, share=None):
 
 
 def rows(ev, static, fold1_only=(), seed_permutation='not tested (precondition unavailable)'):
-    """All origin rows of one model on one fold. ``ev`` holds the stage's computed evidence; ``static`` the dataset's documented
-    rows; ``fold1_only`` the documented rows to mark as read on fold 1 (on another fold);
+    """All origin rows for one model and fold. ``ev`` holds the stage's computed evidence; ``static`` the dataset's documented
+    rows; ``fold1_only`` the documented rows to mark as read on fold 1 (when another fold is read);
     ``seed_permutation`` what O1 says of the seed-permutation statistic."""
     out = []
     for origin in ORIGINS:

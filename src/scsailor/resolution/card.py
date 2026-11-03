@@ -1,4 +1,4 @@
-"""The model contrasts of attribution and calibration: the parent decomposed into removable parts, their calibrated amounts, the
+"""Attribution's model contrasts: the parent decomposed into removable parts, their calibrated amounts, the
 recommendation condition, Shapley shares and the alignment of a correction.
 
 The parent is written p = b + r + d: b the anchor's base (the input bag's mean, "no change"), r = a - b the anchor's
@@ -133,7 +133,7 @@ def line_one(detections, separation):
 def alignment(pred, anchor, units, unmatchable=None):
     """Per part, on the raw scale: the cosine between the predicted correction (pred - anchor) and the true one
     (truth - anchor); the best scale of the predicted correction; its parallel ratio, the size of its component along
-    the true correction relative to the true one (above 1: over-applied along the right direction); and its
+    the true correction relative to the true one (above 1: over-sized along the true direction); and its
     misdirected share, 1 - cosine^2. With ``unmatchable`` (per part, the energy no predictor reading the bag can
     match), the ceiling of the cosine and the cosine over it."""
     base = risk(anchor - units['truth'], units['context'], units['weight'])

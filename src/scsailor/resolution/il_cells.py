@@ -4,18 +4,18 @@ A cell is IL's map recipe behind a cut (``<cut>/<arm>/x<rate multiple>``), hande
 Its real-task runs give, per seed, the parent trained on real labels and the cell's end on the same lines (the parent
 on every training line; the nested parent's runs give the calibration entries). Over the seeds:
 
-  Q1 Did the planted target recover?  IL's synthetic reading: setting 1 (synthetic parent) and setting 2 (natural parent,
-     the bridge), every seed (``recovery``, ``q1_text``).
-  Q2 Did real error on new lines improve?  The cell's end against its own parent, pooled over seeds (paired line
+  Q1 Did the planted target recover?  IL's synthetic readings: the synthetic-trained and the real-trained model retrained
+     on planted responses, every seed (``recovery``, ``q1_text``).
+  Q2 What does the change cost on held-out lines?  The cell's end against its own parent, pooled over seeds (paired line
      bootstrap, margin 0.2 points) with the seed rule beside it (``change``); training lines beside it.
-  Q3 Where does the change lie?  Every comparison split into the cell-line-level (context-common) and drug-difference
-     parts, pooled and per line; beside it the diagnosis of the full-strength change on the calibration lines against
-     the same reading on the held-out lines.
-  Q4 Does it beat continued training and simple calibration?  (a) continued training of the parent on its own recipe
-     for as long as a cell run (site and recipe together); (b) the parent's cell-line-level shrink and the uniform
-     shrink, chosen on the calibration lines; (c) the cell and continued training, both shrunk at that amount, with a
-     sensitivity favouring continued training (its best held-out amount); (d) the cell shrunk at that amount against
-     simple calibration.
+  Q3 Where does the cost sit?  Every comparison split into the common and contrast components, pooled and per line;
+     beside it the diagnosis of the full-strength change on the calibration lines against the same reading on the
+     held-out lines.
+  Q4 How does it read beside continued training and simple calibration?  (a) continued training of the parent, the
+     whole network on the cell's route for as long as a cell run, with training longer (the parent's own schedule)
+     beside it where it exists; (b) the parent's cell-line-level shrink and the uniform shrink, chosen on the calibration lines; (c)
+     the cell and continued training, both shrunk at that amount, with a sensitivity favouring continued training (its
+     best held-out amount); (d) the cell shrunk at that amount against simple calibration.
 
 Credit: improved with the target recovered in none of the evaluable map runs -> the intervention's own effect;
 recovered in all -> not separated between reuse of the cue and the recipe; otherwise undetermined, or no gain to credit.
@@ -124,14 +124,15 @@ def protocol(model, record, continued, paired):
     note = ('; the parent is one checkpoint, so Q2, Q4b and Q4d include the averaging gain'
             + (', and Q4a and Q4c are matched in read-out' if paired else '') if model in AVERAGED else '')
     continued = continued if paired else f'not available ({continued})'
-    return f'{cell}; continued training: {continued}; Q4a compares site and recipe together{note}'
+    return f'{cell}; continued training: {continued}{note}'
 
 
 def score(fold, model, cell, record, held, train, seed_inputs, seeds, saved, missing, continued, paired):
     """Q2-Q4, the current action and the diagnosis check of one cell with complete runs on every training line.
     ``seed_inputs(seed)``: the seed's predictions, ``p``, ``a`` (anchor) and ``R`` (the cell's end) on the
-    held-out units ``held``, ``continuation`` there where ``paired``, and under ``train`` functions that read the
-    parent's, the cell's and (where paired) continued training's predictions on the training units ``train``.
+    held-out units ``held``, ``continuation`` there where ``paired``, ``longer`` (training longer) there where it exists,
+    and under ``train`` functions that read the parent's, the cell's and (where they exist) the comparators' predictions
+    on the training units ``train``.
     ``saved``: the cell's saved selection, or None (``missing`` says why); ``continued``: what continued training is,
     or why it is missing. Returns the answers, Q2's reading, and the per-seed and per-line rows."""
     seed_rows, line_rows = [], []
@@ -157,6 +158,8 @@ def score(fold, model, cell, record, held, train, seed_inputs, seeds, saved, mis
                 preds['continuation_at_lam'] = predict('cheapest_fix', lam, cont, R, a, held)
                 for y in G:
                     cont_lam[y].append((line_parts(predict('cheapest_fix', y, cont, R, a, held), held), base['total_mse']))
+        if 'longer' in x:
+            preds['longer'] = x['longer']
         s = {k: scores(v, held) for k, v in preds.items()}
         tp = scores(x['train']['parent'](), train)
         tt = {k: scores(read(), train) for k, read in x['train'].items() if k != 'parent'}
@@ -197,7 +200,7 @@ def score(fold, model, cell, record, held, train, seed_inputs, seeds, saved, mis
                              + ' / '.join(f"{x['cell_total_pts']:+.2f}" for x in mine),
             'Q2_training_lines': ' ; '.join(k + ' ' + ' / '.join(
                 f"{x[f'{k}_training_total_pts']:+.2f} (common {x[f'{k}_training_common_pts']:+.2f}, "
-                f"differential {x[f'{k}_training_differential_pts']:+.2f})" for x in mine) for k in ('cell', 'continuation')
+                f"differential {x[f'{k}_training_differential_pts']:+.2f})" for x in mine) for k in ('cell', 'continuation', 'longer')
                 if f'{k}_training_total_pts' in mine[0]),
             'Q3_where': f"common {fmt(q2['common'])}, differential {fmt(q2['differential'])}; by seed "
                         + ' / '.join(f"common {x['cell_common_pts']:+.2f}, differential {x['cell_differential_pts']:+.2f}" for x in mine),
@@ -208,6 +211,8 @@ def score(fold, model, cell, record, held, train, seed_inputs, seeds, saved, mis
             'Q4 another site at the same dose': 'not available: IL runs only the carried cells in setting 3',
             'lambda_by_seed': ' / '.join(f'{x["lambda"]:g}' for x in mine) if saved else f'not available: {missing}',
             'current_action': action or f'not available: {missing}'}
+    if 'longer' in parts:
+        card['Q4a cell - training longer'] = text(compare(parts['cell'], parts['longer']), below(parts['cell'], parts['longer']))
     if paired and saved:
         best = min(G, key=lambda x: np.mean(totals(cont_lam[x])))
         card['Q4c sensitivity favouring continued training'] = (

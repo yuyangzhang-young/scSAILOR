@@ -115,7 +115,7 @@ def diagnose(seeds, synthetic, can_protect_common):
     ``seeds``: seed -> {'labels', 'calibration'}; ``synthetic``: the repair's synthetic reading ('recovered',
     'partial' or 'not recovered'); ``can_protect_common``: whether the model has a separate common branch to protect
     (the summary-statistics model). Candidates: the parent and the cheapest fix always. Repair candidates, none if the
-    synthetic reading is "not recovered": the full repair when the route is step 4 or the size is about right; the
+    synthetic reading is "not recovered": the full repair when the route is step 4 or the size reads 'about right'; the
     size fix when the size is too large; protection of the common part when it is damaged in all seeds. Every repair
     candidate also enters shrunk at the parent's lambda. The cheapest fix replaces the parent as default when it is
     below it in all seeds; a repair candidate replaces the default when it is below it in all seeds (the lowest mean

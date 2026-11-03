@@ -4,7 +4,7 @@ A reference says how much of the error the data and the task set, whatever the m
 scored targets (D1), the discrepancy between replicate measurements of the same unit (D2) and its split into a part
 shared by the units measured together and a unit-specific part, the sampling of the control pools, the reproducibility
 of the true corrections between replicates, and, on a genetic screen, the GEM-group term and the knockdown test.
-Energies are in the frozen risk's units: squared error averaged over genes and weighted over units.
+Energies are in the risk's units: squared error averaged over genes and weighted over units.
 
 - ``cell_sampling`` and ``moments``: a unit's cell-sampling variance v = (1/G) sum_g s2_g / n, from its cells or from
   streamed sums; ``d1_difference`` its drug-difference floor per unit and ``line_floor`` the floor of one whole-line
@@ -143,7 +143,7 @@ def well_split(delta, weight, drug, plate, d1):
 def pair_sampling_content(own, partner, omega, ctx, var):
     """Expected sampling energy carried by pair rows (z_own - z_partner) / sqrt(2) for independent zero-mean errors z of
     gene-averaged variance var[item]: per context of the rows, (mass, total energy, common energy), the common energy
-    being that of the context's weighted mean row (the frozen risk's projection). The drug-difference energy is total -
+    being that of the context's weighted mean row (the risk's projection). The drug-difference energy is total -
     common."""
     per = {}
     for c in np.unique(ctx):
@@ -292,7 +292,7 @@ def _twin_split_half(D, weight, half, twin):
 def reliability(correction, units, line, half, twin):
     """The split-half reliability of the true corrections (truth - anchor, units x genes) between two replicates of each
     line (``half`` 0 or 1 per unit), and its square-root ceilings: the highest cosine a predictor can reach with one
-    replicate's target. Cell-line-level part (the per-context weighted mean, the frozen risk's projection): R between the
+    replicate's target. Cell-line-level part (the per-context weighted mean, the risk's projection): R between the
     replicates' context rows over lines, sqrt(R), and Spearman-Brown for both replicates together, 2R / (1 + R), with
     its square root. Drug-difference part (the rest): R between unit twins (``twin``: each unit's twin in the other
     replicate, -1 where missing), sqrt(R), the pairs and Spearman-Brown."""

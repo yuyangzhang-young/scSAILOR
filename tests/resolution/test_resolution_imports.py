@@ -11,8 +11,8 @@ import unittest
 CHECK = """
 import json, sys
 before = list(sys.path)
-from scsailor.resolution import (attribution, card, comparison, grids, il_cells, menu, origins, policies, references,
-                                 scoring, stages)
+from scsailor.resolution import (attribution, card, comparison, grids, il_cells, menu, net_cost, origins, policies, probes,
+                                 references, scoring, slopes, stages)
 print(json.dumps({"torch": "torch" in sys.modules, "path_unchanged": sys.path == before}))
 """
 

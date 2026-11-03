@@ -77,7 +77,7 @@ def gene_where(vectors, groups, scale, floor=None, draws=1000, seed=20261019):
 
 
 def group_excess(parts, units, group_of_code, part='differential'):
-    """Each perturbation group's excess X_A = T(A) - m_A T in one part, in units of the frozen risk."""
+    """Each perturbation group's excess X_A = T(A) - m_A T in one part, in units of the risk."""
     w = units['weight'] / units['weight'].sum()
     v = parts[part]
     labels = np.asarray([group_of_code[int(c)] for c in units['p_code']])
@@ -169,7 +169,7 @@ class NestedProjection:
 
 def four_parts(pred, units, clip=True):
     """Energies of the four parts of the error: context-common, shared drug, identity x drug, within-identity
-    residual, in units of the frozen risk (normalized weights, gene mean); clipped at zero unless clip is False."""
+    residual, in units of the risk (normalized weights, gene mean); clipped at zero unless clip is False."""
     e = (np.maximum(pred, 0) if clip else pred) - units['truth']
     split = NestedProjection(units['context'], units['p_code'], units['weight']).split(e)
     n = e.shape[1]
@@ -205,7 +205,7 @@ def oracle_context_mean(units):
 
 def matched_excess(parts, units, annotated, part='differential'):
     """T7's matched comparison: the mean, over annotated units, of a unit's contribution minus the mean contribution of
-    the same perturbation's units on the other identities (equal-weight mean), in the units of the frozen risk."""
+    the same perturbation's units on the other identities (equal-weight mean), in the units of the risk."""
     ident = identities(units)
     v = parts[part]
     gaps = []
@@ -282,7 +282,7 @@ def t7_matched(parts, units, annotated=None, part='differential'):
 
 def d2_parts(units, twin, pool=None):
     """D2's reference per part: the twin deviations (y - y')/sqrt(2), treated, or response when per-unit pool means
-    are given, split by the frozen risk on the twin-bearing units with their scoring weights. None when no unit has a
+    are given, split by the risk on the twin-bearing units with their scoring weights. None when no unit has a
     twin."""
     keep = twin >= 0
     if not keep.any():
@@ -295,5 +295,5 @@ def d2_parts(units, twin, pool=None):
 
 def gene_floor(floor, share):
     """Per-gene floor vectors per part: each part's unit floor spread over genes by a per-gene variance share (an
-    approximation, stated in the output)."""
+    approximation, stated in the readings)."""
     return {part: float(v.sum()) * share for part, v in floor.items()}

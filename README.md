@@ -103,14 +103,14 @@ When a trained model misses a planted state, information localization asks where
 
 ## Origin resolution
 
-A model's prediction is its anchor (the input bag's mean plus the transferred response) plus its correction. Origin resolution asks whether the correction, or the restoring change that information localization hands on, pays on held-out lines, and if not, why. It has four steps:
+A model's prediction is its anchor (the control mean plus the transferred response) plus its correction. Origin resolution follows each restoring change from information localization through four steps, and asks what it costs on held-out lines, why, and whether any of it pays:
 
-1. **Recovery and cost** sets the change against the original model, on planted and on measured responses.
-2. **Attribution** assigns the error to the model, the data or the task set-up.
-3. **Calibration** recommends a kept fraction, or refuses, on calibration lines that no model of the nested chain has seen.
-4. **The held-out check** reads the margins of that choice on the held-out lines.
+1. **Recovery and cost** trains the change on measured responses and sets it beside its original model, continued training and training longer.
+2. **Attribution** says where the error sits and which origin it points to: the model, the data or the task set-up.
+3. **Calibration** recommends what to keep of a prediction, or refuses, on lines that no model of the nested chain has seen.
+4. **The held-out check** reports the same differences on held-out lines, which take no part in any choice.
 
-`scsailor.resolution` holds the candidates and their kept fractions (`policies`, `card`, `menu`), the held-out test (`comparison`), where the error sits and which origin it points to (`attribution`, `origins`), the datasets' references computed from cells (`references`), the stages over one dataset's case (`stages`), and the recovery and cost of a cell that information localization hands on (`il_cells`). A dataset enters as a *case*, whose contract is given in `stages`. Its facts, such as the names of its replicate plates, are passed in as arguments. The paper's terms are listed in [`src/scsailor/resolution/__init__.py`](src/scsailor/resolution/__init__.py).
+`scsailor.resolution` follows these steps: `il_cells` for recovery and cost; `attribution`, `origins`, `references` and `probes` for attribution; `slopes`, `policies`, `card`, `menu` and `net_cost` for calibration; and `comparison` for the held-out check. `stages` runs them over one dataset's case, whose contract it states. A dataset's facts, such as the names of its replicate plates, are passed in as arguments. The paper's terms are listed in [`src/scsailor/resolution/__init__.py`](src/scsailor/resolution/__init__.py).
 
 ## Third-party code
 

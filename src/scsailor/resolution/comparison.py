@@ -1,10 +1,10 @@
 """Comparing two predictions on held-out units: the paired line bootstrap, its call, and the unit-level sign-flip test.
 
 Both tests read *runs*: one pair (per-line parts, scale) per seed, where the per-line parts are
-``scoring.line_parts`` of a prediction and the scale is the reference's clipped total (the parent's, usually).
-Differences are reported in points (percent) of the scale.
+``scoring.line_parts`` of a prediction and the scale is the reference's clipped total MSE (the parent's, usually).
+Differences are reported in % of the scale.
 
-- ``compare``: seeds averaged within a line, lines resampled (``bootstrap``), a call with the 0.2-point margin, and
+- ``compare``: seeds averaged within a line, lines resampled (``bootstrap``), a call with the 0.2% margin, and
   the call's rate of "different" when the per-line differences are centred and sign-flipped (its null rate).
 - ``detect``: the test of attribution and of the held-out check. Each held-out line is one unit; a contrast is detected
   when the exact one-sided sign-flip p over the units is at most ``ALPHA``, the summed difference is below minus the
@@ -20,12 +20,12 @@ from .scoring import PARTS
 __all__ = ["MARGIN", "ALPHA", "RESAMPLES", "bootstrap", "call", "null_rate", "seed_rule", "compare", "design_floor", "sign_patterns",
            "signflip", "detect"]
 
-MARGIN = .2          # points of the scale: a difference smaller than this is not called "different"
+MARGIN = .2          # % of the scale: a difference smaller than this is not called "different"
 ALPHA = .025         # one side of the comparison call's 95% percentile interval
 EXACT_UP_TO = 14     # sign patterns enumerated exactly up to 2^14 units; drawn beyond
 SIGNFLIP_DRAWS = 10000
 NULL_DRAWS = 1000    # sign flips of the null rate
-NULL_SHIFTS = (0., -.2, -.5, -1.)   # planted shifts of the null rate, in points of the scale
+NULL_SHIFTS = (0., -.2, -.5, -1.)   # planted shifts of the null rate, in % of the scale
 RESAMPLES = 2000     # line resamples of the bootstrap
 BOOTSTRAP_SEED = 20261011
 
@@ -119,7 +119,7 @@ def signflip(values, seed=20261019):
 
 
 def detect(x_runs, y_runs, part='total', with_bootstrap=True):
-    """x minus y, per held-out unit averaged over seeds, in points of each seed's scale. Detected when the design
+    """x minus y, per held-out unit averaged over seeds, in % of each seed's scale. Detected when the design
     floor allows a test, the one-sided sign-flip p is at most ALPHA, the total (the sum over units) is below -MARGIN
     and the seeds agree in sign; below the floor the result is case-level (signs per unit and seed). The bootstrap
     call and its null rate are reported beside it."""

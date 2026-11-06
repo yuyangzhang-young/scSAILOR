@@ -10,8 +10,10 @@ change through four steps, one group of modules each:
    ``origins``, ``references``,       like the error (cell sampling of the targets, the between-plate discrepancy, the
    ``probes``                         input set's sampling) and the fixed-weight probes;
 3. calibration (recommend or          what to keep, chosen on calibration lines no model of the nested chain has seen: one
-   refuse): ``slopes``, ``policies``, slope per layer, the shrinks and kept fractions, the single-model menu, the gate
-   ``card``, ``menu``, ``net_cost``   against the field's references and the matched comparisons;
+   refuse): ``slopes``, ``policies``, slope per layer, the shrinks and kept fractions, the single-model menu, the
+   ``card``, ``menu``, ``net_cost``,  comparisons and the recommendation rule against the standard references,
+   ``planted``                        the calibrated original, the design-aware baseline and the model's fixed
+                                      intervention, and planted changes with a known answer;
 4. held-out check: ``comparison``     per held-out line, a sign flip over lines with the seed rule, and the paired line
                                       bootstrap beside it. Held-out lines take no part in a choice and report differences.
 
@@ -29,6 +31,7 @@ Code                                                            Paper
 parent                                                          original model
 nested parent, nested chain                                     nested model
 calibration units or lines                                      calibration lines
+points, ``*_pts``                                               % of the named total MSE
 outer units or lines                                            held-out lines
 input bag, bag mean ``b``                                       input set, control mean $S$
 anchor ``a``                                                    anchor ($S+r_p$)
@@ -44,24 +47,42 @@ layers 'response', 'line', 'perturbation' (``slopes``)          the transferred 
 amount ``lam``, ``(lam_c, lam_d)``, ``kappa``                   kept fraction $\\lambda$, $(\\lambda_1, \\lambda_2)$,
                                                                 $\\lambda_r$
 ``alpha``, ``size_fix``                                         kept fraction of a restoring change
-``cheapest_fix``                                                the context-level correction scaled (cell-line-level
-                                                                shrink)
+``cheapest_fix``, ``cell_line_shrink_A``                        the context-level correction scaled (context-level
+                                                                shrink), toward the anchor or toward A
+'cell-line shrink', 'cell-line-level shrink' in saved strings   context-level shrink
+cheap alternatives, ``ALTERNATIVES``, ``PLATE_ALTERNATIVES``    the original model's shrinks among the standard
+                                                                references; with a plate-aware target, the plate-aware
+                                                                baseline and the shrinks toward it
 ``global_parent_shrink``                                        uniform shrink toward the anchor
 repair, IL cell, cell                                           restoring change
+kind 'control', ``control``, ``*_own_control``                  fixed intervention (negative control)
 continuation, ``continued_*``, ``input/a/x1``                   continued training
 ``training_longer``, ``longer_*``                               training longer
-second seed, ``second_design``                                  extra seed
-sets 1, 2, 3 (``LADDER.csv``)                                   the field's references, the same calibration and the
-                                                                screen's design, the same budget
-gate, recommended, refused at a margin, ``card.branch``         recommend or refuse
+extra or second seed, ``extra_seed*``, ``second_design``        second training run
+stages and sets 1, 2, 3 (``LADDER.csv``, ``min_gap_set*``)      the standard references; with the design-aware baseline
+                                                                and the original calibrated toward it; with the second
+                                                                training run
+'field' calibration, ``*_field``                                calibration toward the baseline
+gap, ``gap_pts``, ``*_worst_vs_*``                              a reference's error minus the kept change's (positive
+                                                                when the kept change has the lower error); worst: over
+                                                                references and seeds
+comparisons 'standard', 'calibrated', 'design-aware'            the standard references; with the original calibrated
+                                                                toward the baseline; the design-aware comparison
+``recommend``, ``RULE_MARGIN``, ``RECOMMENDATIONS.csv``         recommend or refuse, at the margin of 0.1% of the
+                                                                original model's total MSE on calibration lines
+``planted``, ``READ_BACK.csv``                                  planted changes, the known-answer test
+``*_standing_matched``                                          the design-aware comparison; standing: recommended
+``card.branch``'s ``recommendation``                            recommend or refuse, for a model's action
 ledger (``LEDGER.csv``)                                         the accounting, in both orders
-``price``                                                       the price of a point
+``price``                                                       not in the paper: cost at full strength per unit the
+                                                                best size returns
 cosine, best scale below one                                    alignment; over-sized
-``H``, ``dependence``, ``E``, ``Delta_E``                       benefit, dependence, excess cost, what a probe removes
-                                                                of it
+``H``, ``dependence``, ``E``, ``Delta_E``                       benefit, dependence, added cost, what a probe removes of
+                                                                it
 ``output_shrink``                                               matched shrink
 ``repair_increment`` energy                                     increment energy
-``true``, ``train_avg``, ``other_plate``                        own controls, training-average mean, other-plate mean
+``true``, ``train_avg``, ``other_plate``                        own controls, line-agnostic control mean, other-plate
+                                                                mean
 own, ``pooled``                                                 own and line-agnostic controls
 model ``summary``, ``deepsets``, ``attention_model``            summary-statistics model, DeepSets model, attention
                                                                 model
@@ -76,5 +97,5 @@ Q1-Q4 in the ``CARDS_V2`` columns                               recovery and cos
                                                                 differences, a reading and not a test of a choice
 ==============================================================  ==================================================
 """
-__all__ = ["attribution", "card", "comparison", "grids", "il_cells", "menu", "net_cost", "origins", "policies", "probes",
-           "references", "scoring", "slopes", "stages"]
+__all__ = ["attribution", "card", "comparison", "grids", "il_cells", "menu", "net_cost", "origins", "planted", "policies",
+           "probes", "references", "scoring", "slopes", "stages"]

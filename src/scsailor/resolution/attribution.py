@@ -28,7 +28,7 @@ __all__ = ["where", "gene_where", "group_excess", "perturbation_group_test", "fo
 
 
 def where(parts, units, keys, scale, floor=None):
-    """Per group, descriptively: contribution in points of `scale`, mass, relative error, excess T(A) - m_A T, and,
+    """Per group, descriptively: contribution in % of `scale`, mass, relative error, excess T(A) - m_A T, and,
     given per-unit floor contributions, the group's floor and its excess net of the floor."""
     w = units['weight'] / units['weight'].sum()
     whole = {part: float(v.sum()) for part, v in parts.items()}

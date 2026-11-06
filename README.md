@@ -65,7 +65,7 @@ check_carriers(cells, depth)                               # verifies the moment
 
 ## Built models
 
-The study's three models share one form: the prediction is a baseline (the input set's mean plus the perturbation's mean offset) plus a correction computed by the model from the rows, their sequencing depths and a learned perturbation embedding.
+The study's three models share one form: the prediction is an anchor (the control mean plus the transferred response, the perturbation's mean offset) plus a correction computed by the model from the rows, their sequencing depths and a learned perturbation embedding.
 
 | Model | Code key | How it combines cells |
 |---|---|---|
@@ -110,7 +110,7 @@ A model's prediction is its anchor (the control mean plus the transferred respon
 3. **Calibration** recommends what to keep of a prediction, or refuses, on lines that no model of the nested chain has seen.
 4. **The held-out check** reports the same differences on held-out lines, which take no part in any choice.
 
-`scsailor.resolution` follows these steps: `il_cells` for recovery and cost; `attribution`, `origins`, `references` and `probes` for attribution; `slopes`, `policies`, `card`, `menu` and `net_cost` for calibration; and `comparison` for the held-out check. `stages` runs them over one dataset's case, whose contract it states. A dataset's facts, such as the names of its replicate plates, are passed in as arguments. The paper's terms are listed in [`src/scsailor/resolution/__init__.py`](src/scsailor/resolution/__init__.py).
+`scsailor.resolution` follows these steps: `il_cells` for recovery and cost; `attribution`, `origins`, `references` and `probes` for attribution; `slopes`, `policies`, `card`, `menu` and `net_cost` for calibration, with `planted` for its known-answer test on planted changes; and `comparison` for the held-out check. `stages` runs them over one dataset's case, whose contract it states. A dataset's facts, such as the names of its replicate plates, are passed in as arguments. The paper's terms are listed in [`src/scsailor/resolution/__init__.py`](src/scsailor/resolution/__init__.py).
 
 ## Third-party code
 

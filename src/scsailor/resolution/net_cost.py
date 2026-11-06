@@ -1,26 +1,33 @@
-"""Matched comparisons: how much of a prediction's improvement required the restoring change.
+"""The recommendation rule and the accounting: whether a kept change is recommended, and how much of a prediction's
+improvement required it.
 
 Write a for the anchor, b for the control mean, p for the original model and R for the restoring change at full
 strength. The change is kept at the fraction alpha, its slope on calibration lines truncated to 0-1 (``slopes``), which
 gives X = p + alpha (R - p). The design-aware baseline is b + kappa (A - b), with A the perturbation mean within the
 screen's design stratum and kappa the slope of the target on A - b, truncated to 0-1, on calibration units: the screen's
-design defines it and no model enters it.
+design defines it and no model enters it. Every amount is chosen on calibration lines. A gap is a reference's error
+minus the kept change's, in % of the original model's total MSE, so positive when the kept change has the lower error.
 
-Three sets of references widen one gate. Each reference is calibrated on calibration lines, and the sets accumulate:
+``cumulative_gaps`` calibrates three stages of references, which accumulate:
 
-    set 1  the field's references: no change, the baseline, the original model as trained, the context-level shrink, the
-           uniform shrink and the shrink toward no change. The kept change is calibrated toward the baseline.
-    set 2  the same treatment and the screen's design: the design-aware baseline, and the original model with the same
-           two-amount calibration toward it. From here the kept change is calibrated toward the design-aware baseline.
-    set 3  the same budget: an extra seed, the original averaged with the next seed's original under the same calibration.
+    stage 1  the standard references: no change, the baseline, the original model as trained, the context-level shrink,
+             the uniform shrink and the shrink toward no change. The kept change is calibrated toward the baseline.
+             Beside it ('variant'), the original model with the same two-amount calibration toward the baseline.
+    stage 2  the design-aware baseline, and the original model with the same two-amount calibration toward it. From here
+             the kept change is calibrated toward the design-aware baseline.
+    stage 3  the second training run: the original averaged with the next seed's original under the same calibration.
 
-The gate recommends a change above a margin against every reference in every seed, with some of the change kept. Held-out
-lines report the same gaps as continuous differences and take no part in any choice.
+The recommendation rule reads them in three comparisons (``COMPARISONS``): standard (stage 1), calibrated (stage 1 and
+the variant) and design-aware (stage 2). A kept change is recommended when, in every seed, some of the change is kept
+and its error is lower, by more than the margin (``RULE_MARGIN``: 0.1% of the original model's total MSE on calibration
+lines), than every reference of the comparison and than its model's fixed intervention calibrated the same way, where
+the model has one. The fixed intervention is a comparator and gets no verdict. The second training run enters no
+comparison: it is a scale, in the accounting. Held-out lines report the same worst gaps and take no part in the choice.
 
 The accounting splits the distance between the baseline and the kept change calibrated toward the design-aware baseline
-in two orders. Forward: baseline, design-aware baseline, original model's correction, change, with the extra seed apart.
-Reverse: baseline, change, original model's correction, design-aware baseline. The split between the first two terms
-depends on the order and is not read; the change's term is small in both.
+in two orders. Forward: baseline, design-aware baseline, original model's correction, change, with the second training
+run apart. Reverse: baseline, change, original model's correction, design-aware baseline. The split between the first
+two terms depends on the order and is not read; the change's term is small in both.
 
 A *side* is one chain on one set of units, as a dataset's binding reads it:
 
@@ -36,12 +43,9 @@ from .policies import predict
 from .scoring import PARTKEY, project, scores
 from .slopes import fraction, inner, slope
 
-__all__ = ["MARGINS", "part_slopes", "change_slopes", "extra_seed_slopes", "price", "partner", "extra_seed", "design_baseline", "calibrate_design", "total",
-           "calibrate_original", "calibrate_change", "references", "actions", "cumulative_gaps", "recommended", "ledger", "costs",
-           "reference_points", "recovery_at", "planted_reading", "stratum_shift"]
-
-MARGINS = (0., .2, .5)   # points of the original model's total
-
+__all__ = ["part_slopes", "change_slopes", "extra_seed_slopes", "price", "partner", "extra_seed", "design_baseline", "calibrate_design", "total",
+           "calibrate_original", "calibrate_change", "references", "actions", "cumulative_gaps", "RULE_MARGIN", "COMPARISONS", "worst_gap",
+           "own_control_gap", "recommend", "ledger", "costs", "reference_points", "recovery_at", "planted_reading", "stratum_shift"]
 
 def part_slopes(x, y, u):
     """total, common and contrast slope of the need y on x, with x's common share of energy."""
@@ -59,8 +63,8 @@ def change_slopes(sd):
 
 
 def extra_seed_slopes(sd):
-    """The extra seed as a change, every ordered pair: the slope of i's need on j minus i. Two models' slopes toward each
-    other add to exactly 1, so an extra seed sits at one half."""
+    """The second training run as a change, every ordered pair: the slope of i's need on j minus i. Two models' slopes
+    toward each other add to exactly 1, so a second training run sits at one half."""
     out = []
     for i in sd['p']:
         for j in sd['p']:
@@ -70,7 +74,8 @@ def extra_seed_slopes(sd):
 
 
 def price(s):
-    """Points of cost at full strength per point the best size returns; blank without a return."""
+    """Cost at full strength per unit of error the best size returns, both in % of the original model's total MSE; blank
+    without a return."""
     return (1 - 2 * s) / (s * s) if s > 0 else None
 
 
@@ -81,7 +86,7 @@ def partner(sd, seed):
 
 
 def extra_seed(sd, seed):
-    """The original model averaged with the next seed's."""
+    """The second training run: the original model averaged with the next seed's."""
     return (sd['p'][seed] + sd['p'][partner(sd, seed)]) / 2
 
 
@@ -100,8 +105,8 @@ def total(x, u):
 
 
 def calibrate_original(sd):
-    """The model-level amounts: kappa, and per seed the original model's and the extra seed's same calibration toward
-    the design-aware baseline, and the original's field calibration and cheap alternatives."""
+    """The model-level amounts: kappa, and per seed the original model's and the second training run's same calibration
+    toward the design-aware baseline, and the original's calibration toward the baseline and its three shrinks."""
     u, a, b = sd['u'], sd['a'], sd['b']
     kappa = calibrate_design(sd)
     T = design_baseline(sd, kappa)
@@ -131,7 +136,7 @@ def calibrate_change(sd, model_amounts):
 
 
 def references(sd, s, amounts):
-    """set -> reference -> prediction for seed s, with the model-level amounts; sets accumulate."""
+    """stage -> reference -> prediction for seed s, with the model-level amounts; the stages accumulate."""
     u, a, b, p = sd['u'], sd['a'], sd['b'], sd['p'][s]
     m = amounts['seeds'][str(s)]
     T = design_baseline(sd, amounts['kappa'])
@@ -145,7 +150,7 @@ def references(sd, s, amounts):
 
 
 def actions(sd, s, kept, kappa):
-    """The kept change at each set: toward the baseline at set 1, toward the design-aware baseline after it."""
+    """The kept change at each stage: toward the baseline at stage 1, toward the design-aware baseline after it."""
     p = sd['p'][s]
     X = p + kept['alpha'] * (sd['R'][s] - p)
     field = menu.two_part(sd['a'], X, *kept['action_field'], sd['u'])
@@ -155,8 +160,8 @@ def actions(sd, s, kept, kappa):
 
 def cumulative_gaps(sd, amounts, kept):
     """stage -> seed -> reference -> 100 (reference - action) / original on clipped totals, against that stage's action,
-    every reference up to the stage. 'variant': the original with the action's two-amount field calibration, printed
-    beside stage 1 and not part of the gate."""
+    every reference up to the stage. 'variant': the original model with the same two-amount calibration toward the
+    baseline, against stage 1's action; the rule's calibrated comparison reads it."""
     u, out = sd['u'], {}
     for s in sd['p']:
         base = total(sd['p'][s], u)
@@ -171,13 +176,36 @@ def cumulative_gaps(sd, amounts, kept):
     return out
 
 
-def recommended(gaps, alphas, margin):
-    """Above the margin against every reference, every seed, with some of the change kept in every seed."""
-    return min(alphas) > 0 and all(min(v.values()) > margin for v in gaps.values())
+RULE_MARGIN = .1   # the recommendation rule's margin, % of the original model's total MSE on calibration lines
+# comparison -> (the stage of the kept change, the stages whose references enter, the reference against which the
+# kept change and the fixed intervention are compared)
+COMPARISONS = {'standard': (1, (1,), 'original'), 'calibrated': (1, (1, 'variant'), 'original'),
+               'design-aware': (2, (2,), 'original, same calibration')}
+
+
+def worst_gap(gaps, comparison):
+    """The kept change's smallest gap to a reference of the comparison, over references and seeds; ``gaps`` as
+    ``cumulative_gaps`` gives them."""
+    return min(g for stage in COMPARISONS[comparison][1] for by_reference in gaps[stage].values() for g in by_reference.values())
+
+
+def own_control_gap(gaps, control, comparison):
+    """The kept change against its model's fixed intervention calibrated the same way, in the worst seed: per seed, the
+    change's gap minus the fixed intervention's (``control``, its gaps) at the comparison's reference, which is the fixed
+    intervention's error minus the change's."""
+    stage, _, reference = COMPARISONS[comparison]
+    return min(gaps[stage][s][reference] - control[stage][s][reference] for s in gaps[stage])
+
+
+def recommend(alpha_min, worst, own=None, margin=RULE_MARGIN):
+    """The recommendation rule: some of the change kept in every seed (``alpha_min``, the smallest kept fraction, above
+    zero), and a lower error than every reference of the comparison (``worst``, ``worst_gap``) and than the model's fixed
+    intervention (``own``, ``own_control_gap``; None without one), each by more than the margin."""
+    return alpha_min > 0 and worst > margin and (own is None or own > margin)
 
 
 def ledger(sd, amounts, kept):
-    """The accounting in points of the original model's total, mean over seeds, in both orders; both end at the kept
+    """The accounting in % of the original model's total MSE, mean over seeds, in both orders; both end at the kept
     change calibrated toward the design-aware baseline."""
     u, a = sd['u'], sd['a']
     rows = []
@@ -196,7 +224,7 @@ def ledger(sd, amounts, kept):
 
 
 def costs(sd):
-    """Mean over seeds of the change at full strength minus the original model, in points of its total, per part; and the
+    """Mean over seeds of the change at full strength minus the original model, in % of its total MSE, per part; and the
     realized price: the clipped cost over what the best held-out size returns."""
     u, rows = sd['u'], []
     for s in sd['p']:
@@ -214,7 +242,8 @@ def costs(sd):
 
 
 def reference_points(sd, amounts):
-    """The references without a model and the original model on a side, points of the original's total, mean over seeds."""
+    """The references without a model and the original model on a side, in % of the original's total MSE, mean over
+    seeds."""
     u, T = sd['u'], design_baseline(sd, amounts['kappa'])
     rows = []
     for s in sd['p']:

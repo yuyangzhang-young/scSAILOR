@@ -292,7 +292,7 @@ def _twin_split_half(D, weight, half, twin):
 def reliability(correction, units, line, half, twin):
     """The split-half reliability of the true corrections (truth - anchor, units x genes) between two replicates of each
     line (``half`` 0 or 1 per unit), and its square-root ceilings: the highest cosine a predictor can reach with one
-    replicate's target. Cell-line-level part (the per-context weighted mean, the risk's projection): R between the
+    replicate's target. Context-level part (the per-context weighted mean, the risk's projection): R between the
     replicates' context rows over lines, sqrt(R), and Spearman-Brown for both replicates together, 2R / (1 + R), with
     its square root. Drug-difference part (the rest): R between unit twins (``twin``: each unit's twin in the other
     replicate, -1 where missing), sqrt(R), the pairs and Spearman-Brown."""

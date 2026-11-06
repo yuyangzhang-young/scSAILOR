@@ -7,13 +7,13 @@ on every training line; the nested parent's runs give the calibration entries). 
   Q1 Did the planted target recover?  IL's synthetic readings: the synthetic-trained and the real-trained model retrained
      on planted responses, every seed (``recovery``, ``q1_text``).
   Q2 What does the change cost on held-out lines?  The cell's end against its own parent, pooled over seeds (paired line
-     bootstrap, margin 0.2 points) with the seed rule beside it (``change``); training lines beside it.
+     bootstrap, margin 0.2% of the parent's total MSE) with the seed rule beside it (``change``); training lines beside it.
   Q3 Where does the cost sit?  Every comparison split into the common and contrast components, pooled and per line;
      beside it the diagnosis of the full-strength change on the calibration lines against the same reading on the
      held-out lines.
   Q4 How does it read beside continued training and simple calibration?  (a) continued training of the parent, the
      whole network on the cell's route for as long as a cell run, with training longer (the parent's own schedule)
-     beside it where it exists; (b) the parent's cell-line-level shrink and the uniform shrink, chosen on the calibration lines; (c)
+     beside it where it exists; (b) the parent's context-level shrink and the uniform shrink, chosen on the calibration lines; (c)
      the cell and continued training, both shrunk at that amount, with a sensitivity favouring continued training (its
      best held-out amount); (d) the cell shrunk at that amount against simple calibration.
 

@@ -10,7 +10,7 @@ A units dictionary holds, in one row order:
 - ``weight``: the scoring weights.
 
 The risk (``scsailor.natural.score.risk``) splits a prediction's squared error into the *common* part, each context's
-weighted mean error over its perturbations (the cell-line-level part), and the *differential* part, the rest (the
+weighted mean error over its perturbations (the context-level part), and the *differential* part, the rest (the
 perturbation-difference part). Predictions are clipped at zero before they are scored, as the natural task's scoring
 does.
 """

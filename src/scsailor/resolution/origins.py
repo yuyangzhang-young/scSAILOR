@@ -1,6 +1,6 @@
 """Attribution's rows: one per candidate origin of a failure to transfer, and the headline's line 3.
 
-Origins are coded by kind: M (the model: M5 its cell-line-level correction, M7 its perturbation correction), D (the
+Origins are coded by kind: M (the model: M5 its context-level correction, M7 its perturbation correction), D (the
 data: D1 cell sampling of the scored targets, D2 the between-replicate discrepancy, D7 a systematic plate or campaign
 difference, ...) and T (the task set-up: T2 the input bag's sampling, T3 the simple references, T7 unequal treatment,
 ...), with O for the evaluation itself. Rows with computed evidence take it from the attribution stage (``ev``); the

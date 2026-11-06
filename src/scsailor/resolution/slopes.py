@@ -181,8 +181,8 @@ def with_layer(sd, name, a, seed):
 
 
 def gain(sd, name, a):
-    """Points of the layer's baseline's clipped total removed by the layer at fraction a, mean over seeds (positive:
-    lower error)."""
+    """The error the layer removes at fraction a, in % of the layer's baseline's clipped total MSE, mean over seeds
+    (positive: lower error)."""
     def points(seed):
         total = lambda x: scores(with_layer(sd, name, x, seed), sd['u'])['total_mse']
         base = total(0.)

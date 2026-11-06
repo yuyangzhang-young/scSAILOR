@@ -2,19 +2,19 @@
 labels and the selection rules.
 
 Write p for the parent's prediction, a for its anchor (the input bag's mean plus the model's transferred response), R
-for the repair at full strength, r = R - p and P for the per-context common projection (the cell-line-level part).
+for the repair at full strength, r = R - p and P for the per-context common projection (the context-level part).
 Every amount is chosen on the masked calibration units by the lowest clipped total over one grid ``G``, with
 clipping after combination and ties to less change:
 
     parent                 p
     full_repair            R
     global_parent_shrink   a + lam (p - a)              (the uniform shrink)
-    cheapest_fix           p - (1 - lam) P(p - a)       (the cell-line-level shrink)
+    cheapest_fix           p - (1 - lam) P(p - a)       (the context-level shrink)
     size_fix               p + alpha r
     selective_repair       p + lam P(r) + (r - P(r)), or p ("no repair", amount None)
     always_selective       R - (1 - lam) P(R - a)
     protect_common         R - P(R - p)
-    <policy>_at_parent_lam the policy's prediction X, then X - (1 - lam_p) P(X - a) at the parent's cell-line amount
+    <policy>_at_parent_lam the policy's prediction X, then X - (1 - lam_p) P(X - a) at the parent's context-level amount
 
 ``select`` is the current selection rule (ordinary validation over a menu); ``diagnose`` is the earlier
 decision-table rule, kept because saved selections were made with it.
@@ -85,7 +85,7 @@ def choose(policy, p, R, a, units, mask):
 
 def labels(p, R, units, mask):
     """The diagnosis on the masked rows: is the full-strength repair better than the parent; does its cost sit at the
-    cell-line level (d1a); is the common part damaged at every amount (d1b); is the repair too large (d1c)."""
+    context level (d1a); is the common part damaged at every amount (d1b); is the repair too large (d1c)."""
     base, full = scores(p, units, mask), scores(R, units, mask)
     total = base['total_mse']
     increase = 100 * (full['total_mse'] - total) / total
@@ -152,7 +152,8 @@ def default_menu(can_protect_common):
 
 def select(entries, actions):
     """The current rule over a menu of actions (the first two are the parent and the cheapest fix): ordinary
-    validation picks the lowest mean parent-normalized calibration total; the gated consensus is reported beside it.
+    validation picks the lowest mean parent-normalized calibration total; beside it, the consensus (``ungated_consensus``)
+    is the lowest mean among the actions below the default in every seed, with no margin.
     ``entries``: seed -> {'calibration': action -> total}."""
     cal = {a: [e['calibration'][a] / e['calibration']['parent'] for e in entries.values()]
            for a in actions}

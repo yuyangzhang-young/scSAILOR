@@ -8,7 +8,7 @@ plate-aware anchor A where the screen measures every line on the same two replic
     shrink_<X>     T + lam (X - T)                                  (shrink_parent only with a plate-aware target:
                                                                     elsewhere it is the uniform shrink, a cheap
                                                                     alternative)
-    two_part_<X>   T + lam_c P(X - T) + lam_d (X - T - P(X - T))    the cell-line-level and perturbation parts apart
+    two_part_<X>   T + lam_c P(X - T) + lam_d (X - T - P(X - T))    the context-level and perturbation parts apart
     corrected_by_<m>   for a published model: the two-amount shrink toward T of p + beta (q - p), q the same seed's
                    parent of in-house architecture m; beta chosen first (ties to the smaller), then the two amounts.
 
@@ -16,7 +16,7 @@ A = a + r_plate[plate] - r, with r and r_plate the training lines' drug averages
 (``plate_effects``); each context's plate is read from its input bag by the paired plate direction of the training
 lines (``plates_from_bags``), since the task's inputs carry no plate label. ``plates`` names the two plates, as the
 second field of the context keys (``"<line>|<plate>"``), in the order of the plate direction. With a plate-aware
-target the cheap alternatives add A itself, the uniform shrink toward A and the cell-line-level shrink toward A. Every
+target the cheap alternatives add A itself, the uniform shrink toward A and the context-level shrink toward A. Every
 amount is chosen on the calibration units of the nested chain: one amount by ``card.calibrate``, two by the lowest
 clipped total over G x G, ties to the larger.
 """

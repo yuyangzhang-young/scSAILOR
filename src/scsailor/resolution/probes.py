@@ -2,16 +2,16 @@
 
 A probe changes a trained model's control input and keeps its weights. Each condition replaces the statistic, ``true``
 being the model's own input, and the anchor stays the context's own, so only the model's correction reads the replaced
-input. These functions take the predictions on one side (the held-out or the training units) and read, in points of the
-baseline's total:
+input. These functions take the predictions on one side (the held-out or the training units) and read, in % of the
+baseline's total MSE:
 
     L            the error under a condition, relative to the baseline
     dependence   the risk of the prediction under the own input minus under the replaced one
     H            benefit: L(true) - L(condition), negative when the own statistic lowers error
-    E            excess cost: the changed model's L minus the original model's, under one condition
-    Delta_E      what the condition removes of the excess cost, E(true) - E(condition)
+    E            added cost: the changed model's L minus the original model's, under one condition
+    Delta_E      what the condition removes of the added cost, E(true) - E(condition)
 
-The matched shrink scales the context-level correction, with weights fixed, to the size the training-average mean gives
+The matched shrink scales the context-level correction, with weights fixed, to the size the line-agnostic control mean gives
 it. Increment energy and best scale come from the moments of a change: the change's energy, its inner product with what
 the model still needs, and that need's energy. The value of own controls is error under a line-agnostic input minus error
 under the own input, across training length. A probe says how the model's output depends on its input, not what would
@@ -55,7 +55,7 @@ def l2_atoms(s, h, m, upper, rng):
 
 
 def condition_scores(preds, u, baseline):
-    """condition -> L, dependence and H, in points of the baseline's total. ``preds``: condition -> predictions, with
+    """condition -> L, dependence and H, in % of the baseline's total MSE. ``preds``: condition -> predictions, with
     'true' first; ``baseline``: the clipped baseline per unit."""
     contexts, w = u['context'], u['weight']
     base = risk(baseline - u['truth'], contexts, w)
@@ -159,7 +159,7 @@ def score_model(meta, state, grids, sides, diagnostics):
 
 
 def paired_tables(pair_records):
-    """The excess cost per fold and seed with intervals over lines, and each line's contribution. Each record holds
+    """The added cost per fold and seed with intervals over lines, and each line's contribution. Each record holds
     (meta, state -> ``score_model``'s line risks, sides) for one change, fold and seed. The mean over the random mean
     permutations (conditions 'S1_<seed>') is 'S1_mean'."""
     rows, line_rows, groups = [], [], {}

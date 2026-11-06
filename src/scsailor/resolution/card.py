@@ -5,13 +5,13 @@ The parent is written p = b + r + d: b the anchor's base (the input bag's mean, 
 transferred response, d = p - a the model's deviation from the anchor. Three removals, each scaled by an amount chosen
 on the calibration units:
 
-    M5  the cell-line-level part P d          (amount lam: the cheapest fix)
+    M5  the context-level part P d            (amount lam: the cheapest fix)
     M7  the perturbation part (I - P) d       (amount mu: the drug shrink)
     N   the transferred response r            (amount kappa: the response shrink)
 
 The cheap alternatives are the cheapest fix, the uniform shrink toward the anchor and the whole prediction shrunk
 toward no change. An action is recommended when, in every seed, it is not the parent and its calibration total is
-below the parent's and below every cheap alternative's by more than the margin, in points of the parent's total.
+below the parent's and below every cheap alternative's by more than the margin, in % of the parent's total MSE.
 """
 import itertools
 import math
@@ -79,7 +79,7 @@ def calibration_entry(p, a, b, units):
 
 def branch(entries, action, action_calibration=None, margin=MARGIN, alternatives=ALTERNATIVES):
     """The recommendation condition, every seed: the action is not the parent, and it is below the parent and below
-    every cheap alternative that differs from it by more than the margin, in points of the parent's calibration total.
+    every cheap alternative that differs from it by more than the margin, in % of the parent's calibration total MSE.
     action_calibration: seed -> the action's calibration total where the action is not one of the entries."""
     gaps = {}
     for seed, e in entries.items():

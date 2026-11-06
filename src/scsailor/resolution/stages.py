@@ -26,7 +26,7 @@ A *case* is one model on one fold of a dataset, as a dataset's binding builds it
 Stages:
 
 - ``selection``: an action chosen once, without repair candidates, for a model with no earlier selection (official
-  State): the cell-line-level shrink when it is below the parent in every seed, else the parent;
+  State): the context-level shrink when it is below the parent in every seed, else the parent;
 - ``calibration``: every removal and cheap alternative calibrated on the calibration units, the menu's items added
   and the full-menu rule applied, the recommendation condition decided, and, where perturbation groups are declared,
   the group to be tested chosen. Nothing here reads held-out truth;
@@ -79,7 +79,7 @@ def repair_alpha(saved):
 
 def selection(case, seeds):
     """The action of a model with no earlier selection (State), chosen once before its calibration stage:
-    the earlier decision-table rule without repair candidates (``policies.diagnose``), the cell-line-level shrink when
+    the earlier decision-table rule without repair candidates (``policies.diagnose``), the context-level shrink when
     its calibration total is below the parent's in every seed, else the parent. Returns the per-seed entries and the
     action."""
     cal = case['units']['calibration']
@@ -431,7 +431,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
 
 def repair_entry(p, R, a, units, mask):
     """One seed's selection entry for a parent p and its repair R (anchor a) on the masked calibration units: the
-    diagnosis labels, every policy's amount and total, and each repair shrunk at the parent's cell-line amount."""
+    diagnosis labels, every policy's amount and total, and each repair shrunk at the parent's context-level amount."""
     entry = {'labels': policies.labels(p, R, units, mask), 'amount': {}, 'calibration': {}}
     for policy in policies.FIXED + ('protect_common',):
         entry['amount'][policy], entry['calibration'][policy] = policies.choose(policy, p, R, a, units, mask)
@@ -443,7 +443,7 @@ def repair_entry(p, R, a, units, mask):
 
 
 def parent_entry(p, a, units, mask):
-    """One seed's selection entry without a repair: the parent, the cell-line-level shrink and the uniform shrink,
+    """One seed's selection entry without a repair: the parent, the context-level shrink and the uniform shrink,
     each with its amount and calibration total."""
     entry = {'amount': {}, 'calibration': {}}
     for policy in ('parent', 'cheapest_fix', 'global_parent_shrink'):

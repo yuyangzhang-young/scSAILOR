@@ -12,8 +12,7 @@ A *case* is one model on one fold of a dataset, as a dataset's binding builds it
 - ``bags``: side (``'train'``, ``'heldout'``) -> context -> (the input bag's mean, the control pool's mean);
 - ``noise``: unit set -> each unit's cell-sampling variance of the scored target (D1), or None where not computed;
 - ``meta``: ``coincident`` (factors that coincide with identity by design, or None), ``type_variable`` and
-  ``composition`` (notes the rows and readings print), and ``target_note`` (what the headline adds when a
-  recommendation that holds on held-out lines shrinks toward a design-aware target, or None);
+  ``composition`` (notes the rows and readings print);
 - ``gene_variance``: the per-gene cell variance of the training units' scored targets (their treated cells), averaged
   over units, which spreads the cell-sampling floor over genes; or None;
 - ``static_rows``: the dataset's documented origin rows (``static``), those whose evidence is fold 1's
@@ -28,11 +27,11 @@ Stages:
 - ``selection``: an action chosen once, without repair candidates, for a model with no earlier selection (official
   State): the context-level shrink when it is below the parent in every seed, else the parent;
 - ``calibration``: every removal and cheap alternative calibrated on the calibration units, the menu's items added
-  and the full-menu rule applied, the recommendation condition decided, and, where perturbation groups are declared,
-  the group to be tested chosen. Nothing here reads held-out truth;
-- ``attribution``: the parent, the action and every removal on the held-out units; the held-out check against the cheap
-  alternatives; the contrasts M5, M7 and N by the unit-level test and their Shapley shares; the headline; one row
-  per origin; the "where", the references and the three readings of the nested parent.
+  and the full-menu rule applied, and, where perturbation groups are declared, the group to be tested chosen. Nothing
+  here reads held-out truth;
+- ``attribution``: the parent, the action and every removal on the held-out units; the held-out check against the
+  parent and the cheap alternatives; the contrasts M5, M7 and N by the unit-level test and their Shapley shares; the
+  headline; one row per origin; the "where", the references and the three readings of the nested parent.
 
 ``repair_entry`` and ``parent_entry`` are the per-seed calibration entries of the earlier selections (a model with a
 repair, such as an IL cell's; a parent-only menu), which the stages read as their saved selection.
@@ -113,7 +112,7 @@ def calibration(case, saved, seeds, side, mapping):
         action_cal[str(seed)] = old[action]
         cal_parts.append(unit_parts(p, cal))
     # the menu's added items and the full-menu rule over them and the earlier action; a published model's option
-    # (corrected by one in-house model) is chosen and branched beside it
+    # (corrected by one in-house model) is chosen beside it
     alpha = repair_alpha(saved)
     menu.add_items(entries, side)
     previous = action
@@ -121,12 +120,10 @@ def calibration(case, saved, seeds, side, mapping):
     if action != previous:
         action_cal = {s: entries[s][action]['calibration'] for s in entries}
     alternatives = card.ALTERNATIVES + (menu.PLATE_ALTERNATIVES if side['A'] is not None else ())
-    decision = card.branch(entries, action, action_cal, alternatives=alternatives)
     option_record = None
     if option is not None:
         option_record = {'action': option, 'normalized_calibration': option_normalized,
-                         'amounts': {s: entries[s][option]['amount'] for s in entries},
-                         'branch': card.branch(entries, option, {s: entries[s][option]['calibration'] for s in entries}, alternatives=alternatives)}
+                         'amounts': {s: entries[s][option]['amount'] for s in entries}}
     group = None
     if mapping is not None:
         parts = {part: np.mean([x[part] for x in cal_parts], axis=0) for part in PARTS}
@@ -141,16 +138,16 @@ def calibration(case, saved, seeds, side, mapping):
             'option': option_record,
             'action_amounts': ({s: saved['entries'][s]['amount'][action] for s in saved['entries']} if action == previous
                                else {s: entries[s][action]['amount'] for s in entries}),
-            'action_calibration': action_cal, 'entries': entries, 'branch': decision, 'perturbation_group': group,
-            'calibration_units': len(cal['truth']), 'margin_pts': card.MARGIN, 'grid_G': list(policies.G)}
+            'action_calibration': action_cal, 'entries': entries, 'perturbation_group': group,
+            'calibration_units': len(cal['truth']), 'grid_G': list(policies.G)}
 
 
 def calibration_message(record, seeds):
-    """The calibration stage's printed summary after the dataset's labels: action, amounts, recommendation, group."""
+    """The calibration stage's printed summary after the dataset's labels: action, amounts, group."""
     entries, group = record['entries'], record['perturbation_group']
     return (f"action {record['current_action']}; amounts "
             + ', '.join(f"{k} {[entries[str(s)][k]['amount'] for s in seeds]}" for k in ('cheapest_fix', 'drug_shrink', 'response_shrink', 'nochange_shrink', 'global_parent_shrink'))
-            + f"; recommendation {record['branch']['recommendation']}; perturbation group {group['chosen'] if group else 'none declared'}")
+            + f"; perturbation group {group['chosen'] if group else 'none declared'}")
 
 
 def action_prediction(case, saved, seed, p, a, units):
@@ -234,8 +231,6 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
         if side['A'] is not None:   # the added cheap alternatives with a plate-aware target, at their calibrated amounts
             for ref in menu.PLATE_ALTERNATIVES:
                 preds.setdefault(ref, []).append(menu.predict(ref, saved['entries'][str(seed)][ref]['amount'], seed, side))
-        if option:
-            preds.setdefault('option', []).append(menu.predict(option['action'], option['amounts'][str(seed)], seed, side))
         preds['anchor'].append(a)
         preds['nochange'].append(b)
         preds['uniform'].append(rem['uniform'])
@@ -254,12 +249,6 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
     for ref, key in references:
         if ref != saved['current_action']:
             verification[ref] = comparison.detect(R['action'], R[key])
-    recommended = saved['branch']['recommendation']
-    verified = recommended and all(v['seed_rule'] == 'holds' for v in verification.values())
-    option_verification = None
-    if option:   # the published model corrected by one in-house model: the same references, and the model's own action
-        option_verification = {ref: comparison.detect(R['option'], R[key]) for ref, key in references + (('action', 'action'),)
-                               if ref != option['action']}
 
     # contrasts, sharing and the headline
     detections = {r: comparison.detect(R[r], R['parent']) for r in card.PLAYERS}
@@ -284,16 +273,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
                              'joint minus best (pts of the parent total)': seeds_mean(lambda i, key=key, best=best: 100 * (
                                  scores(joint[i], held)[key] - scores(preds[best][i], held)[key]) / scales[i])}
     n = detections['N']
-    line0 = (f"Repair recommendation verified: {saved['current_action']}, below the parent and every cheap alternative in every seed"
-             if verified else ('Recommendation not confirmed on the outer units' if recommended else 'No recommendation: attribution card'))
-    if verified and side['A'] is not None and saved['current_action'] in menu.MENU:
-        line0 += case['meta']['target_note']
-    line4 = None
-    if option:
-        option_ok = option['branch']['recommendation'] and all(v['seed_rule'] == 'holds' for k, v in option_verification.items() if k != 'action')
-        line4 = (f"Option for a published model: {option['action']}, {'verified' if option_ok else 'not verified'}; "
-                 f"{option_verification['parent']['total_pts']:+.2f} pts against the parent, "
-                 f"{option_verification['action']['total_pts']:+.2f} against the card's action")
+    line0 = f"Action chosen on calibration lines: {saved['current_action']}"
     line1 = card.line_one({k: detections[k] for k in ('M5', 'M7')}, separation)
     line2 = (f"parent {1e3 * parent_part['total']:.3f}e-3; Shapley shares ({'case-level, all three' if case_level else 'detected only'}): "
              + ', '.join(f"{q} {shares['total'].get(q, 0.):+.2f}" for q in card.PLAYERS)
@@ -421,9 +401,7 @@ def attribution_stage(case, saved, seeds, side, evidence, genes, mapping):
                          **{f'{part}_{k}': v for part, d in align[i].items() for k, v in d.items()}, 'composition': composition(held)})
 
     headline = [{'line': 0, 'text': line0}, {'line': 1, 'text': line1}, {'line': 2, 'text': line2}, {'line': 3, 'text': line3}]
-    if line4:
-        headline.append({'line': 4, 'text': line4})
-    record = {'verification': verification, 'option': {'record': option, 'verification': option_verification} if option else None,
+    record = {'verification': verification, 'option': {'record': option} if option else None,
               'detections': detections, 'separation': separation, 'shares_pts': shares,
               'players': players, 'line2_per_part': line2_parts, 'headline': [h['text'] for h in headline]}
     return {'CARD': headline, 'ROWS': ev['rows'], 'WHERE': where_rows, 'REFERENCES': ref_rows, 'READINGS': readings}, record
@@ -451,15 +429,8 @@ def parent_entry(p, a, units, mask):
     return entry
 
 
-def parent_selection(entries, seeds, actions):
-    """The current rule over the parent-only menu ``actions`` (ordinary validation), and the recommendation branch:
-    the action is not the parent and is below the parent and the uniform shrink in every seed."""
+def parent_selection(entries, actions):
+    """The rule over the parent-only menu ``actions`` (``policies.select``): its record, and the action ordinary
+    validation chooses."""
     choice = policies.select(entries, actions)
-    action = choice['ordinary_validation']
-    value = lambda t: [entries[str(s)]['calibration'][t] for s in seeds]
-    below = lambda x, y: all(u < v for u, v in zip(value(x), value(y)))
-    branch = {'action_is_parent': action == 'parent', 'below_parent_every_seed': below(action, 'parent'),
-              'below_uniform_shrink_every_seed': below(action, 'global_parent_shrink')}
-    branch['recommendation'] = not branch['action_is_parent'] and branch['below_parent_every_seed'] \
-        and branch['below_uniform_shrink_every_seed']
-    return choice, action, branch
+    return choice, choice['ordinary_validation']

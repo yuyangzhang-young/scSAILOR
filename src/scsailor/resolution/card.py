@@ -1,5 +1,5 @@
-"""Attribution's model contrasts: the parent decomposed into removable parts, their calibrated amounts, the
-recommendation condition, Shapley shares and the alignment of a correction.
+"""Attribution's model contrasts: the parent decomposed into removable parts, their calibrated amounts, Shapley
+shares and the alignment of a correction.
 
 The parent is written p = b + r + d: b the anchor's base (the input bag's mean, "no change"), r = a - b the anchor's
 transferred response, d = p - a the model's deviation from the anchor. Three removals, each scaled by an amount chosen
@@ -10,20 +10,18 @@ on the calibration units:
     N   the transferred response r            (amount kappa: the response shrink)
 
 The cheap alternatives are the cheapest fix, the uniform shrink toward the anchor and the whole prediction shrunk
-toward no change. An action is recommended when, in every seed, it is not the parent and its calibration total is
-below the parent's and below every cheap alternative's by more than the margin, in % of the parent's total MSE.
+toward no change.
 """
 import itertools
 import math
 
 import numpy as np
 
-from .comparison import MARGIN
 from .policies import G, lowest, predict
 from .scoring import line_parts, project, risk, scores
 
 __all__ = ["PLAYERS", "ALTERNATIVES", "compose", "drug_shrink", "nochange_shrink", "removals", "calibrate",
-           "calibration_entry", "branch", "runs", "shapley", "line_one", "alignment"]
+           "calibration_entry", "runs", "shapley", "line_one", "alignment"]
 
 PLAYERS = ('M5', 'M7', 'N')
 ALTERNATIVES = ('cheapest_fix', 'global_parent_shrink', 'nochange_shrink')
@@ -75,19 +73,6 @@ def calibration_entry(p, a, b, units):
     out['response_shrink'] = calibrate(lambda x: compose(p, a, b, units, kappa=x), units)
     out['nochange_shrink'] = calibrate(lambda x: nochange_shrink(p, b, x), units)
     return {k: {'amount': v[0], 'calibration': v[1]} for k, v in out.items()}
-
-
-def branch(entries, action, action_calibration=None, margin=MARGIN, alternatives=ALTERNATIVES):
-    """The recommendation condition, every seed: the action is not the parent, and it is below the parent and below
-    every cheap alternative that differs from it by more than the margin, in % of the parent's calibration total MSE.
-    action_calibration: seed -> the action's calibration total where the action is not one of the entries."""
-    gaps = {}
-    for seed, e in entries.items():
-        base = e['parent']['calibration']
-        mine = e[action]['calibration'] if action in e else action_calibration[seed]
-        gaps[seed] = {ref: 100 * (e[ref]['calibration'] - mine) / base for ref in ('parent',) + tuple(alternatives) if ref != action}
-    holds = action != 'parent' and all(g > margin for seed in gaps.values() for g in seed.values())
-    return {'recommendation': bool(holds), 'gaps_pts': gaps}
 
 
 def runs(preds, units, scales):

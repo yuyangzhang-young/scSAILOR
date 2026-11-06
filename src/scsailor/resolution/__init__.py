@@ -72,7 +72,6 @@ comparisons 'standard', 'calibrated', 'design-aware'            the standard ref
                                                                 original model's total MSE on calibration lines
 ``planted``, ``READ_BACK.csv``                                  planted changes, the known-answer test
 ``*_standing_matched``                                          the design-aware comparison; standing: recommended
-``card.branch``'s ``recommendation``                            recommend or refuse, for a model's action
 ledger (``LEDGER.csv``)                                         the accounting, in both orders
 ``price``                                                       not in the paper: cost at full strength per unit the
                                                                 best size returns
@@ -93,7 +92,7 @@ saved ``official_state``                                        State
 card, ``cards``, ``CARD_*``, ``CARDS_*``                        the readings of one model, or of one change, on a fold
 Q1-Q4 in the ``CARDS_V2`` columns                               recovery and cost (Q1, Q2), attribution (Q3), the
                                                                 comparisons beside continued training (Q4)
-'verified', 'not confirmed', ``verification`` in saved strings  the held-out check: the seed rule on held-out
+``verification``                                                the held-out check: the seed rule on held-out
                                                                 differences, a reading and not a test of a choice
 ==============================================================  ==================================================
 """

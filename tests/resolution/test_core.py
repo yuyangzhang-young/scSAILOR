@@ -75,17 +75,6 @@ class Calibration(unittest.TestCase):
         self.assertTrue(np.allclose(scoring.project(zero - a, u["context"], u["weight"]), 0))
         self.assertTrue(np.allclose(menu.two_part(a, p, 1., 1., u), p))
 
-    def test_recommendation_needs_a_margin_over_every_alternative_in_every_seed(self):
-        entry = lambda action: {"parent": {"calibration": 1.}, "cheapest_fix": {"calibration": .99},
-                                "global_parent_shrink": {"calibration": .995}, "nochange_shrink": {"calibration": 1.2},
-                                "two_part_parent": {"calibration": action}}
-        self.assertTrue(card.branch({"1": entry(.98), "2": entry(.97)}, "two_part_parent")["recommendation"])
-        self.assertFalse(card.branch({"1": entry(.98), "2": entry(.989)}, "two_part_parent")["recommendation"])
-        self.assertFalse(card.branch({"1": entry(.98)}, "parent")["recommendation"])
-        gaps = card.branch({"1": entry(.98)}, "two_part_parent")["gaps_pts"]["1"]
-        at_the_margin = min(gaps.values())   # a gap equal to the margin does not count
-        self.assertFalse(card.branch({"1": entry(.98)}, "two_part_parent", margin=at_the_margin)["recommendation"])
-
 
 class Attribution(unittest.TestCase):
     def test_shapley_shares_add_up_to_the_joint_removal(self):

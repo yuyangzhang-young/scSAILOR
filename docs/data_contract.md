@@ -22,7 +22,7 @@ Read by `scsailor.assay.Instance`.
 | `parameters` | `alpha`, `I_mean`, `T_mean` (`scsailor.assay.generator.Parameters`) |
 | `train_contexts` | training contexts, in generator order |
 | `F1_contexts` | held-out contexts (the held-out side is called `F1` in every fold) |
-| `evaluation` | `{"F1": [...], "seen": [...]}`, entries with `context`, `q` (index in the side's list) and `root` (seed root) |
+| `evaluation` | `{"F1": [...], "seen": [...]}`, entries with `context`, `q` (its index in `F1_contexts` or `train_contexts`), `root` (seed root), `pool_path` (its group in `input_pools.h5`) and `bag_key` (`[root, q, 999]`, the key of its fixed bag) |
 
 **`generator.npz`**: `r_gen` (P × 2000 response field), `pi` (P training weights), `directions` (at most 5 × 2000), `code` (P perturbation codes), `beta` (25), `c_train`, `intercept` (float32), `p_ids` (P perturbation names) and `context_keys` (equal to `train_contexts`).
 

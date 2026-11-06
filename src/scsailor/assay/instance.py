@@ -8,8 +8,8 @@ states and known answers on the evaluation bags).
 
 The evaluation support has two sides: ``HELDOUT`` (the held-out backgrounds; saved as "F1" in every
 fold of every dataset) and ``SEEN`` (training backgrounds). In ``INSTANCE.json`` an evaluation entry's
-``q`` is the background's index in its side's list (``context_index`` in code) and ``root`` starts the
-keys of its base states and replay draws.
+``q`` is the background's index in ``F1_contexts`` or ``train_contexts`` (``context_index`` in code) and ``root``
+starts the keys of its base states and replay draws.
 """
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ __all__ = ["Instance", "EvaluationBag", "HELDOUT", "SEEN"]
 class EvaluationBag:
     """One evaluation background's fixed bag and its base states."""
     context: str
-    context_index: int    # the background's index in its side's list (saved key "q")
+    context_index: int    # the background's index in F1_contexts or train_contexts (saved key "q")
     root: int             # first entry of the keys of its base states and replay draws
     x: np.ndarray         # 256 x genes
     depth: np.ndarray     # 256

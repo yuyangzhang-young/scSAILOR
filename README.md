@@ -16,6 +16,7 @@ Models that predict how cells respond to a perturbation usually receive a set of
 | `src/scsailor/assay/` | The synthetic-answer assay | Apache-2.0 |
 | `src/scsailor/localization/` | Information localization | Apache-2.0 |
 | `src/scsailor/resolution/` | Origin resolution | Apache-2.0 |
+| `examples/` | A small run of the three components on a CPU, with stand-ins to replace by your own data and model | Apache-2.0 |
 | `tests/` | Tests that need no study data | Apache-2.0 |
 | `docs/data_contract.md` | The files a dataset must provide | Apache-2.0 |
 | `reproduce/published_models/` | Training, prediction and scoring of the published models State, CPA and PrePR-CT on both tasks | Apache-2.0 |
@@ -37,6 +38,14 @@ pip install -e ".[torch,test]"
 
 ```bash
 pytest
+```
+
+## Quick start on your own data and model
+
+[`examples/quickstart.py`](examples/quickstart.py) runs the synthetic-answer assay, information localization and origin resolution on a small screen and a small network in a few minutes on a CPU. Random arrays stand in for the data, so it runs as it is; [`examples/README.md`](examples/README.md) says what to replace with your own data, what the package calls on your model, and how a full run differs.
+
+```bash
+python examples/quickstart.py --out quickstart-run
 ```
 
 ## The information ladder
@@ -118,7 +127,7 @@ The published models of the paper (State, CPA and PrePR-CT) were adapted from th
 
 ## Licence
 
-The code written for scSAILOR (`src/`, `tests/`, `docs/`, `reproduce/`) is released under the [Apache License 2.0](LICENSE). The files under `third_party/` are **not** covered by it: they keep their upstream licences, which include the non-commercial terms of State's licences (CC BY-NC-SA 4.0 and the Arc Research Institute State Model Non-Commercial License) and GPL v3.0 for PrePR-CT. See [`third_party/README.md`](third_party/README.md).
+The code written for scSAILOR (`src/`, `examples/`, `tests/`, `docs/`, `reproduce/`) is released under the [Apache License 2.0](LICENSE). The files under `third_party/` are **not** covered by it: they keep their upstream licences, which include the non-commercial terms of State's licences (CC BY-NC-SA 4.0 and the Arc Research Institute State Model Non-Commercial License) and GPL v3.0 for PrePR-CT. See [`third_party/README.md`](third_party/README.md).
 
 ## Citation
 

@@ -6,14 +6,13 @@
 ``leakage_ratio``      a null bit's predicted contrast energy A over the mean true energy E of the same
                        statistic's two main bits;
 ``null_leakage_table`` that ratio per seed;
-``judge``              Q against an attainable reference: the relative recovery Q / reference, and
-                       descriptive labels whose thresholds were fixed before the scores were seen, kept
-                       as an extra column;
+``judge``              Q against an attainable reference: the relative recovery Q / reference, and a
+                       descriptive label (``label``), kept as an extra column;
 ``summarize``          per model and support, how many visible cells reached the reference or show a
                        model problem under those labels.
 
-The continuous read-outs are Q (``recovery`` in code), the reference and their ratio. The labels use
-thresholds fixed before the scores were seen and are not part of the reading. Rows keep the saved
+The continuous read-outs are Q (``recovery`` in code), the reference and their ratio. The labels use the
+``LABEL_*`` thresholds and are not part of the reading. Rows keep the saved
 column names (``design.BIT``, ``STATISTIC``, ``ROLE``; ``REFERENCE_COLUMN``).
 """
 from __future__ import annotations
@@ -29,11 +28,11 @@ MAIN = ("main_common", "main_conditional")
 # Saved column of the attainable reference's Q: the second of two attainable references, a ridge reader on
 # the bag mean (level L1, Mean) with eight principal components.
 REFERENCE_COLUMN = "R2_Q"
-# Label thresholds, fixed before the scores were seen: reference >= .8 makes a cell judgeable.
-FROZEN_JUDGEABLE, FROZEN_PROBLEM_Q, FROZEN_REACHED_SHARE, FROZEN_TASK_LIMITED = .8, .2, .8, .5
+# Label thresholds: an attainable reference of at least .8 makes a cell judgeable.
+LABEL_JUDGEABLE, LABEL_PROBLEM_Q, LABEL_REACHED_SHARE, LABEL_TASK_LIMITED = .8, .2, .8, .5
 RATIO_MIN_REFERENCE = .5  # the relative recovery is shown only where the reference reaches .5
 
-__all__ = ["seed_rows", "pool_seeds", "leakage_ratio", "null_leakage_table", "frozen_label", "judge", "summarize"]
+__all__ = ["seed_rows", "pool_seeds", "leakage_ratio", "null_leakage_table", "label", "judge", "summarize"]
 
 
 def seed_rows(scores, models, seeds, levels=LEVELS):
@@ -131,7 +130,7 @@ def null_leakage_table(rows):
     return out
 
 
-def frozen_label(bit, level, status, recovery, reference):
+def label(bit, level, status, recovery, reference):
     """The descriptive label of one pooled cell (an extra column; not a reading of its own)."""
     if bit % 5 == 4:
         return "null_na"
@@ -139,11 +138,11 @@ def frozen_label(bit, level, status, recovery, reference):
         return "missing"
     if not visible(bit, level):
         return "invisible"
-    if reference >= FROZEN_JUDGEABLE and recovery < FROZEN_PROBLEM_Q:
+    if reference >= LABEL_JUDGEABLE and recovery < LABEL_PROBLEM_Q:
         return "model_problem"
-    if reference >= FROZEN_JUDGEABLE and recovery >= FROZEN_REACHED_SHARE * reference:
+    if reference >= LABEL_JUDGEABLE and recovery >= LABEL_REACHED_SHARE * reference:
         return "reached_reference"
-    if reference < FROZEN_TASK_LIMITED:
+    if reference < LABEL_TASK_LIMITED:
         return "task_limited_reference"
     return "unclassified"
 
@@ -160,7 +159,7 @@ def judge(pooled, references):
             raise ValueError(f"No attainable reference for bit {bit} on {row['support']}")
         shown = status == "ok" and visible(bit, row["level"]) and reference_Q >= RATIO_MIN_REFERENCE
         judged.append(row | {REFERENCE_COLUMN: reference_Q, "ratio": recovery / reference_Q if shown else None,
-                             "classification": frozen_label(bit, row["level"], status, recovery, reference_Q)})
+                             "classification": label(bit, row["level"], status, recovery, reference_Q)})
     return judged
 
 

@@ -1,0 +1,33 @@
+sheet	source	build	dropped	renamed	relabelled
+per_change	DL/source-tables/SUPP_TABLE_24_PER_CHANGE.csv				
+restored_by_fold	ST/SUPP_TABLE_24B_RESTORED_BY_FOLD.csv				
+calibration_per_change	ST/SUPP_TABLE_25B_PER_CHANGE.csv		Margin, extra seed toward the baseline; Margin, extra seed toward the design-aware baseline; Held-out margin, extra seed	Extra seed term => Second training run term	
+recommendation	FM6/RECOMMEND_RULE_BY_CHANGE.csv		recommended_margin_0_2_no_control		
+known_answer_margins	FM6/KNOWN_ANSWER_NULLS_BY_MARGIN.csv				
+original_calibration	FM5/FIG5_PREDICTORS_BY_MODEL_AND_FOLD.csv				
+net_cost_accounting	NCL/LEDGER.csv				
+recovery_at_kept_fraction	NCL/RECOVERY_SUMMARY.csv				
+weight_decay_comparison	JA/WEIGHT_DECAY_READING.csv				
+uniform_vs_two_part	JA/UNIFORM_VS_TWO_PART.csv				
+control_mean_swaps	SSH/ADDED_COST_FRACTIONS.csv				
+built_mean_dependence	DL/source-tables/SWAP_SUMMARY.csv				
+attention_mean_dependence	SSH/ATTENTION_EXTENDED_SCORE_MEANS.csv				
+state_f23_mean_swaps	SF23/STATE_PAIRED.csv				
+planted_change_readback	CPU/known-answer/READ_BACK.csv		recommended_set1_m0; recommended_set1_m0.2; recommended_set1_m0.5; recommended_set2_m0; recommended_set2_m0.2; recommended_set2_m0.5; recommended_set3_m0; recommended_set3_m0.2; recommended_set3_m0.5; min_gap_set3		
+baseline_methods	DL/source-tables/BASELINES_SIDE_BY_SIDE.csv		or_result; or_action; action_margin_calibration_pts; action_margin_heldout_pts		row: extra seed at full strength (average with the next seed) => average of two training runs before calibration
+fraction_accuracy	RRF/PRIMARY.csv				
+fraction_tolerance	RRF/TOLERANCE_CURVE.csv				
+hindsight_change_returns	NCL/CARDS.csv		recommended_set1_m0; recommended_set1_m0.2; recommended_set1_m0.5; recommended_set2_m0; recommended_set2_m0.2; recommended_set2_m0.5; recommended_set3_m0; recommended_set3_m0.2; recommended_set3_m0.5; min_gap_set3; tightest_set3; held_min_gap_set3		
+other_metrics	CPU/all-screens/BY_CHANGE.csv		seed_gain; change_minus_seed		
+continued_training	CX/il-cells/PER_SEED_F*.csv	d[['fold', 'model', 'seed', 'continuation_total_pts', 'continuation_common_pts', 'continuation_differential_pts', 'continuation_training_total_pts', 'continuation_training_common_pts', 'continuation_training_differential_pts']].drop_duplicates(['fold', 'model', 'seed'])			model: state => attention
+built_mean_dependence_by_seed	SW6/SWAP_SCORES.csv				
+correction_alignment	AP/READINGS_tahoe_*.csv;DL/cards-*-folds-2-3/nested/READINGS_tahoe_*.csv	d.assign(fold=d.file.str.extract(r'_(F\d)_')[0], model=d.file.str.extract(r'_F\d_(\w+)\.csv')[0]).sort_values(['fold', 'model'], kind='stable')[['fold', 'model', 'seed', 'reading', 'units', 'total', 'common', 'differential', 'common_size_over_anchor_error', 'common_cosine', 'common_best_scale', 'differential_size_over_anchor_error', 'differential_cosine', 'differential_best_scale']]			reading: fit => nested model, fit lines; reading: calibration => nested model, calibration lines; reading: outer => nested model, held-out lines; reading: full parent, outer => full model, held-out lines
+increment_energy	SSH/ERROR_GEOMETRY_FOLDS.csv				
+training_coverage	RA/COVERAGE.csv				set: E4 L1 => line scan; set: E4 L3 => line scan; set: natural L1 => natural fits; set: natural L2 => natural fits; set: natural L3 => natural fits; set: OR parent L2 (nested, OR line order) => nested model; set: OR parent L2 (full) => full model
+target_reproducibility	RA/RIDGE_COMMON_F*.json	pd.DataFrame([x['components'] for x in d])		ceiling_line_reproducible_only => reference_line_reproducible_only; ceiling_plate_blind (shared global + line) => reference_plate_blind; ceiling_plate_aware (plate-level + line) => reference_plate_aware	
+ridge_readers	RA/RIDGE_COMMON_F*.json	pd.DataFrame([r for x in d for r in x['readers']])			
+jiang_split_half	JSH/JIANG_SPLIT_HALF_POOLED.csv			ceiling => reference_alignment	
+jiang_correction_alignment	GD/jiang/F*/OFFSET_READINGS.csv	d.assign(fold=d.file.str.extract(r'(F\d)/')[0], cosine=d.alignment / np.sqrt(d.p_size * d.e_size))[['fold', 'name', 'model', 'seed', 'level', 'step', 'side', 'p_size', 'e_size', 'alignment', 'cosine', 'best_scale', 'common_error']]			
+control_use_by_length	CU/CONTROL_USE_SEED_MEANS.csv;CUS/CONTROL_USE_SEED_MEANS.csv				
+recovery_by_length	TA/TIME_AXIS.csv			Q0 => Q_shared_shift; Q1 => Q_selective_shift; Q5 => Q_shared_spread; Q6 => Q_selective_spread	model: state => attention
+change_benefit	FM6/FIG6_C_CHANGE_BENEFIT.csv		refused		

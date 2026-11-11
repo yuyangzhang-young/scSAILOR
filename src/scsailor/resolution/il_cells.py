@@ -117,7 +117,8 @@ def diagnosis(per_seed):
 
 def protocol(model, record, continued, paired):
     """The cell's and the comparator's protocols, from the first seed's run record on every training line."""
-    cell = (f"cell: IL's map recipe behind the cut ({RECIPE.get(model, DEFAULT_RECIPE)}), {record['updates']:,} updates at "
+    cell = (f"cell: information localization's map recipe behind the cut ({RECIPE.get(model, DEFAULT_RECIPE)}), "
+            f"{record['updates']:,} updates at "
             f"x{float(record['row']['rate_multiple']):g} the parent's rate (peak {record.get('peak_lr')}), trained "
             f"{', '.join(record.get('trained_prefixes') or ['not recorded'])}, read out "
             + ('as the final-quarter weight mean' if model in AVERAGED else 'at the last update'))
@@ -208,7 +209,8 @@ def score(fold, model, cell, record, held, train, seed_inputs, seeds, saved, mis
                                                  + ('' if agree is None else ' | cost reading ' + ('agrees' if agree else 'differs')),
             **{name: text(compare(parts[x], parts[y]), below(parts[x], parts[y])) if x in parts and y in parts
                else unavailable(x, y) for name, (x, y) in PAIRS.items() if not name.startswith('Q2')},
-            'Q4 another site at the same dose': 'not available: IL runs only the carried cells in setting 3',
+            'Q4 another site at the same dose': 'not available: information localization runs only the restoring changes in '
+                                                'setting 3',
             'lambda_by_seed': ' / '.join(f'{x["lambda"]:g}' for x in mine) if saved else f'not available: {missing}',
             'current_action': action or f'not available: {missing}'}
     if 'longer' in parts:

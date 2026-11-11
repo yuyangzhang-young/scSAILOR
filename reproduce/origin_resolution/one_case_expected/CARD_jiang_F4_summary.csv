@@ -1,0 +1,5 @@
+line,text
+0,Action chosen on calibration lines: two_part_parent
+1,"Case-level only (5 outer units): M5: 15 of 15 unit-seeds lower, total -37.82 pts; M7: 15 of 15 unit-seeds lower, total -7.26 pts"
+2,"parent 3.254e-3; Shapley shares (case-level, all three): M5 -36.95, M7 -7.37, N -1.56 pts; joint removal at calibrated amounts (M5, M7, N) 1.761e-3; against the lower reference of each part, in points of the parent total: total -1.40 (anchor), common -0.19 (anchor), drug difference -1.21 (anchor); transferred response N -2.30 pts (case-level; candidates T7, T1, D6, not separated)"
+3,D1 reference; D2 not computed; D4 reported; D7 not computed; T1 cannot be tested; T7 not documented

@@ -1,0 +1,109 @@
+folder	contents
+attention-model-folds-2-3	The attention model on Tahoe-100M folds 2 and 3: the restoring changes and continued training
+attention-model-folds-2-3/continued-training	Continued training of the attention model, folds 2 and 3
+attention-model-jiang	The attention model with each restoring change and with continued training on Jiang et al. folds 4-5
+attention-model-other-screens	The attention model with each restoring change and with continued training on GSE306429, Parse PBMC and Replogle-Nadig: start and end predictions and run records
+built-models-other-screens	The built models with each restoring change and with continued training on GSE306429 and Parse PBMC
+cards-attention-model-folds-2-3	Origin resolution's cards of the attention model on Tahoe-100M folds 2 and 3
+cards-genetic-screens	Origin resolution's cards on Replogle-Nadig and Jiang et al.: calibration, attribution, the restoring changes, parent-only selections
+cards-genetic-screens/jiang	The cards of Jiang et al. folds 4-5
+cards-genetic-screens/replogle-nadig-fold-2	The cards of Replogle-Nadig fold 2
+cards-state-folds-2-3	Origin resolution's cards of State on Tahoe-100M folds 2 and 3
+common-share	Each model's held-out error split into its common and contrast parts (COMMON_SHARE.csv)
+continued-training-readings	Continued training beside each restoring change on Tahoe-100M, and the readings of the restoring changes
+continued-training-runs	The continued-training runs on Tahoe-100M folds 1-3: start and end predictions and records
+control-use-by-training-length	Control use by training length on Tahoe-100M fold 1: the built models' fixed-weight predictions with own, pooled and training-average controls (40,000-160,000 updates), and the tables for the built models and State
+cost-readings-attention-model	Cost and alignment readings of the attention model's changes on GSE306429, Parse PBMC and Replogle-Nadig
+cost-readings-attention-model-jiang	Cost and alignment readings of the attention model's changes on Jiang et al.
+cost-readings-built-models	Cost and alignment readings of the built models' changes on GSE306429 and Parse PBMC
+cost-readings-state	Cost and alignment readings of State's changes on the screens other than Tahoe-100M
+figure-tables	The tables behind Figs. 5 and 6
+genetic-screens-predictions	The built models' natural-task predictions and the held-out truth and unit reliability on Replogle-Nadig and Jiang et al.
+genetic-screens-runs	The built models on Replogle-Nadig folds 1-2 and Jiang et al. folds 4-5: nested parents, the restoring changes and continued training (predictions and run records), with the fold data
+genetic-truth-statistics	Per-gene statistics of the genetic screens' held-out truth, for the weighted R2 metrics
+gse306429-control-membership	GSE306429's control membership table
+information-localization	Information localization's tables: recovery along training, State's correction amounts, the statistic-swap scores
+information-localization-attention-model	Information localization of the attention model on Tahoe-100M fold 1: the natural runs of the restoring changes and the map evaluations
+information-localization-folds-2-3	Information localization of the attention model and State on Tahoe-100M folds 2 and 3: the map runs' evaluations, records and map tables
+information-localization-light	The light information localization on GSE306429, Parse PBMC, Replogle-Nadig and Jiang et al.: map run evaluations and records
+information-localization-maps-fold-1	Information localization maps of the summary-statistics and DeepSets models on Tahoe-100M fold 1
+information-localization-maps-fold-2	Information localization maps of the summary-statistics and DeepSets models on Tahoe-100M fold 2
+information-localization-maps-fold-3	Information localization maps of the summary-statistics and DeepSets models on Tahoe-100M fold 3
+information-localization-published-models	Information localization map tables of CPA and PrePR-CT on Tahoe-100M fold 1
+information-localization-replogle-nadig	Information localization on Replogle-Nadig folds 1-2: map tables and evaluations, the runs of the restoring changes, the fold data
+information-localization-runs-fold-1	The natural runs of the summary-statistics and DeepSets models' restoring changes, Tahoe-100M fold 1: start and end predictions and records
+information-localization-runs-fold-2	The same on Tahoe-100M fold 2
+information-localization-runs-fold-3	The same on Tahoe-100M fold 3
+information-localization-state	Information localization of State on Tahoe-100M fold 1: the natural runs of the restoring changes and the map evaluations
+information-localization/recovery-by-training-length	Recovery of planted responses along training (TIME_AXIS.csv)
+information-localization/state-correction-amounts	State's correction amounts on the natural task
+information-localization/statistic-swap	The statistic-swap scores of the changes
+jiang-correction-alignment	Jiang et al.'s context-level correction readings per fit and fold (OFFSET_READINGS.csv)
+jiang-inputs	Jiang et al.'s model inputs and training arrays, folds 4-5
+jiang-split-half-reference	Split-half reproducibility of Jiang et al.'s held-out context-level target (JIANG_SPLIT_HALF_POOLED.csv)
+layer-fractions	Calibrated fractions per prediction layer against the held-out best fraction: readings, primary table, tolerance curve, use
+light-version-cases	The light version's cases and menus on the screens other than Tahoe-100M
+light-version-cases/cases-extended-menu	The light cases with the extended menu (CASES.csv)
+metric-and-known-answer-readings	Readings on metrics other than squared error on every screen, and the known-answer read-back
+metric-readings-tahoe-100m	Readings on metrics other than squared error, Tahoe-100M
+nested-parents-gse306429-replogle-nadig	Nested parents of GSE306429 and Replogle-Nadig fold 1: predictions, run records, fold data, held-out truth, the parent-only selections and the cards
+nested-parents-gse306429-replogle-nadig/cards	Origin resolution's cards of the nested parents
+nested-parents-gse306429-replogle-nadig/selections	The parent-only selections
+net-cost	The matched comparisons: amounts, cards, gates, ledger, recovery at the kept fraction, design baseline
+origin-resolution	Origin resolution: the Tahoe-100M cards with their references and checks, the selections and the restoring changes; Parse PBMC's repairs and donor orders; the nested and continued-training runs
+origin-resolution/cards	The cards of every model and fold, and the references they read
+origin-resolution/checks	Fold 1's floors (FLOORS.csv)
+origin-resolution/continued-training-folds-2-3	Continued training of the built models, folds 2 and 3
+origin-resolution/parse-pbmc-donor-orders	Parse PBMC's donor orders, groups G1-G3
+origin-resolution/restoring-changes	Information localization's selections of the restoring changes
+origin-resolution/selections	The selections of the restoring changes, per fold
+parse-pbmc-held-out-truth	Parse PBMC's held-out truth, groups G1-G3
+parse-pbmc-inputs	Parse PBMC's model inputs, groups G1-G3
+parse-pbmc-primary-donor-recovery	Recovery on Parse PBMC's evaluated donors, all twelve
+replogle-nadig-inputs	Replogle-Nadig's input libraries, folds 1-2 (held-out line, training lines, evaluation sets)
+replogle-nadig-unit-reliability	Which Replogle-Nadig held-out units carry reproducible signal (UNIT_RELIABILITY.csv)
+second-run-plain-baseline	The second training run calibrated toward the plain baseline, and the gate points without the plate
+source-tables	Seven tables the paper reads: swap summary, own-mean value, run readings, Supplementary Table 24, baselines, rank correlation, Parse PBMC's menu
+state-control-use-by-training-length	State's fixed-weight predictions with own, pooled and training-average controls at 5,000-80,000 updates, Tahoe-100M fold 1
+state-folds-2-3	State on Tahoe-100M folds 2 and 3: nested and full chains, the restoring changes and continued training
+state-nested-chains	State on Tahoe-100M fold 1: the nested and full chains, continued training and training longer (predictions on origin resolution's grid)
+state-other-screens	State with each restoring change and with continued training on GSE306429, Parse PBMC, Replogle-Nadig and Jiang et al.
+state-predictions-fold-1	State's predictions on Tahoe-100M fold 1 at 5,000 updates, read by the statistic-swap tables
+state-statistic-swap	State's fixed-weight statistic-swap predictions on Tahoe-100M fold 1
+state-statistic-swap-folds-2-3	State's fixed-weight statistic-swap predictions on Tahoe-100M folds 2 and 3
+state-statistic-swap-readings-folds-2-3	State's statistic-swap scores, Tahoe-100M folds 2 and 3
+statistic-swap	The built models' fixed-weight statistic-swap predictions, original and changed, Tahoe-100M folds 1-3
+statistic-swap-shams	Sham and probe predictions of the statistic swap (original and changed models) and its tables
+supplementary-tables	Supplementary Tables 24b and 25b
+tahoe-100m	Tahoe-100M's cell-line metadata, unchanged (CC0)
+tahoe-100m-deepsets-fold-1	DeepSets predictions on Tahoe-100M fold 1 at 40,000 updates
+tahoe-100m-evaluation-units-fold-1	The held-out evaluation units of Tahoe-100M fold 1
+tahoe-100m-evaluation-units-folds-2-3	The held-out evaluation units of Tahoe-100M folds 2 and 3
+tahoe-100m-inputs-fold-1	Model inputs of Tahoe-100M fold 1: input library, evaluation inputs, training constants
+tahoe-100m-inputs-folds-2-3	Model inputs of Tahoe-100M folds 2 and 3: input library, evaluation inputs, controls, training targets and constants
+tahoe-100m-line-subsets	The fit and calibration line subsets of the Tahoe-100M folds
+tahoe-100m-line-subsets/folds-2-3	The line subsets of folds 2 and 3
+tahoe-100m-noise-floor	Per-unit noise and per-gene variance of Tahoe-100M fold 1's measured responses
+tahoe-100m-predictions-fold-1	The built models' and the attention model's predictions on Tahoe-100M fold 1 at 40,000 updates
+training-arrays-parse-pbmc-tahoe-100m	Training targets of Parse PBMC's held-out groups G1-G3 and Tahoe-100M fold 1's training controls and targets, as the models were trained on them
+training-coverage	Training coverage and the ridge readers of the held-out target, Tahoe-100M
+training-coverage-runs	Summary-statistics model runs trained on 7, 14 or 21 lines of Tahoe-100M fold 1: held-out predictions, for the training-coverage reading
+training-coverage-runs/runs/summary_train14_31002_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train14_31002_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train14_31003_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train14_31003_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train14_31004_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train14_31004_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train21_31002_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train21_31002_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train21_31003_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train21_31003_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train21_31004_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train21_31004_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train7_31002_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train7_31002_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train7_31003_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train7_31003_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train7_31004_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+training-coverage-runs/runs/summary_train7_31004_L3_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)
+weight-decay-and-uniform-shrink	Weight-decay runs of the built models and State on Tahoe-100M folds 1-3, and the tables comparing weight decay and the uniform shrink with the two-part calibration

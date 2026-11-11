@@ -1,0 +1,170 @@
+{
+  "dataset": "jiang",
+  "fold": "F4",
+  "model": "summary",
+  "outer_truth_read": false,
+  "outer_units_built": false,
+  "current_action": "two_part_parent",
+  "previous_action": "cheapest_fix",
+  "menu_normalized_calibration": {
+    "cheapest_fix": 0.6043899536358807,
+    "two_part_parent": 0.5787474413397238
+  },
+  "cheap_alternatives": [
+    "cheapest_fix",
+    "global_parent_shrink",
+    "nochange_shrink"
+  ],
+  "menu_inputs": {
+    "repair_alpha": {
+      "31002": null,
+      "31003": null,
+      "31004": null
+    },
+    "items_available": [
+      [
+        "two_part_parent"
+      ],
+      []
+    ],
+    "plate_from_bag": null
+  },
+  "option": null,
+  "action_amounts": {
+    "31002": [
+      0.0,
+      0.25
+    ],
+    "31003": [
+      0.0,
+      0.25
+    ],
+    "31004": [
+      0.0,
+      0.25
+    ]
+  },
+  "action_calibration": {
+    "31002": 0.0043577332417268615,
+    "31003": 0.004353498512812327,
+    "31004": 0.004350673412954303
+  },
+  "entries": {
+    "31002": {
+      "parent": {
+        "amount": null,
+        "calibration": 0.008347359103581597
+      },
+      "cheapest_fix": {
+        "amount": 0.0,
+        "calibration": 0.004584465851363034
+      },
+      "global_parent_shrink": {
+        "amount": 0.0,
+        "calibration": 0.004376280717697239
+      },
+      "drug_shrink": {
+        "amount": 0.25,
+        "calibration": 0.008178864027388657
+      },
+      "response_shrink": {
+        "amount": 0.5,
+        "calibration": 0.008144155261263197
+      },
+      "nochange_shrink": {
+        "amount": 0.125,
+        "calibration": 0.0041055047681749285
+      },
+      "two_part_parent": {
+        "amount": [
+          0.0,
+          0.25
+        ],
+        "calibration": 0.0043577332417268615
+      }
+    },
+    "31003": {
+      "parent": {
+        "amount": null,
+        "calibration": 0.006907161375080852
+      },
+      "cheapest_fix": {
+        "amount": 0.125,
+        "calibration": 0.004551010547686902
+      },
+      "global_parent_shrink": {
+        "amount": 0.125,
+        "calibration": 0.004359849808733767
+      },
+      "drug_shrink": {
+        "amount": 0.25,
+        "calibration": 0.006748642350924905
+      },
+      "response_shrink": {
+        "amount": 0.5,
+        "calibration": 0.0066907579823778434
+      },
+      "nochange_shrink": {
+        "amount": 0.125,
+        "calibration": 0.004084291353334659
+      },
+      "two_part_parent": {
+        "amount": [
+          0.0,
+          0.25
+        ],
+        "calibration": 0.004353498512812327
+      }
+    },
+    "31004": {
+      "parent": {
+        "amount": null,
+        "calibration": 0.007450990938965543
+      },
+      "cheapest_fix": {
+        "amount": 0.0,
+        "calibration": 0.0045084115325457735
+      },
+      "global_parent_shrink": {
+        "amount": 0.125,
+        "calibration": 0.004373987886591503
+      },
+      "drug_shrink": {
+        "amount": 0.3333333333333333,
+        "calibration": 0.007324538400619254
+      },
+      "response_shrink": {
+        "amount": 0.3333333333333333,
+        "calibration": 0.007208433671970975
+      },
+      "nochange_shrink": {
+        "amount": 0.125,
+        "calibration": 0.004091615686931269
+      },
+      "two_part_parent": {
+        "amount": [
+          0.0,
+          0.25
+        ],
+        "calibration": 0.004350673412954303
+      }
+    }
+  },
+  "perturbation_group": null,
+  "grids": {
+    "31002": "genetic-screens-runs/jiang/F4/nested/summary_31002/predictions-nested.npz",
+    "31003": "genetic-screens-runs/jiang/F4/nested/summary_31003/predictions-nested.npz",
+    "31004": "genetic-screens-runs/jiang/F4/nested/summary_31004/predictions-nested.npz"
+  },
+  "saved_selection": "cards-genetic-screens/selections/SELECTIONS_jiang_F4_summary.json",
+  "calibration_units": 127,
+  "grid_G": [
+    0.0,
+    0.125,
+    0.25,
+    0.3333333333333333,
+    0.5,
+    0.75,
+    1.0
+  ]
+}

@@ -20,6 +20,8 @@ Models that predict how cells respond to a perturbation usually receive a set of
 | `tests/` | Tests that need no study data | Apache-2.0 |
 | `docs/data_contract.md` | The files a dataset must provide | Apache-2.0 |
 | `reproduce/published_models/` | Training, prediction and scoring of the published models State, CPA and PrePR-CT on both tasks | Apache-2.0 |
+| `reproduce/origin_resolution/` | Origin resolution's results tables, rebuilt from the deposited predictions and compared with the tables record | Apache-2.0 |
+| `reproduce/data/` | The deposit's folders and their contents | Apache-2.0 |
 | `third_party/` | Unchanged upstream code of State (with its CPA implementation) and PrePR-CT, used to reproduce the published-model results | Each directory's own licence |
 
 ## Installation

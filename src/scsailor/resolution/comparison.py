@@ -4,8 +4,9 @@ Both tests read *runs*: one pair (per-line parts, scale) per seed, where the per
 ``scoring.line_parts`` of a prediction and the scale is the reference's clipped total MSE (the parent's, usually).
 Differences are reported in % of the scale.
 
-- ``compare``: seeds averaged within a line, lines resampled (``bootstrap``), a call with the 0.2% margin, and
-  the call's rate of "different" when the per-line differences are centred and sign-flipped (its null rate).
+- ``compare``: seeds averaged within a line (``pool_seeds`` for one part), lines resampled (``bootstrap``), a call
+  with the 0.2% margin, and the call's rate of "different" when the per-line differences are centred and sign-flipped
+  (its null rate).
 - ``detect``: the test of attribution and of the held-out check. Each held-out line is one unit; a contrast is detected
   when the exact one-sided sign-flip p over the units is at most ``ALPHA``, the summed difference is below minus the
   margin and every seed agrees in sign. With too few units for that p (the design floor), the result is case-level:
@@ -17,8 +18,8 @@ import numpy as np
 
 from .scoring import PARTS
 
-__all__ = ["MARGIN", "ALPHA", "RESAMPLES", "bootstrap", "call", "null_rate", "seed_rule", "compare", "design_floor", "sign_patterns",
-           "signflip", "detect"]
+__all__ = ["MARGIN", "ALPHA", "RESAMPLES", "bootstrap", "pool_seeds", "call", "null_rate", "seed_rule", "compare",
+           "design_floor", "sign_patterns", "signflip", "detect"]
 
 MARGIN = .2          # % of the scale: a difference smaller than this is not called "different"
 ALPHA = .025         # one side of the comparison call's 95% percentile interval
@@ -44,6 +45,14 @@ def bootstrap(differences, scale):
     sums = values[draws].sum(axis=1)
     return {"estimate_pct": 100 * float(values.sum()) / scale,
             "interval_pct": [100 * float(np.percentile(sums, 2.5)) / scale, 100 * float(np.percentile(sums, 97.5)) / scale]}
+
+
+def pool_seeds(runs):
+    """Seeds averaged within each line: ``runs`` is a list of (per-line differences, scale), one per seed. Returns the
+    per-line means and the mean scale, the arguments of ``bootstrap``."""
+    lines = sorted(runs[0][0])
+    mean = {line: float(np.mean([differences[line] for differences, _ in runs])) for line in lines}
+    return mean, float(np.mean([scale for _, scale in runs]))
 
 
 def call(result):

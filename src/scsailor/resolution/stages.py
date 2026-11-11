@@ -48,7 +48,8 @@ __all__ = ["PARTKEY", "LABEL", "SELECTION_RULE", "bag_of", "net", "choose_group"
 
 LABEL = {'total': 'total', 'common': 'common', 'differential': 'drug difference'}
 # the wording of the saved records
-SELECTION_RULE = "round 12's default without repair candidates: the cell-line-level shrink if below the parent in every seed"
+SELECTION_RULE = ("the repair selections' default without repair candidates: the cell-line-level shrink if below the parent in "
+                  "every seed")
 GROUP_RULE = 'largest drug-difference excess of the nested parent on the calibration units, seed mean'
 
 

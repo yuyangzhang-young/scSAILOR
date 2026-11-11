@@ -18,7 +18,8 @@ change through four steps, one group of modules each:
                                       bootstrap beside it. Held-out lines take no part in a choice and report differences.
 
 ``stages`` holds the stages over one dataset's case, ``scoring`` the natural task's risk on the clipped scale and its
-additive parts, and ``grids`` reads prediction grids. A dataset enters through its *case* (``stages``) and the *sides* of
+additive parts, ``grids`` reads prediction grids, and ``metrics`` holds the metrics other than squared error that the
+matched comparisons are also read on. A dataset enters through its *case* (``stages``) and the *sides* of
 ``slopes``, ``net_cost`` and ``probes``: its units, its models' prediction grids, its input sets and its documented origin
 rows. The modules take loaded objects and the dataset's facts (for example the names of its replicate plates) as
 arguments; importing them has no side effects and loads no torch.
@@ -55,6 +56,8 @@ cheap alternatives, ``ALTERNATIVES``, ``PLATE_ALTERNATIVES``    the original mod
                                                                 baseline and the shrinks toward it
 ``global_parent_shrink``                                        uniform shrink toward the anchor
 repair, IL cell, cell                                           restoring change
+``handed_on_by``, ``carried*``, ``MAP_CARRIED*``                the planted targets, settings and kinds for which
+                                                                information localization names a restoring change
 kind 'control', ``control``, ``*_own_control``                  fixed intervention (negative control)
 continuation, ``continued_*``, ``input/a/x1``                   continued training
 ``training_longer``, ``longer_*``                               training longer
@@ -90,11 +93,11 @@ saved ``attention``, and ``state`` in localization's runs       attention model
 saved ``official_state``                                        State
 ``'about right'``, ``'too large'`` of the label ``d1c``        size matched; over-sized
 card, ``cards``, ``CARD_*``, ``CARDS_*``                        the readings of one model, or of one change, on a fold
-Q1-Q4 in the ``CARDS_V2`` columns                               recovery and cost (Q1, Q2), attribution (Q3), the
+Q1-Q4 in the columns of ``CARDS_<fold>.csv``                     recovery and cost (Q1, Q2), attribution (Q3), the
                                                                 comparisons beside continued training (Q4)
 ``verification``                                                the held-out check: the seed rule on held-out
                                                                 differences, a reading and not a test of a choice
 ==============================================================  ==================================================
 """
-__all__ = ["attribution", "card", "comparison", "grids", "il_cells", "menu", "net_cost", "origins", "planted", "policies",
-           "probes", "references", "scoring", "slopes", "stages"]
+__all__ = ["attribution", "card", "comparison", "grids", "il_cells", "menu", "metrics", "net_cost", "origins",
+           "planted", "policies", "probes", "references", "scoring", "slopes", "stages"]

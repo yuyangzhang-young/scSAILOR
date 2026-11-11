@@ -1,0 +1,558 @@
+{
+  "dataset": "jiang",
+  "model": "summary",
+  "fold": "F4",
+  "calibration": "CALIBRATION_jiang_F4_summary.json",
+  "grids": {
+    "31002": "genetic-screens-predictions/jiang/F4/summary_31002_L2/PREDICTIONS.npz",
+    "31003": "genetic-screens-predictions/jiang/F4/summary_31003_L2/PREDICTIONS.npz",
+    "31004": "genetic-screens-predictions/jiang/F4/summary_31004_L2/PREDICTIONS.npz"
+  },
+  "verification": {
+    "parent": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": -45.35640317429559,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          -8.463190129878738,
+          -8.820433143843518,
+          -9.429784511945465
+        ],
+        "HT29_IFNG": [
+          -8.245299808183693,
+          -10.39380881949049,
+          -9.651877629831448
+        ],
+        "HT29_INS": [
+          -10.468228711457794,
+          -9.546550116325015,
+          -9.66952069382059
+        ],
+        "HT29_TGFB": [
+          -10.834422716374572,
+          -10.315731374149323,
+          -10.279983741849795
+        ],
+        "HT29_TNFA": [
+          -6.917087567249468,
+          -6.8646066990666705,
+          -6.168683859420189
+        ]
+      },
+      "seed_totals_pts": [
+        -44.92822893314427,
+        -45.94113015287502,
+        -45.19985043686749
+      ],
+      "seed_rule": "holds",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": -45.35974546502296,
+        "interval_pct": [
+          -50.29922290943182,
+          -39.27045387773182
+        ],
+        "call": "different",
+        "null_different_rate": 0.215
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 15,
+        "of": 15
+      }
+    },
+    "cheapest_fix": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": -7.534773774818714,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          -0.49956391832437447,
+          -0.8124388385100305,
+          -0.390862920872158
+        ],
+        "HT29_IFNG": [
+          -0.9536405774277641,
+          -1.7051021119927956,
+          -1.54324312678577
+        ],
+        "HT29_INS": [
+          -3.011903372359966,
+          -1.9720602592158913,
+          -1.5796066448789954
+        ],
+        "HT29_TGFB": [
+          -1.9705444153609215,
+          -1.859444546244802,
+          -1.4824038422523285
+        ],
+        "HT29_TNFA": [
+          -1.9657860944298826,
+          -1.5945811923177087,
+          -1.2631394634827533
+        ]
+      },
+      "seed_totals_pts": [
+        -8.401438377902908,
+        -7.943626948281228,
+        -6.259255998272005
+      ],
+      "seed_rule": "holds",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": -7.53626568437908,
+        "interval_pct": [
+          -9.686780630651409,
+          -5.081351788463276
+        ],
+        "call": "different",
+        "null_different_rate": 0.195
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 15,
+        "of": 15
+      }
+    },
+    "global_parent_shrink": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": -0.9563931976619814,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          -0.4688114194885102,
+          -0.2610940708063967,
+          -0.37307082701221705
+        ],
+        "HT29_IFNG": [
+          -0.5306448592982902,
+          -0.34754800154841065,
+          -0.2929231902210807
+        ],
+        "HT29_INS": [
+          0.057526598060988775,
+          -0.12987623760853714,
+          -0.16832554027509575
+        ],
+        "HT29_TGFB": [
+          0.004583661033044771,
+          -0.20822227156903922,
+          -0.19029347191504137
+        ],
+        "HT29_TNFA": [
+          0.1251886946861667,
+          -0.06173728561615259,
+          -0.02393137140737252
+        ]
+      },
+      "seed_totals_pts": [
+        -0.8121573250066002,
+        -1.0084778671485364,
+        -1.0485444008308074
+      ],
+      "seed_rule": "holds",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": -0.9567678053561948,
+        "interval_pct": [
+          -1.6459703815144404,
+          -0.2675652291979494
+        ],
+        "call": "different",
+        "null_different_rate": 0.112
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 12,
+        "of": 15
+      }
+    },
+    "nochange_shrink": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": -6.00577885334389,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          -6.117144555042433,
+          -6.007038350821467,
+          -6.16464590774099
+        ],
+        "HT29_IFNG": [
+          -5.445221872032064,
+          -5.533689225427568,
+          -5.399648682127038
+        ],
+        "HT29_INS": [
+          1.988437524433055,
+          1.8708195855693504,
+          1.8789964100203398
+        ],
+        "HT29_TGFB": [
+          2.7705525020263826,
+          2.6490135915062005,
+          2.7283811261448454
+        ],
+        "HT29_TNFA": [
+          0.968701963934342,
+          0.8764833517636555,
+          0.9186659777617276
+        ]
+      },
+      "seed_totals_pts": [
+        -5.834674436680718,
+        -6.144411047409828,
+        -6.038251075941115
+      ],
+      "seed_rule": "holds",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": -6.006621707159096,
+        "interval_pct": [
+          -22.190409506210667,
+          10.980282803893388
+        ],
+        "call": "inconclusive",
+        "null_different_rate": 0.136
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 6,
+        "of": 15
+      }
+    }
+  },
+  "option": null,
+  "detections": {
+    "M5": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": -37.821629399476876,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          -7.963626211554363,
+          -8.007994305333487,
+          -9.038921591073306
+        ],
+        "HT29_IFNG": [
+          -7.29165923075593,
+          -8.688706707497692,
+          -8.108634503045678
+        ],
+        "HT29_INS": [
+          -7.456325339097829,
+          -7.574489857109126,
+          -8.089914048941596
+        ],
+        "HT29_TGFB": [
+          -8.863878301013653,
+          -8.456286827904519,
+          -8.797579899597467
+        ],
+        "HT29_TNFA": [
+          -4.951301472819586,
+          -5.270025506748961,
+          -4.9055443959374365
+        ]
+      },
+      "seed_totals_pts": [
+        -36.526790555241355,
+        -37.997503204593784,
+        -38.94059443859548
+      ],
+      "seed_rule": "holds",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": -37.82347978064387,
+        "interval_pct": [
+          -42.15533578872316,
+          -31.197849793004927
+        ],
+        "call": "different",
+        "null_different_rate": 0.195
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 15,
+        "of": 15
+      }
+    },
+    "M7": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": -7.257267524839216,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          -0.589028466562419,
+          -0.7555975144480782,
+          -0.522133439295259
+        ],
+        "HT29_IFNG": [
+          -0.8009290577486979,
+          -1.377844311678286,
+          -1.4704563096466607
+        ],
+        "HT29_INS": [
+          -2.9279688015150205,
+          -1.769693295602487,
+          -1.4290855835032772
+        ],
+        "HT29_TGFB": [
+          -2.0983830565017145,
+          -1.691387644714566,
+          -1.5352948266298723
+        ],
+        "HT29_TNFA": [
+          -2.0453276905242435,
+          -1.5123957082562858,
+          -1.2462768678907805
+        ]
+      },
+      "seed_totals_pts": [
+        -8.461637072852096,
+        -7.106918474699702,
+        -6.20324702696585
+      ],
+      "seed_rule": "holds",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": -7.255615063749029,
+        "interval_pct": [
+          -9.321683030683188,
+          -4.898581574291273
+        ],
+        "call": "different",
+        "null_different_rate": 0.195
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 15,
+        "of": 15
+      }
+    },
+    "N": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": -2.304618371636519,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          0.8944064546081488,
+          1.2105824084750458,
+          2.1584793660159423
+        ],
+        "HT29_IFNG": [
+          -0.19909131013904338,
+          0.30967641666365164,
+          0.7772230027367134
+        ],
+        "HT29_INS": [
+          -0.9658177409995521,
+          -1.0673586447730583,
+          -1.2292541391119856
+        ],
+        "HT29_TGFB": [
+          -2.0009724998172413,
+          -1.899120278540481,
+          -2.246902249041886
+        ],
+        "HT29_TNFA": [
+          -0.8093206438801461,
+          -0.8951297905542794,
+          -0.9512554665513862
+        ]
+      },
+      "seed_totals_pts": [
+        -3.080795740227834,
+        -2.3413498887291215,
+        -1.4917094859526023
+      ],
+      "seed_rule": "holds",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": -2.304246305495078,
+        "interval_pct": [
+          -7.915451215945981,
+          3.4702432096963687
+        ],
+        "call": "inconclusive",
+        "null_different_rate": 0.199
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 10,
+        "of": 15
+      }
+    }
+  },
+  "separation": {
+    "units": 5,
+    "floor": 0.03125,
+    "total_pts": -30.564361874637658,
+    "per_unit_pts": {
+      "HT29_IFNB": [
+        -7.374597744991944,
+        -7.252396790885409,
+        -8.516788151778048
+      ],
+      "HT29_IFNG": [
+        -6.490730173007232,
+        -7.310862395819407,
+        -6.638178193399018
+      ],
+      "HT29_INS": [
+        -4.528356537582808,
+        -5.804796561506638,
+        -6.6608284654383185
+      ],
+      "HT29_TGFB": [
+        -6.765495244511937,
+        -6.7648991831899545,
+        -7.262285072967595
+      ],
+      "HT29_TNFA": [
+        -2.905973782295342,
+        -3.7576297984926765,
+        -3.6592675280466556
+      ]
+    },
+    "seed_totals_pts": [
+      -28.065153482389263,
+      -30.890584729894083,
+      -32.737347411629635
+    ],
+    "seed_rule": "holds",
+    "seed_rule_floor": 0.125,
+    "bootstrap_call": {
+      "estimate_pct": -30.567864716894853,
+      "interval_pct": [
+        -36.10126354996182,
+        -23.70761510884362
+      ],
+      "call": "different",
+      "null_different_rate": 0.197
+    },
+    "level": "case-level",
+    "detected": null,
+    "case_counts": {
+      "lower": 15,
+      "of": 15
+    },
+    "reverse": {
+      "units": 5,
+      "floor": 0.03125,
+      "total_pts": 30.564361874637658,
+      "per_unit_pts": {
+        "HT29_IFNB": [
+          7.374597744991944,
+          7.252396790885409,
+          8.516788151778048
+        ],
+        "HT29_IFNG": [
+          6.490730173007232,
+          7.310862395819407,
+          6.638178193399018
+        ],
+        "HT29_INS": [
+          4.528356537582808,
+          5.804796561506638,
+          6.6608284654383185
+        ],
+        "HT29_TGFB": [
+          6.765495244511937,
+          6.7648991831899545,
+          7.262285072967595
+        ],
+        "HT29_TNFA": [
+          2.905973782295342,
+          3.7576297984926765,
+          3.6592675280466556
+        ]
+      },
+      "seed_totals_pts": [
+        28.065153482389263,
+        30.890584729894083,
+        32.737347411629635
+      ],
+      "seed_rule": "no",
+      "seed_rule_floor": 0.125,
+      "bootstrap_call": {
+        "estimate_pct": 30.567864716894853,
+        "interval_pct": [
+          23.70761510884362,
+          36.10126354996182
+        ],
+        "call": "different",
+        "null_different_rate": 0.197
+      },
+      "level": "case-level",
+      "detected": null,
+      "case_counts": {
+        "lower": 0,
+        "of": 15
+      }
+    }
+  },
+  "shares_pts": {
+    "total": {
+      "M5": -36.94906999983618,
+      "M7": -7.373402126523406,
+      "N": -1.558040754943961
+    },
+    "common": {
+      "M5": -36.6486073378285,
+      "M7": -0.09976326180204198,
+      "N": -1.233285506536463
+    },
+    "differential": {
+      "M5": -0.3004626620076845,
+      "M7": -7.273638864721371,
+      "N": -0.32475524840750275
+    }
+  },
+  "players": [
+    "M5",
+    "M7",
+    "N"
+  ],
+  "line2_per_part": {
+    "total": {
+      "parent": 0.00325404807421883,
+      "joint removal": 0.0017609385354442092,
+      "anchor": 0.0018064246356532872,
+      "nochange": 0.0021174500301403836,
+      "best reference": "anchor",
+      "joint minus best (pts of the parent total)": -1.397107156795501
+    },
+    "common": {
+      "parent": 0.0018902105706677013,
+      "joint removal": 0.0006541611291242833,
+      "anchor": 0.0006602000744613564,
+      "nochange": 0.00068713312890834,
+      "best reference": "anchor",
+      "joint minus best (pts of the parent total)": -0.18710581485349495
+    },
+    "differential": {
+      "parent": 0.0013638375035511293,
+      "joint removal": 0.001106777406319926,
+      "anchor": 0.0011462245611919314,
+      "nochange": 0.0014303169012320433,
+      "best reference": "anchor",
+      "joint minus best (pts of the parent total)": -1.2100013419420137
+    }
+  },
+  "headline": [
+    "Action chosen on calibration lines: two_part_parent",
+    "Case-level only (5 outer units): M5: 15 of 15 unit-seeds lower, total -37.82 pts; M7: 15 of 15 unit-seeds lower, total -7.26 pts",
+    "parent 3.254e-3; Shapley shares (case-level, all three): M5 -36.95, M7 -7.37, N -1.56 pts; joint removal at calibrated amounts (M5, M7, N) 1.761e-3; against the lower reference of each part, in points of the parent total: total -1.40 (anchor), common -0.19 (anchor), drug difference -1.21 (anchor); transferred response N -2.30 pts (case-level; candidates T7, T1, D6, not separated)",
+    "D1 reference; D2 not computed; D4 reported; D7 not computed; T1 cannot be tested; T7 not documented"
+  ],
+  "wall_seconds": 19.040061235427856,
+  "peak_rss_mb": 327.2109375
+}

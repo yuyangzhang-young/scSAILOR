@@ -13,6 +13,7 @@ import json, sys
 before = list(sys.path)
 from scsailor.localization import (constants, contract, draws, presence, readings, real_task, recovery, runtime,
                                    starts, task, training_time)
+from scsailor.localization.light import assay, compare, maps, menus, plan, rules, selection
 print(json.dumps({"torch": "torch" in sys.modules, "path_unchanged": sys.path == before}))
 """
 

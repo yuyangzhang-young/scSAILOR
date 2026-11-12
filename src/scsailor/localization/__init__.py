@@ -15,6 +15,10 @@ Steps, one module each:
 4. ``training_time``  recovery along the original model's own training, read on its saved checkpoints;
 5. ``real_task``      the handed-on change applied to a model trained on real responses.
 
+``light`` is the light version: a fixed menu of cuts, starting points and learning rates for each model, one seed
+for the parts and a second seed for the best candidates, with the recovery level, margins and choice of ``readings``
+read on the validation panel.
+
 ``task`` reads a synthetic-answer instance as the steps draw from it, ``recovery`` scores recovery Q on flip-pair
 panels, ``draws`` makes the panels' draws and the training batches, ``runtime`` sets threads and numerical precision
 (the only place that does), ``constants`` holds the shared constants, and ``contract`` states what localization
@@ -49,5 +53,5 @@ model ``state``, ``cpa``, ``prepr``                        State, CPA, PrePR-CT
 drug embedding (``backbone.pert``)                         perturbation embedding
 =========================================================  ==========================================================
 """
-__all__ = ["constants", "contract", "draws", "presence", "readings", "real_task", "recovery", "runtime", "starts",
-           "task", "training_time"]
+__all__ = ["constants", "contract", "draws", "light", "presence", "readings", "real_task", "recovery", "runtime",
+           "starts", "task", "training_time"]

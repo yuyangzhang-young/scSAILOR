@@ -1,6 +1,6 @@
 """Linear read-out probes: is the planted state linearly readable inside the trained network?
 
-A probe design (``ProbeDesign``; the paper's designs are ``PROBE`` in ``reproduce/study.py``) gives each training background
+A probe design (``ProbeDesign``) gives each training background
 ``bags_per_context`` probe bags (256 cells, a random state, one technical draw, perturbation 0). One
 internal feature vector is taken per bag from the submodules ``contract.READOUT_MODULES`` names for the
 network. Ridge readers on standardized features then predict the visible bits (5 per visible statistic,

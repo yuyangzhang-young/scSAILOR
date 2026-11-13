@@ -20,7 +20,7 @@ Steps, one module each:
 ``contract`` states what the assay calls on a model, and ``instance`` reads an instance from disk.
 
 Every module takes its settings as arguments; the settings used in the paper (instances per dataset and
-fold, training recipe, replay draws and scopes, probe designs) are in ``reproduce/study.py``. Importing a
+fold, training recipe, replay draws and scopes) are in ``reproduce/assay/study.py``. Importing a
 module has no side effects, and torch is imported only inside the functions that run a model.
 
 Code names and the paper's terms (saved files keep the code names):

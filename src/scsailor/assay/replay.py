@@ -10,7 +10,7 @@ stored once as float32. Clipping at zero happens only in scoring.
 
 ``write_predictions`` stores ``raw``, ``anchor_raw`` (the baseline; bases x 26 x
 perturbations x genes) and ``done`` (bases x 26) per background in the original layout.
-The number of draws is a setting (``DRAWS`` in ``reproduce/study.py``); torch is imported only to run the model.
+The number of draws is a setting (``DRAWS`` in ``reproduce/assay/study.py``); torch is imported only to run the model.
 """
 from __future__ import annotations
 

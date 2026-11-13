@@ -4,7 +4,7 @@
 
 Models that predict how cells respond to a perturbation usually receive a set of control cells as input. scSAILOR asks which statistics of that set a trained model actually uses, and whether using them helps it predict. It combines an *information ladder* of inputs that keep progressively more of the control cells' statistics with three components: the **synthetic-answer assay**, **information localization** and **origin resolution**.
 
-> **Status.** This is the first part of the public release that accompanies [paper reference to be added]. It contains the information ladder, the three models built for the study, the natural-task training stream and scores, the synthetic-answer assay, information localization, origin resolution, and the code that trains, predicts and scores the three published models. The study's dataset bindings, information localization and origin resolution on the published models, and the remaining reproduction scripts will follow.
+> **Status.** This is the first part of the public release that accompanies [paper reference to be added]. It contains the information ladder, the three models built for the study, the natural-task training stream and scores, the synthetic-answer assay, information localization, origin resolution, the code that trains, predicts and scores the three published models, the settings of the assay's runs of the built models, and origin resolution's results rebuilt from the deposited data. The other dataset bindings and reproduction scripts, among them those of information localization's runs, will follow.
 
 ## Contents
 
@@ -19,6 +19,7 @@ Models that predict how cells respond to a perturbation usually receive a set of
 | `examples/` | A small run of the three components on a CPU, with stand-ins to replace by your own data and model | Apache-2.0 |
 | `tests/` | Tests that need no study data | Apache-2.0 |
 | `docs/data_contract.md` | The files a dataset must provide | Apache-2.0 |
+| `reproduce/assay/` | The settings of the paper's synthetic-answer assay runs of the built models, and their binding to `scsailor.models` | Apache-2.0 |
 | `reproduce/published_models/` | Training, prediction and scoring of the published models State, CPA and PrePR-CT on both tasks | Apache-2.0 |
 | `reproduce/origin_resolution/` | Origin resolution's results tables, rebuilt from the deposited predictions and compared with the tables record | Apache-2.0 |
 | `reproduce/data/` | The deposit's folders and their contents | Apache-2.0 |

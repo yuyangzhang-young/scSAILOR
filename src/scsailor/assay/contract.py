@@ -1,6 +1,6 @@
 """The model contract: what the assay calls on a network, with shapes and callers.
 
-The assay never builds a network itself (``reproduce/study.py`` builds it from ``scsailor.models``); every step receives
+The assay never builds a network itself (``reproduce/assay/study.py`` builds it from ``scsailor.models``); every step receives
 the model as an argument. B is the number of bags; one bag is 512 rows by 2,000 genes
 (``constants.N_ROWS``, ``N_GENES``); P is the number of perturbations.
 
@@ -26,7 +26,7 @@ the model as an argument. B is the number of bags; one bag is 512 rows by 2,000 
     ``backbone.phi`` -> B x 512 x 128; ``summary``: ``backbone.common_hidden`` -> B x 256 and
     ``backbone.inter_hidden`` -> B x 128.
 ``parameters()``, ``train()``, ``state_dict()``, ``load_state_dict()``, ``eval()``
-    Standard torch modules. Used by ``train``, and by ``load_checkpoint`` in ``reproduce/study.py``, which returns the model
+    Standard torch modules. Used by ``train``, and by ``load_checkpoint`` in ``reproduce/assay/study.py``, which returns the model
     in eval mode as replay and the probe expect.
 
 The built models pass all 512 carrier rows to their backbone, together with ``m = 256``, the number

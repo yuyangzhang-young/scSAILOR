@@ -8,10 +8,11 @@ import pandas as pd
 
 from ..origin_resolution import ROOT
 
-__all__ = ["GROWTH", "HALLMARK", "gene_sets", "panel", "masks", "growth"]
+__all__ = ["GROWTH", "HALLMARK", "MIN_GENES", "gene_sets", "panel", "masks", "growth"]
 
 GROWTH = ('HALLMARK_E2F_TARGETS', 'HALLMARK_G2M_CHECKPOINT', 'HALLMARK_MITOTIC_SPINDLE')
 HALLMARK = ROOT / 'msigdb-hallmark/h.all.v2025.1.Hs.symbols.gmt'
+MIN_GENES = 10   # on Parse PBMC and the genetic screens, a program is read when it has this many genes on the panel
 PANELS = ROOT / 'tahoe-100m-gene-panels'
 
 

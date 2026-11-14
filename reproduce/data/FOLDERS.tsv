@@ -18,7 +18,7 @@ cost-readings-attention-model-jiang	Cost and alignment readings of the attention
 cost-readings-built-models	Cost and alignment readings of the built models' changes on GSE306429 and Parse PBMC
 cost-readings-state	Cost and alignment readings of State's changes on the screens other than Tahoe-100M
 figure-tables	The tables behind Figs. 5 and 6
-genetic-screens-predictions	The built models' natural-task predictions and the held-out truth and unit reliability on Replogle-Nadig and Jiang et al.
+genetic-screens-predictions	The five models' +Var natural-task predictions on Replogle-Nadig folds 1-4 and Jiang et al. folds 1-6 (<screen>/<fold>/<model>_<seed>_L2/PREDICTIONS.npz; model codes summary, deepsets, attention_model, state, cpa; three seeds), the held-out truth and unit reliability
 genetic-screens-runs	The built models on Replogle-Nadig folds 1-2 and Jiang et al. folds 4-5: nested parents, the restoring changes and continued training (predictions and run records), with the fold data
 genetic-truth-statistics	Per-gene statistics of the genetic screens' held-out truth, for the weighted R2 metrics
 gse306429-control-membership	GSE306429's control membership table
@@ -43,16 +43,26 @@ information-localization/recovery-by-training-length/checkpoint-scores	The score
 information-localization/state-correction-amounts	State's correction amounts on the natural task
 information-localization/statistic-swap	The statistic-swap scores of the changes
 jiang-correction-alignment	Jiang et al.'s context-level correction readings per fit and fold (OFFSET_READINGS.csv)
-jiang-inputs	Jiang et al.'s model inputs and training arrays, folds 4-5
+jiang-inputs	Jiang et al.'s model inputs and training arrays, folds 1-6
 jiang-split-half-reference	Split-half reproducibility of Jiang et al.'s held-out context-level target (JIANG_SPLIT_HALF_POOLED.csv)
+ladder	The information ladder's tables of Results 1-2 (reproduce/ladder; tables with Parse PBMC rows CC BY-NC 4.0)
 layer-fractions	Calibrated fractions per prediction layer against the held-out best fraction: readings, primary table, tolerance curve, use
 light-version-cases	The light version's cases and menus on the screens other than Tahoe-100M
 light-version-cases/cases-extended-menu	The light cases with the extended menu (CASES.csv)
-memorization	Results 7's memorization tables (reproduce/memorization)
+memorization	Results 7's memorization tables, one folder per screen (reproduce/memorization)
+memorization/genetic-screens	The memorization tables of Results 7 on the genetic screens (reproduce/memorization)
+memorization/parse-pbmc	The memorization tables of Results 7 on Parse PBMC (reproduce/memorization; CC BY-NC 4.0)
 memorization/tahoe-100m	The memorization tables of Results 7 on Tahoe-100M (reproduce/memorization)
 metric-and-known-answer-readings	Readings on metrics other than squared error on every screen, and the known-answer read-back
 metric-readings-tahoe-100m	Readings on metrics other than squared error, Tahoe-100M
 msigdb-hallmark	The MSigDB Hallmark gene sets, release 2025.1.Hs (CC BY 4.0; Liberzon et al. 2015)
+natural-scores	The saved held-out scores of every natural-task fit of the information ladder on the five screens (reproduce/ladder)
+natural-scores/gse306429	GSE306429: the built models' per-fit tables, the published models' per-seed tables with their baseline records, and no change, per fold
+natural-scores/held-out-unit-sums	Each fit's weighted error sums per held-out cell line (Tahoe-100M) or donor (Parse PBMC), with the baseline's and the built models' own anchor's (Parse PBMC rows CC BY-NC 4.0)
+natural-scores/jiang	Jiang et al.: the per-fit tables of the built models, State and CPA, and no change, per fold
+natural-scores/replogle-nadig	Replogle-Nadig: the per-fit tables of the built models, State and CPA, and no change, per fold
+natural-scores/tahoe-100m	Tahoe-100M: the built models' per-fit records (fold 1) and table (folds 2-3), the published models' per-seed tables and each fold's baseline record
+natural-scores/weighted-r2	The adapted weighted R2 of every fit and of each fold's baseline and no change; Parse PBMC's on twelve and ten donors (Parse PBMC rows CC BY-NC 4.0)
 nested-parents-gse306429-replogle-nadig	Nested parents of GSE306429 and Replogle-Nadig fold 1: predictions, run records, fold data, held-out truth, the parent-only selections and the cards
 nested-parents-gse306429-replogle-nadig/cards	Origin resolution's cards of the nested parents
 nested-parents-gse306429-replogle-nadig/selections	The parent-only selections
@@ -64,10 +74,14 @@ origin-resolution/continued-training-folds-2-3	Continued training of the built m
 origin-resolution/parse-pbmc-donor-orders	Parse PBMC's donor orders, groups G1-G3
 origin-resolution/restoring-changes	Information localization's selections of the restoring changes
 origin-resolution/selections	The selections of the restoring changes, per fold
-parse-pbmc-held-out-truth	Parse PBMC's held-out truth, groups G1-G3
-parse-pbmc-inputs	Parse PBMC's model inputs, groups G1-G3
+parse-pbmc-gene-panels	The 2,000-gene panel of each Parse PBMC group (parse_outer_<group>.csv; CC BY-NC 4.0)
+parse-pbmc-held-out-truth	Parse PBMC's held-out truth, groups G1-G3 (CC BY-NC 4.0)
+parse-pbmc-inputs	Parse PBMC's model inputs, groups G1-G3 (CC BY-NC 4.0)
+parse-pbmc-ladder	Mean-level predictions on Parse PBMC groups G1-G3 of the summary-statistics, DeepSets and attention models, State and CPA, on the training and held-out donors (three seeds; <group>/<model>_<seed>_L1.npz, model codes summary, deepsets, attention_model, state, cpa; CC BY-NC 4.0)
 parse-pbmc-primary-donor-recovery	Recovery on Parse PBMC's evaluated donors, all twelve
-replogle-nadig-inputs	Replogle-Nadig's input libraries, folds 1-2 (held-out line, training lines, evaluation sets)
+parse-pbmc-reference-wells	Parse PBMC's reference control wells H10-H12, 256 cells per donor and cell type, raw counts in compressed rows, and the gene registry that maps them to the panels (CC BY-NC 4.0)
+replogle-nadig-gene-symbols	The HGNC symbol of each Ensembl identifier on the Replogle-Nadig panels (hgnc_replogle_panels.tsv; from the HGNC complete set, CC0)
+replogle-nadig-inputs	Replogle-Nadig's input libraries (folds 1-2), model inputs and training arrays, folds 1-4
 replogle-nadig-unit-reliability	Which Replogle-Nadig held-out units carry reproducible signal (UNIT_RELIABILITY.csv)
 second-run-plain-baseline	The second training run calibrated toward the plain baseline, and the gate points without the plate
 source-tables	Seven tables the paper reads: swap summary, own-mean value, run readings, Supplementary Table 24, baselines, rank correlation, Parse PBMC's menu
@@ -94,7 +108,7 @@ tahoe-100m-line-subsets	The fit and calibration line subsets of the Tahoe-100M f
 tahoe-100m-line-subsets/folds-2-3	The line subsets of folds 2 and 3
 tahoe-100m-noise-floor	Per-unit noise and per-gene variance of Tahoe-100M fold 1's measured responses
 tahoe-100m-predictions-fold-1	The built models' and the attention model's predictions on Tahoe-100M fold 1 at 40,000 updates
-training-arrays-parse-pbmc-tahoe-100m	Training targets of Parse PBMC's held-out groups G1-G3 and Tahoe-100M fold 1's training controls and targets, as the models were trained on them
+training-arrays-parse-pbmc-tahoe-100m	Training targets of Parse PBMC's held-out groups G1-G3 (CC BY-NC 4.0) and Tahoe-100M fold 1's training controls and targets, as the models were trained on them
 training-coverage	Training coverage and the ridge readers of the held-out target, Tahoe-100M
 training-coverage-runs	Summary-statistics model runs trained on 7, 14 or 21 lines of Tahoe-100M fold 1: held-out predictions, for the training-coverage reading
 training-coverage-runs/runs/summary_train14_31002_L1_wd0	A run of the summary-statistics model, named by its settings (lines, seed, level, weight decay)

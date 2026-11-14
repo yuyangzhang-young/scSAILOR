@@ -1,14 +1,15 @@
-"""The paper's Results 7 on Tahoe-100M (folds 1-3), computed on a CPU from the saved predictions: memorization of the
-training lines' responses and control levels, and the readers of a held-out context's control cells that replace a
-model's context-level correction.
+"""The paper's Results 7 on Tahoe-100M (folds 1-3), Parse PBMC and the genetic screens, computed on a CPU from the
+saved predictions: memorization of the training contexts' responses and control levels, and the readers of a held-out
+context's control cells that replace a model's context-level correction.
 
 ``data`` reads a fold's units and the saved predictions; ``programs`` holds the growth programs on each fold's panel;
 ``readers`` fits the readers and builds the arms; ``calibration`` holds origin resolution's +Var cases and their
-calibration; ``arms``, ``metrics``, ``selection``, ``ranking``, ``storage`` and ``growth_genes`` compute the tables;
-``tables`` writes them all (README.md).
+calibration; ``arms``, ``metrics``, ``selection``, ``ranking``, ``storage`` and ``growth_genes`` compute the Tahoe-100M
+tables; ``parse`` and ``parse_interferon`` those of Parse PBMC (readers and error; interferon readings) and
+``genetic`` those of the genetic screens; ``tables`` writes them all (README.md).
 
-Code names and the paper's terms (the tables keep the code names, except their ``model`` column, which prints the
-names of ``data.MODELS``):
+Code names and the paper's terms (the tables keep the code names, except their ``model`` and ``screen`` columns, which
+print the names of ``data.MODELS`` and ``genetic.NAMES``):
 
 =========================================================  ==========================================================
 Code                                                       Paper
@@ -70,5 +71,56 @@ sampling difference ``s``                                  pool-minus-control sa
 seed 'seed mean'                                           mean of the seeds, each scored alone
 model ``summary``, ``deepsets``, ``attention_model``       summary-statistics model, DeepSets model, attention model
 model ``state``, ``cpa``, ``prepr``                        State, CPA, PrePR-CT
+Parse PBMC (``parse``, ``parse_interferon``)
+group 'G1', 'G2', 'G3'                                     donor groups 1-3
+context ('donor|cell type'), cell type                     a donor's cell type: CD14 monocytes, CD4 memory and CD4
+                                                           naive T cells
+readers (``group``'s ``readers``)                          readers of each gene's control mean, cell-type centred,
+                                                           leave-one-donor-out
+arms 'calibrated', 'calibrated + readers'                  calibrated; readers after calibration
+amounts (``amounts``; ``GRID``, ``TIES_TO_SMALLER``,       calibration's context and perturbation scales, chosen on
+``ONE_PAIR_FROM_SEED_MEAN``)                               the calibration donors from the nested parents (a rule
+                                                           unlike menu.pick_two's: parse's docstring)
+``total_pct_of_original``                                  total MSE in % of the original model's
+scope 'G1'-'G3', 'pooled'; ``donors``                      one donor group; pooled over all 12 donors
+comparison 'A - B'; ``gain``                               A vs B; the change, signed so that positive favours A
+                                                           (squared error in % of the original's total MSE)
+``ci90_low``, ``ci90_high``                                its 90% paired-donor interval
+``control_level``                                          control level relative to training donors
+series 'measured'; reference wells                         measured, against control wells no model saw (H10-H12)
+``value``; ``ratio``                                       interferon-alpha response; its ratio to the control level
+``split``                                                  a cytokine partition (the same in every group)
+``spearman`` (``INTERFERON_RANKING.csv``)                  interferon-alpha ranking over the 36 group-by-cell-type-
+                                                           centred contexts
+``pearson`` (``CONTROL_WELLS.csv``)                        correlation of input wells (H7-H9) and reference wells
+``sd_between_donors``                                      between-donor SD of the program's control level
+genetic screens (``genetic``)
+screen 'Replogle-Nadig', 'Jiang et al.'; ``line``          Replogle-Nadig CRISPRi, Jiang et al.; the held-out line
+anchor, 'baseline'                                         baseline: the model's anchor (input-set mean + average
+                                                           training response for the built models; State and CPA
+                                                           store their own)
+side 'training lines', 'held-out line'; ``slope``          the slope of the context-level correction on the line
+                                                           offset, on training lines and on the held-out line
+``reader_r2``                                              the readers' (out-of-line) R² of the line offset
+``COMPOSITE``                                              growth composite: E2F targets, G2M checkpoint, mitotic
+                                                           spindle
+``growth_level``                                           the line's control growth level (relative to the training
+                                                           lines)
+``growth_correction``, ``measured_growth_correction``      the predicted growth correction; the measured growth-
+                                                           composite correction
+``most_pulled``                                            the most-pulled program (growth or MYC pull: E2F targets,
+                                                           G2M checkpoint, mitotic spindle, MYC targets V1 and V2)
+prediction 'removal'; 'removal + readers'                  context removal; readers after context removal
+prediction 'gene-wise shrink'                              the gene-wise extension: slopes restricted to [0, 1] after
+                                                           context removal, knockdown-target genes unshrunk
+prediction 'no change'                                     predicting no change (the input-set mean)
+``UNIT_VALUES``                                            the nine metrics per unit, the target gene kept (weight
+                                                           zero in the weighted R² only; unlike the shared
+                                                           target_excluded_values)
+comparison 'A - B'; ``change``                             A vs B; A minus B, the raw sign (as in Supplementary
+                                                           Table 28; MSE in points of the baseline's total MSE)
+``cases_improved``, ``median_change``                      cases improved (lower MSE, higher otherwise); median
+                                                           paired change
+``median_first``, ``median_second``                        the two predictions' median MSE (or other metric)
 =========================================================  ==========================================================
 """

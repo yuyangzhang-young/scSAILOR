@@ -78,9 +78,8 @@ context ('donor|cell type'), cell type                     a donor's cell type: 
 readers (``group``'s ``readers``)                          readers of each gene's control mean, cell-type centred,
                                                            leave-one-donor-out
 arms 'calibrated', 'calibrated + readers'                  calibrated; readers after calibration
-amounts (``amounts``; ``GRID``, ``TIES_TO_SMALLER``,       calibration's context and perturbation scales, chosen on
-``ONE_PAIR_FROM_SEED_MEAN``)                               the calibration donors from the nested parents (a rule
-                                                           unlike menu.pick_two's: parse's docstring)
+calibration (``calibration``, ``seed_amounts``)            calibration toward the design-aware baseline, each seed's
+                                                           amounts chosen on the calibration donors (nested parents)
 ``total_pct_of_original``                                  total MSE in % of the original model's
 scope 'G1'-'G3', 'pooled'; ``donors``                      one donor group; pooled over all 12 donors
 comparison 'A - B'; ``gain``                               A vs B; the change, signed so that positive favours A
@@ -114,9 +113,8 @@ prediction 'removal'; 'removal + readers'                  context removal; read
 prediction 'gene-wise shrink'                              the gene-wise extension: slopes restricted to [0, 1] after
                                                            context removal, knockdown-target genes unshrunk
 prediction 'no change'                                     predicting no change (the input-set mean)
-``UNIT_VALUES``                                            the nine metrics per unit, the target gene kept (weight
-                                                           zero in the weighted R² only; unlike the shared
-                                                           target_excluded_values)
+``UNIT_VALUES``                                            the nine metrics per unit, the knockdown's target gene left
+                                                           out (squared error keeps it)
 comparison 'A - B'; ``change``                             A vs B; A minus B, the raw sign (as in Supplementary
                                                            Table 28; MSE in points of the baseline's total MSE)
 ``cases_improved``, ``median_change``                      cases improved (lower MSE, higher otherwise); median

@@ -6,6 +6,8 @@ import unittest
 
 import numpy as np
 
+from scsailor.resolution import metrics
+
 from reproduce.memorization import genetic
 
 
@@ -116,6 +118,24 @@ class Programs(unittest.TestCase):
         pull = genetic.excess_pull(c, e, dev, masks)
         self.assertTrue(np.allclose([pull['A'], pull['B']], [-.1, .1]))   # (e - c) sign(dev), on program means
         self.assertEqual(genetic.most_pulled(pull), 'B')
+
+
+class Metrics(unittest.TestCase):
+    def test_the_knockdowns_target_gene_is_left_out_of_the_correlations_but_not_out_of_squared_error(self):
+        rng = np.random.default_rng(5)
+        u = training(lines=('K562',), knockdowns=4, genes=6, seed=5)
+        C = rng.uniform(0, 1, u['truth'].shape)
+        target = np.array([0, 1, 2, 3])   # each knockdown's target gene column
+        P = u['truth'].copy()
+        P[np.arange(4), target] += 5.   # wrong only at the target genes
+        ybar = metrics.context_mean(u['truth'], u['weight'], u['context'])
+        d = u['truth'] - ybar
+        reference = {'C': C, 'R': C + .1, 'ybar': ybar, 'd': d, 'gene_weight': metrics.effect_weights(d, target),
+                     'index': np.zeros(4, int), 'n': 1, 'target': target}
+        got = genetic.scored(P, u, reference)
+        for m in ('pearson_delta', 'spearman_delta', 'systema_pearson_delta', 'systema_pearson_delta_observed'):
+            self.assertAlmostEqual(got[m], 1., msg=m)
+        self.assertAlmostEqual(got['mse'], 25 / 6)
 
 
 class Summary(unittest.TestCase):

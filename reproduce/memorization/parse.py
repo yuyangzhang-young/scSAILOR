@@ -16,17 +16,15 @@ gene's own input-set mean, centred within cell type, the penalty chosen per gene
 Parse has no growth or lineage feature.
 
 **Arms** (``arms``). With ``c`` each held-out unit's context mean of ``P - A`` and ``q = P - A - c`` (``split``):
-readers ``A + q + H``; for the summary-statistics model and DeepSets also calibrated ``A + lam c + mu q`` and calibrated
-+ readers ``A + mu q + H``.
+readers ``A + q + H``; for the summary-statistics model and DeepSets also calibrated, and calibrated + readers, the
+readers' replacement on the calibrated prediction.
 
-**Calibration amounts** (``amounts``). Chosen on the training units of the group's two calibration donors with their
-training weights (not recomputed for the subset, unlike ``scoring.retained``), from the nested parents: +Var fits of
-40,000 updates on the group's six nested-fit donors, whose amounts are then applied to the Mean-level fits. The rule
-differs from the shared one (``scsailor.resolution.menu.pick_two``: a pair per seed, on ``policies.G`` = {0, 1/8, 1/4,
-1/3, 1/2, 3/4, 1}, ties to the larger amounts) in three choices, each named by one constant: ``GRID`` (0-1.5 in steps of
-1/8), ``TIES_TO_SMALLER`` and ``ONE_PAIR_FROM_SEED_MEAN`` (one pair per model and group, picked on the mean of the
-three seeds' nested-parent predictions and used for every seed). ``arms`` writes the calibrated prediction out rather
-than calling ``menu.two_part``, whose context projection rounds differently.
+**Calibration** (``calibration``), as on Tahoe-100M and in origin resolution: each seed's prediction is calibrated
+toward the design-aware baseline ``b + kappa (A_d - b)`` (``net_cost.design_baseline``; ``A_d``: the anchor plus the
+cytokine's response within the cell type beyond its average, ``origin_resolution.parse.design_shift``) by the two-part
+calibration (``menu.two_part``). kappa (``net_cost.calibrate_design``) and each seed's amounts (``menu.pick_two``, on
+that seed's own nested-chain prediction; ``seed_amounts``) are chosen on the training units of the group's two
+calibration donors, from the nested parents: +Var fits of 40,000 updates on the group's six nested-fit donors.
 
 **Error.** A unit's error is its weight times the gene mean of the squared clipped error (``unit_errors``); a group's
 total MSE sums its units, the pooled total its twelve donors'. Pooled ratios are each seed's ratio of donor sums, then
@@ -45,31 +43,26 @@ from functools import cache
 import numpy as np
 import pandas as pd
 
-from scsailor.resolution import grids, metrics
-from scsailor.resolution.policies import lowest
+from scsailor.resolution import grids, menu, metrics, net_cost
 
 from ..origin_resolution import ROOT, SEEDS, bag_means, heldout_units, training_units
 from ..origin_resolution import parse as binding
+from ..origin_resolution.net_cost import read_side
 from ..origin_resolution.other_metrics import mean_response, references
 from . import data, readers, storage
 from .data import SEED_MEAN
 from .metrics import METRICS
 
-__all__ = ["GROUPS", "DONORS", "MODELS", "CALIBRATED", "LADDER", "GRID", "TIES_TO_SMALLER", "ONE_PAIR_FROM_SEED_MEAN",
-           "DONOR_SEED", "DRAWS", "METRIC_SEED", "METRIC_DRAWS", "COMPARISONS", "donors", "cell_types", "split",
-           "arms", "calibration_error", "pick_amounts", "unit_errors", "donor_picks", "pooled_ratio", "group",
-           "prediction", "amounts", "fit", "groups_table", "pooled_table", "scope_gain", "metric_gains_table",
-           "metric_summary", "tables"]
+__all__ = ["GROUPS", "DONORS", "MODELS", "CALIBRATED", "LADDER", "DONOR_SEED", "DRAWS", "METRIC_SEED", "METRIC_DRAWS",
+           "COMPARISONS", "donors", "cell_types", "split", "arms", "seed_amounts", "unit_errors", "donor_picks",
+           "pooled_ratio", "group", "prediction", "calibration", "fit", "groups_table", "pooled_table", "scope_gain",
+           "metric_gains_table", "metric_summary", "tables"]
 
 GROUPS = binding.FOLDS
 DONORS = tuple(f'Donor{k}' for k in range(1, 13))
 MODELS = ('summary', 'deepsets', 'attention_model', 'state', 'cpa')
 CALIBRATED = ('summary', 'deepsets')   # the models with nested parents, calibrated on the calibration donors
 LADDER = ROOT / 'parse-pbmc-ladder'   # <group>/<model>_<seed>_L1.npz: the Mean-level fits
-# The calibration rule's three choices (module docstring); each differs from menu.pick_two's
-GRID = np.arange(0, 1.501, 0.125)   # the amounts tried for both scales; menu.pick_two's: policies.G
-TIES_TO_SMALLER = True   # a tie goes to the smaller amounts; menu.pick_two's to the larger
-ONE_PAIR_FROM_SEED_MEAN = True   # one pair from the seeds' mean prediction, for every seed; menu.pick_two's: per seed
 DONOR_SEED = 20261111   # the donor resamples of the 95% intervals (``donor_picks``)
 DRAWS = 2000   # the resamples of every 95% interval: of donors, or within a context of cytokines and reference cells
 METRIC_SEED, METRIC_DRAWS = 20261112, 10000   # the donor resamples of the nine metrics' 90% intervals
@@ -88,33 +81,21 @@ def split(P, A, units):
     return c, P - A - c
 
 
-def arms(P, A, units, H, amounts=None):
+def arms(P, A, units, H, calibrated=None):
     """The original and the readers' arm of a prediction ``P`` with anchor ``A`` and the readers' offset of each unit's
-    context ``H``; given ``amounts`` (context scale, perturbation scale), also calibrated and calibrated + readers."""
-    c, q = split(P, A, units)
+    context ``H``; given its ``calibrated`` prediction, also that and calibrated + readers."""
+    _, q = split(P, A, units)
     out = {'original': P, 'readers': A + q + H}
-    if amounts is not None:
-        lam, mu = amounts
-        out |= {'calibrated': A + lam * c + mu * q, 'calibrated + readers': A + mu * q + H}
+    if calibrated is not None:
+        _, q = split(calibrated, A, units)
+        out |= {'calibrated': calibrated, 'calibrated + readers': A + q + H}
     return out
 
 
-def calibration_error(P, units):
-    """The weighted mean over units of the gene mean of the squared clipped error."""
-    return float(np.average(((np.maximum(P, 0) - units['truth']) ** 2).mean(axis=1), weights=units['weight']))
-
-
-def pick_amounts(P, A, units):
-    """The (context scale, perturbation scale) on ``GRID`` x ``GRID`` with the lowest calibration error of ``A + lam c +
-    mu q``; a tie goes to the smaller amounts (``TIES_TO_SMALLER``) or the larger."""
-    c, q = split(P, A, units)
-
-    def error(pair):
-        return calibration_error(A + pair[0] * c + pair[1] * q, units)
-
-    order = GRID if TIES_TO_SMALLER else GRID[::-1]
-    (lam, mu), _ = lowest(error, [(lam, mu) for lam in order for mu in order])
-    return float(lam), float(mu)
+def seed_amounts(T, predictions, units):
+    """Per seed, the two-part calibration's amounts toward ``T`` (``menu.pick_two``) on that seed's own prediction
+    (``predictions``: seed -> prediction on ``units``)."""
+    return {s: menu.pick_two(T, P, units)[0] for s, P in predictions.items()}
 
 
 def unit_errors(P, units):
@@ -171,23 +152,16 @@ def prediction(g, model, seed):
     return grids.load(LADDER / g / f'{model}_{seed}_L1.npz', 'outer', group(g)['held'])
 
 
-def amounts(g, model, seed):
-    """The calibration amounts (context scale, perturbation scale) of one fit of a model with nested parents: picked
-    from the seeds' mean nested-parent prediction (``ONE_PAIR_FROM_SEED_MEAN``) or from the fit's own seed."""
-    return picked_amounts(g, model, SEEDS if ONE_PAIR_FROM_SEED_MEAN else (seed,))
-
-
 @cache
-def picked_amounts(g, model, seeds):
-    """``pick_amounts`` on the training units of the group's calibration donors, from the mean of the ``seeds``'
-    nested-parent predictions and the nested parents' anchor (the same in every seed's file)."""
-    f = binding.files(g)
-    train = training_units(f['train'], f['constants'])
-    keep = np.isin(donors(train['context']), binding.order(g)['calibration'])
-    u = {k: v[keep] for k, v in train.items()}   # training weights, not recomputed for the subset (unlike retained)
-    paths = binding.case(model, g, outer=False)['grids']
-    P = np.mean([grids.load(paths[s]['nested'], 'train', u) for s in seeds], axis=0)
-    return pick_amounts(P, grids.load(paths[seeds[-1]]['nested'], 'train', u, 'anchor_raw'), u)
+def calibration(g, model):
+    """A model's calibration (module docstring) from origin resolution's Parse case: the design-aware baseline on the
+    held-out units (``baseline``) and each seed's amounts (``amounts``)."""
+    case = binding.case(model, g)
+    side = read_side('parse', case, 'calibration', None)
+    kappa = net_cost.calibrate_design(side)
+    held = read_side('parse', case, 'held-out', None)
+    return {'baseline': net_cost.design_baseline(held, kappa),
+            'amounts': seed_amounts(net_cost.design_baseline(side, kappa), side['p'], side['u'])}
 
 
 @cache
@@ -196,8 +170,12 @@ def fit(g, model, seed):
     (``errors``) and the nine metrics' per-donor sums (``metrics``)."""
     d = group(g)
     held = d['held']
-    calibrated = amounts(g, model, seed) if model in CALIBRATED else None
-    versions = arms(prediction(g, model, seed), held['anchor'], held, d['readers'][held['index']], calibrated)
+    P = prediction(g, model, seed)
+    calibrated = None
+    if model in CALIBRATED:
+        c = calibration(g, model)
+        calibrated = menu.two_part(c['baseline'], P, *c['amounts'][seed], held)
+    versions = arms(P, held['anchor'], held, d['readers'][held['index']], calibrated)
     return {'errors': {a: np.bincount(held['donor'], unit_errors(V, held), len(DONORS)) for a, V in versions.items()},
             'metrics': {a: metrics.per_line(metrics.unit_values(V, held, d['reference']), held, d['reference'])
                         for a, V in versions.items()}}

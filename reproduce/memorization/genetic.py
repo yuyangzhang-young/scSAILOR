@@ -38,9 +38,9 @@ level relative to the training lines of its centring group (the input-set mean m
 the input-set mean plus each gene's scale (``gene_scales``) times the removal's change from it, the knockdown's target
 gene keeping its removal value; removal + readers, the removal plus the readers' offset; no change, the input-set mean.
 Nine metrics per unit (``UNIT_VALUES``), then the weighted mean over the held-out units; squared error in % of the
-baseline's total MSE. The knockdown's target gene is kept in every metric and given weight zero only in the weighted
-R²; this differs from the shared genetic-screen convention, ``scsailor.resolution.metrics.target_excluded_values``,
-which also sets the target gene to the control value in the correlations, the top-50 direction and PDS.
+baseline's total MSE. The knockdown's target gene is left out (``scsailor.resolution.metrics.target_excluded_values``):
+it is set to the control value in prediction and truth for the correlations, the top-50 direction and PDS, and has
+weight zero in the weighted R²; squared error keeps it.
 """
 from functools import cache
 
@@ -76,9 +76,7 @@ MIN_UNITS = 5   # the scored knockdowns a context needs to be read in storage an
 COMPOSITE = 'growth composite'
 GROWTH_PROGRAMS = tuple(name.removeprefix('HALLMARK_') for name in programs.GROWTH)
 SHRINK = 'gene-wise shrink'
-# The nine metrics per unit. The target gene is kept in every metric (weight zero in the weighted R² only); the shared
-# genetic-screen convention is metrics.target_excluded_values (module docstring)
-UNIT_VALUES = metrics.unit_values
+UNIT_VALUES = metrics.target_excluded_values   # the nine metrics per unit, the knockdown's target gene left out
 COMPARISONS = {f'{SHRINK} - original': (SHRINK, 'original'),
                'removal + readers - removal': ('removal + readers', 'removal')}
 SIDES = {'train': 'training lines', 'held': 'held-out line'}

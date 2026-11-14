@@ -47,32 +47,31 @@ class Arms(unittest.TestCase):
         self.assertTrue(np.allclose(got['readers'] - context_mean(got['readers'], self.u),
                                     self.P - context_mean(self.P, self.u)))
 
-    def test_calibration_scales_the_two_parts_and_readers_on_it_keep_the_scaled_differences(self):
-        got = parse.arms(self.P, self.A, self.u, self.H, (.25, .75))
+    def test_readers_on_the_calibrated_prediction_replace_its_context_level_correction(self):
+        calibrated = self.A + np.random.default_rng(9).normal(0, .2, self.A.shape)
+        got = parse.arms(self.P, self.A, self.u, self.H, calibrated)
         self.assertEqual(list(got), ['original', 'readers', 'calibrated', 'calibrated + readers'])
-        self.assertTrue(np.allclose(got['calibrated'], self.A + .25 * self.c + .75 * self.q))
-        self.assertTrue(np.allclose(got['calibrated + readers'], self.A + .75 * self.q + self.H))
+        self.assertIs(got['calibrated'], calibrated)
+        self.assertTrue(np.allclose(context_mean(got['calibrated + readers'] - self.A, self.u), self.H))
+        self.assertTrue(np.allclose(got['calibrated + readers'] - context_mean(got['calibrated + readers'], self.u),
+                                    calibrated - context_mean(calibrated, self.u)))
 
 
 class Amounts(unittest.TestCase):
-    def test_the_grid_point_whose_calibrated_prediction_matches_the_truth_is_picked(self):
-        u = units(seed=3)
+    def setUp(self):
+        self.u = units(seed=3)
         rng = np.random.default_rng(3)
-        A = rng.uniform(4, 5, u['truth'].shape)
-        P = A + rng.normal(0, .3, A.shape)
-        c = context_mean(P - A, u)
-        u['truth'] = A + .375 * c + 1.25 * (P - A - c)
-        self.assertEqual(parse.pick_amounts(P, A, u), (.375, 1.25))
+        self.T = rng.uniform(4, 5, self.u['truth'].shape)
+        self.D = rng.normal(0, .3, self.T.shape)   # one seed's change from T
 
-    def test_ties_go_to_the_smaller_amounts(self):
-        u = units(seed=4)
-        A = np.full(u['truth'].shape, 3.)
-        X = np.random.default_rng(4).normal(size=A.shape)
-        u['truth'] = A.copy()
-        self.assertEqual(parse.pick_amounts(A + context_mean(X, u), A, u), (0., 0.))   # every perturbation scale ties
-        within = X - context_mean(X, u)
-        u['truth'] = A + within
-        self.assertEqual(parse.pick_amounts(A + within, A, u), (0., 1.))   # every context scale ties
+    def test_each_seed_gets_the_amounts_that_fit_its_own_prediction(self):
+        self.u['truth'] = self.T + .5 * self.D
+        got = parse.seed_amounts(self.T, {1: self.T + self.D, 2: self.T + 2 * self.D}, self.u)
+        self.assertEqual(got, {1: [.5, .5], 2: [.25, .25]})   # one pair from the seeds' mean would serve neither
+
+    def test_the_amounts_stay_on_the_shared_grid_up_to_one(self):
+        self.u['truth'] = self.T + 1.25 * self.D
+        self.assertEqual(parse.seed_amounts(self.T, {1: self.T + self.D}, self.u), {1: [1., 1.]})
 
 
 class Errors(unittest.TestCase):

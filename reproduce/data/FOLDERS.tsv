@@ -18,6 +18,7 @@ cost-readings-attention-model-jiang	Cost and alignment readings of the attention
 cost-readings-built-models	Cost and alignment readings of the built models' changes on GSE306429 and Parse PBMC
 cost-readings-state	Cost and alignment readings of State's changes on the screens other than Tahoe-100M
 figure-tables	The tables behind Figs. 5 and 6
+genetic-screens-held-out-references	Held-out contrast errors of no change and of the baseline, and noise floors, of the Replogle-Nadig (folds 1-4) and Jiang et al. (folds 1-6) natural task
 genetic-screens-predictions	The five models' +Var natural-task predictions on Replogle-Nadig folds 1-4 and Jiang et al. folds 1-6 (<screen>/<fold>/<model>_<seed>_L2/PREDICTIONS.npz; model codes summary, deepsets, attention_model, state, cpa; three seeds), the held-out truth and unit reliability
 genetic-screens-runs	The built models on Replogle-Nadig folds 1-2 and Jiang et al. folds 4-5: nested parents, the restoring changes and continued training (predictions and run records), with the fold data
 genetic-truth-statistics	Per-gene statistics of the genetic screens' held-out truth, for the weighted R2 metrics
@@ -80,6 +81,9 @@ parse-pbmc-inputs	Parse PBMC's model inputs, groups G1-G3 (CC BY-NC 4.0)
 parse-pbmc-ladder	Mean-level predictions on Parse PBMC groups G1-G3 of the summary-statistics, DeepSets and attention models, State and CPA, on the training and held-out donors (three seeds; <group>/<model>_<seed>_L1.npz, model codes summary, deepsets, attention_model, state, cpa; CC BY-NC 4.0)
 parse-pbmc-primary-donor-recovery	Recovery on Parse PBMC's evaluated donors, all twelve
 parse-pbmc-reference-wells	Parse PBMC's reference control wells H10-H12, 256 cells per donor and cell type, raw counts in compressed rows, and the gene registry that maps them to the panels (CC BY-NC 4.0)
+parse-pbmc/G1/synthetic	The synthetic-answer instance of Parse PBMC donor group 1 (CC BY-NC 4.0)
+parse-pbmc/G2/synthetic	The synthetic-answer instance of Parse PBMC donor group 2 (CC BY-NC 4.0)
+parse-pbmc/G3/synthetic	The synthetic-answer instance of Parse PBMC donor group 3 (CC BY-NC 4.0)
 replogle-nadig-gene-symbols	The HGNC symbol of each Ensembl identifier on the Replogle-Nadig panels (hgnc_replogle_panels.tsv; from the HGNC complete set, CC0)
 replogle-nadig-inputs	Replogle-Nadig's input libraries (folds 1-2), model inputs and training arrays, folds 1-4
 replogle-nadig-unit-reliability	Which Replogle-Nadig held-out units carry reproducible signal (UNIT_RELIABILITY.csv)
@@ -96,6 +100,9 @@ state-statistic-swap-readings-folds-2-3	State's statistic-swap scores, Tahoe-100
 statistic-swap	The built models' fixed-weight statistic-swap predictions, original and changed, Tahoe-100M folds 1-3
 statistic-swap-shams	Sham and probe predictions of the statistic swap (original and changed models) and its tables
 supplementary-tables	Supplementary Tables 24b and 25b
+synthetic-answer-assay	The synthetic-answer assay's tables of Results 3, Fig. 3 and Supplementary Note S6 (reproduce/assay); Parse PBMC rows CC BY-NC 4.0
+synthetic-answer-positive-control	Scores of the positive control's two fits, exact and sampled labels (summary-statistics model, Mean, Tahoe-100M fold 1)
+synthetic-answer-scores	Scores of the synthetic-answer fits on the five screens (<screen>/<fold>/<model>_<seed>_<level>[_lr03]/SCORES.json), pooled scores of the Tahoe-100M built models and PrePR-CT folds 2-3, whole-profile scores of the Tahoe-100M fits; parse-pbmc/ CC BY-NC 4.0
 tahoe-100m	Tahoe-100M's cell-line metadata, unchanged (CC0)
 tahoe-100m-deepsets-fold-1	DeepSets predictions on Tahoe-100M fold 1 at 40,000 updates
 tahoe-100m-evaluation-units-fold-1	The held-out evaluation units of Tahoe-100M fold 1
@@ -108,6 +115,9 @@ tahoe-100m-line-subsets	The fit and calibration line subsets of the Tahoe-100M f
 tahoe-100m-line-subsets/folds-2-3	The line subsets of folds 2 and 3
 tahoe-100m-noise-floor	Per-unit noise and per-gene variance of Tahoe-100M fold 1's measured responses
 tahoe-100m-predictions-fold-1	The built models' and the attention model's predictions on Tahoe-100M fold 1 at 40,000 updates
+tahoe-100m/F1/synthetic	The synthetic-answer instance of Tahoe-100M fold 1
+tahoe-100m/F2/synthetic	The synthetic-answer instance of Tahoe-100M fold 2
+tahoe-100m/F3/synthetic	The synthetic-answer instance of Tahoe-100M fold 3
 training-arrays-parse-pbmc-tahoe-100m	Training targets of Parse PBMC's held-out groups G1-G3 (CC BY-NC 4.0) and Tahoe-100M fold 1's training controls and targets, as the models were trained on them
 training-coverage	Training coverage and the ridge readers of the held-out target, Tahoe-100M
 training-coverage-runs	Summary-statistics model runs trained on 7, 14 or 21 lines of Tahoe-100M fold 1: held-out predictions, for the training-coverage reading

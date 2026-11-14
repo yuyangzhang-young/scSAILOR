@@ -1,6 +1,6 @@
 # Origin resolution: the paper's results from the deposited data
 
-The stages that rebuild the tables behind origin resolution's results (Results 5 and 6, Figs. 5 and 6, Supplementary Tables 19, 24, 24b and 25b, and Supplementary Data 3) from the models' saved predictions, and compare them with the tables record. The method they call is `scsailor.resolution`; this folder holds the dataset bindings and the stages that read and write the deposited files.
+The stages that rebuild the tables behind origin resolution's results (Results 5 and 6, Figs. 5 and 6a,b, Supplementary Tables 19, 24, 24b and 25b, and Supplementary Data 3) from the models' saved predictions, and compare them with the tables record. The method they call is `scsailor.resolution`; this folder holds the dataset bindings and the stages that read and write the deposited files.
 
 ## Environment
 

@@ -48,8 +48,11 @@ jiang-split-half-reference	Split-half reproducibility of Jiang et al.'s held-out
 layer-fractions	Calibrated fractions per prediction layer against the held-out best fraction: readings, primary table, tolerance curve, use
 light-version-cases	The light version's cases and menus on the screens other than Tahoe-100M
 light-version-cases/cases-extended-menu	The light cases with the extended menu (CASES.csv)
+memorization	Results 7's memorization tables (reproduce/memorization)
+memorization/tahoe-100m	The memorization tables of Results 7 on Tahoe-100M (reproduce/memorization)
 metric-and-known-answer-readings	Readings on metrics other than squared error on every screen, and the known-answer read-back
 metric-readings-tahoe-100m	Readings on metrics other than squared error, Tahoe-100M
+msigdb-hallmark	The MSigDB Hallmark gene sets, release 2025.1.Hs (CC BY 4.0; Liberzon et al. 2015)
 nested-parents-gse306429-replogle-nadig	Nested parents of GSE306429 and Replogle-Nadig fold 1: predictions, run records, fold data, held-out truth, the parent-only selections and the cards
 nested-parents-gse306429-replogle-nadig/cards	Origin resolution's cards of the nested parents
 nested-parents-gse306429-replogle-nadig/selections	The parent-only selections
@@ -83,8 +86,10 @@ tahoe-100m	Tahoe-100M's cell-line metadata, unchanged (CC0)
 tahoe-100m-deepsets-fold-1	DeepSets predictions on Tahoe-100M fold 1 at 40,000 updates
 tahoe-100m-evaluation-units-fold-1	The held-out evaluation units of Tahoe-100M fold 1
 tahoe-100m-evaluation-units-folds-2-3	The held-out evaluation units of Tahoe-100M folds 2 and 3
+tahoe-100m-gene-panels	The 2,000-gene panel of each Tahoe-100M fold (tahoe_<fold>.csv)
 tahoe-100m-inputs-fold-1	Model inputs of Tahoe-100M fold 1: input library, evaluation inputs, training constants
 tahoe-100m-inputs-folds-2-3	Model inputs of Tahoe-100M folds 2 and 3: input library, evaluation inputs, controls, training targets and constants
+tahoe-100m-ladder	Mean-level predictions on Tahoe-100M folds 1-3, each file on the training and the held-out lines: the summary-statistics, DeepSets and attention models, CPA and PrePR-CT (three seeds; <fold>/<model>_<seed>_L1.npz, model codes summary, deepsets, attention_model, cpa, prepr), and the fold-1 built models' runs after 80,000 and 120,000 updates (_step<N>.npz)
 tahoe-100m-line-subsets	The fit and calibration line subsets of the Tahoe-100M folds
 tahoe-100m-line-subsets/folds-2-3	The line subsets of folds 2 and 3
 tahoe-100m-noise-floor	Per-unit noise and per-gene variance of Tahoe-100M fold 1's measured responses

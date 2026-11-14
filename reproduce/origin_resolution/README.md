@@ -45,7 +45,7 @@ The rows `Fig5` and `Fig6` write the tables behind Figs. 5b-d and 6a-b and Suppl
 | Fig. 5d | `control-built/CONTROL_USE_SEED_MEANS.csv` and `control-state/CONTROL_USE_SEED_MEANS.csv`, level `L1` (Mean), condition `pooled`: own-control benefit = common error with pooled training controls minus with own controls (`value_common`) | `control-built`, `control-state` |
 | Fig. 6a | `FIG5_PREDICTORS_BY_MODEL_AND_FOLD.csv`: each original model and its calibration toward the baseline, relative MSE | `figure5` |
 | Fig. 6b | `FIG6_C_CHANGE_SHARE_BY_MODEL_AND_FOLD.csv`: each original calibrated toward the design-aware baseline (`Calibrated`) and each restoring change kept and calibrated the same way (`Kept`), minus the original as trained; filled or outlined from `RECOMMEND_RULE_BY_CHANGE.csv` (comparison `design-aware`) | `figure6c`, `rule` |
-| Supplementary Fig. 4b | `RECOVERY_CARDS.csv` (`Q_full`, `Q_at_alpha`: recovery at full strength and at the kept fraction) and `KEPT_FRACTION_INCREMENT.csv` (held-out ΔMSE at full strength, and at the kept fraction estimated from the clipped errors at strength 0, ½ and 1, exact where no prediction is clipped) | `net-cost-tables`, `kept-fraction` |
+| Supplementary Fig. 4b | `RECOVERY_CARDS.csv` (`Q_full`, `Q_at_alpha`: recovery at full strength and at the kept fraction) and `KEPT_FRACTION_INCREMENT.csv` (held-out ΔMSE at full strength and at the kept fraction before calibration, both scored on the clipped predictions) | `net-cost-tables`, `kept-fraction` |
 
 ## Layout
 

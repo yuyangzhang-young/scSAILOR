@@ -181,7 +181,7 @@ STEPS = {
     'figure5b': step('figure_tables', '--stage', 'figure5b', needs=['net-cost-tables', 'heldout-parts', *TAHOE_OUTER, 'weight-decay-reading'],
                      outputs=saved(FM5, 'FIG5_B_CHANGES_AND_COMPARATORS.csv')),
     'figure5c': step('figure_tables', '--stage', 'figure5c', needs=['net-cost-tables'], outputs=saved(FM5, 'FIG5_C_CORRECTION_BY_SCREEN.csv')),
-    'kept-fraction': step('figure_tables', '--stage', 'kept-fraction', needs=['net-cost-calibration', 'net-cost-tables', 'heldout-parts', *TAHOE_OUTER],
+    'kept-fraction': step('figure_tables', '--stage', 'kept-fraction', needs=['net-cost-tables', 'heldout-parts'],
                           outputs=saved(FM6, 'KEPT_FRACTION_INCREMENT.csv')),
 }
 

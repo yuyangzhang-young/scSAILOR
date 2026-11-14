@@ -7,8 +7,8 @@ Stages, each reading the tables of earlier steps from ``--out`` and writing into
 - ``heldout-parts``: from the saved predictions on held-out lines, with the amounts fixed on calibration lines
   (``AMOUNTS.json`` of ``net_cost --stage calibration``) and the changes of ``CARDS.csv``:
   ``CHANGE_PARTS_HELDOUT.csv``, per change and seed, the kept change (the original model plus the kept fraction of
-  the change, calibrated toward the baseline) and the half change (the original model plus half of the change, not
-  calibrated); ``CLOSEST_REFERENCE_HELDOUT.csv``, per model, fold and seed, the standard reference (no change, the
+  the change, calibrated toward the baseline) and the change at its kept fraction before calibration (the original
+  model plus the kept fraction of the change, ``at_kept``); ``CLOSEST_REFERENCE_HELDOUT.csv``, per model, fold and seed, the standard reference (no change, the
   baseline, the original as trained and its three shrinks) with the lowest held-out error. Total, common and contrast
   error minus the original model's, in points of the original's total MSE, on clipped predictions;
 - ``figure5b``: ``FIG5_B_CHANGES_AND_COMPARATORS.csv``, Fig. 5b's held-out ΔMSE per change and comparator, means over
@@ -23,11 +23,8 @@ Stages, each reading the tables of earlier steps from ``--out`` and writing into
   average training response against the needed context-level correction on the held-out line. All values are written;
   Fig. 5c omits alignment and best scale where ``size_over_anchor_error_heldout`` is below 0.06;
 - ``kept-fraction``: ``KEPT_FRACTION_INCREMENT.csv``, Supplementary Fig. 4b: per restoring change, its held-out error
-  at full strength and, estimated, at its kept fraction before calibration, minus the original model. The estimate
-  (``estimated_at_fraction``) is, per seed, the quadratic in the fraction through the clipped scores at strength 0, 1/2
-  and 1, read at the seed's kept fraction; it is exact where no prediction is clipped. Reads ``CARDS.csv``,
-  ``AMOUNTS.json``, ``PER_SEED_<fold>.csv`` (the per-seed costs whose mean is ``CARDS.csv``'s) and
-  ``CHANGE_PARTS_HELDOUT.csv``.
+  minus the original model's at full strength (``CARDS.csv``) and at its kept fraction before calibration, scored on
+  that prediction (``at_fraction``, per seed in ``CHANGE_PARTS_HELDOUT.csv``), means over seeds.
 
     python -m reproduce.origin_resolution.figure_tables --stage figure5b --out DIR
 """
@@ -50,7 +47,7 @@ from .paper_tables import MODEL, REFERENCE, SCREEN, change_name
 from .slopes import load_case
 from .tahoe import IL_NAME
 
-__all__ = ["PART_KEYS", "TYPE", "points", "closest_reference", "estimated_at_fraction", "correction_table",
+__all__ = ["PART_KEYS", "TYPE", "points", "closest_reference", "at_fraction", "correction_table",
            "average_response_alignment", "heldout_parts_stage", "figure5b_stage", "figure5c_stage", "kept_fraction_stage",
            "main"]
 
@@ -81,11 +78,10 @@ def closest_reference(refs, base):
     return name, points(refs[name], base)
 
 
-def estimated_at_fraction(cost, half, fraction):
-    """The change's error at ``fraction`` of it, estimated by the quadratic in the fraction through 0 at strength 0,
-    ``half`` at 1/2 and ``cost`` at 1. The error of p + l (R - p) is that quadratic where no prediction is clipped."""
-    a, b = 2 * cost - 4 * half, 4 * half - cost
-    return a * fraction * fraction + b * fraction
+def at_fraction(p, R, fraction, u):
+    """The original model plus ``fraction`` of the change (p + fraction (R - p)), scored on the clipped prediction: each
+    part of its error minus the original model's, in points of the original's total MSE."""
+    return points(scores(p + fraction * (R - p), u), scores(p, u))
 
 
 def correction_table(alignment_rows, changes):
@@ -126,8 +122,8 @@ def heldout_parts_stage(out):
             p = held['p'][s]
             base = scores(p, u)
             kept = scores(actions(held, s, saved['kept'][str(s)], saved['model']['kappa'])[1], u)
-            half = scores(p + .5 * (held['R'][s] - p), u)   # the half change, for the kept fraction's estimate
-            parts.append({'card': c['card'], 'seed': s, **prefixed('kept', points(kept, base)), **prefixed('half', points(half, base))})
+            at_kept = at_fraction(p, held['R'][s], saved['kept'][str(s)]['alpha'], u)
+            parts.append({'card': c['card'], 'seed': s, **prefixed('kept', points(kept, base)), **prefixed('at_kept', at_kept)})
         print(c['card'], flush=True)
     write_csv(out / 'CHANGE_PARTS_HELDOUT.csv', parts)
     closest = []
@@ -232,18 +228,13 @@ def figure5c_stage(out):
 
 def kept_fraction_stage(out):
     out = Path(out)
-    amounts = json.loads((out / 'AMOUNTS.json').read_text())
-    readings = per_seed(out)
-    half = {(r['card'], int(r['seed'])): float(r['half_total_pts']) for r in read_csv(out / 'CHANGE_PARTS_HELDOUT.csv')}
+    at_kept = {(r['card'], int(r['seed'])): float(r['at_kept_total_pts']) for r in read_csv(out / 'CHANGE_PARTS_HELDOUT.csv')}
     rows = []
     for c in tahoe_cards(out):
-        if c['kind'] != 'restoring':
-            continue
-        kept = [amounts[c['card']]['kept'][str(s)]['alpha'] for s in SEEDS]
-        at_kept = [estimated_at_fraction(float(readings[(c['fold'], c['model'], c['cell'], s)]['cell_total_pts']), half[(c['card'], s)], k)
-                   for s, k in zip(SEEDS, kept)]
-        rows.append({'fold': c['fold'], 'Model': MODEL[c['model']], 'Change': change_name(c['cell']), 'kept_fraction': float(c['alpha_mean']),
-                     'full_strength_pts': float(c['cost_total_pts']), 'at_kept_fraction_estimated_pts': float(np.mean(at_kept))})
+        if c['kind'] == 'restoring':
+            rows.append({'fold': c['fold'], 'Model': MODEL[c['model']], 'Change': change_name(c['cell']), 'kept_fraction': float(c['alpha_mean']),
+                         'full_strength_pts': float(c['cost_total_pts']),
+                         'at_kept_fraction_pts': float(np.mean([at_kept[(c['card'], s)] for s in SEEDS]))})
     write_csv(out / 'KEPT_FRACTION_INCREMENT.csv', rows)
 
 

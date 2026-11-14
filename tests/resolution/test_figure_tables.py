@@ -38,24 +38,24 @@ class Points(unittest.TestCase):
         self.assertAlmostEqual(parts["contrast"], 5.)
 
 
-class KeptFractionEstimate(unittest.TestCase):
-    def test_the_estimate_passes_through_strength_zero_half_and_one(self):
-        cost, half = 7., 1.5
-        self.assertEqual(figure_tables.estimated_at_fraction(cost, half, 0.), 0.)
-        self.assertAlmostEqual(figure_tables.estimated_at_fraction(cost, half, .5), half, places=12)
-        self.assertAlmostEqual(figure_tables.estimated_at_fraction(cost, half, 1.), cost, places=12)
-
-    def test_the_estimate_is_exact_where_no_prediction_is_clipped(self):
-        # the error of p + l (R - p) is a quadratic in l through 0, so two points give it everywhere
+class KeptFraction(unittest.TestCase):
+    def test_the_error_at_the_kept_fraction_is_scored_on_the_clipped_prediction(self):
+        # targets near zero, so that the original model and the change cross it and clipping matters
         u = units()
-        rng = np.random.default_rng(1)
-        p = u["truth"] + rng.normal(0, .2, u["truth"].shape)
+        rng = np.random.default_rng(3)
+        u["truth"] = rng.uniform(0, .05, u["truth"].shape)
+        p = u["truth"] + rng.normal(0, .1, u["truth"].shape)
         R = p + rng.normal(0, .3, p.shape)
         total = lambda x: scores(x, u)["total_mse"]
-        pts = lambda x: 100 * (total(x) - total(p)) / total(p)
-        cost, half = pts(R), pts(p + .5 * (R - p))
-        for fraction in (.1, .3, .8):
-            self.assertAlmostEqual(figure_tables.estimated_at_fraction(cost, half, fraction), pts(p + fraction * (R - p)), places=9)
+        pts = lambda fraction: 100 * (total(p + fraction * (R - p)) - total(p)) / total(p)
+        fraction = .2
+        scored = figure_tables.at_fraction(p, R, fraction, u)
+        self.assertAlmostEqual(scored["total"], pts(fraction), places=10)
+        # the quadratic through strength 0, 1/2 and 1 misses it where predictions are clipped
+        half, full = pts(.5), pts(1.)
+        quadratic = (2 * full - 4 * half) * fraction ** 2 + (4 * half - full) * fraction
+        self.assertGreater(abs(scored["total"] - quadratic), .1)
+        self.assertAlmostEqual(scored["common"] + scored["contrast"], scored["total"], places=10)
 
 
 class Correction(unittest.TestCase):

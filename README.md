@@ -1,5 +1,7 @@
 # scSAILOR
 
+[![Tests](https://github.com/yuyangzhang-young/scSAILOR/actions/workflows/tests.yml/badge.svg)](https://github.com/yuyangzhang-young/scSAILOR/actions/workflows/tests.yml)
+
 **Which information from control cells does a perturbation-response model read, and does reading it help the model predict?**
 
 ![scSAILOR](docs/images/overview.png)

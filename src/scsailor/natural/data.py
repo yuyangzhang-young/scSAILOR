@@ -2,8 +2,9 @@
 
 Each update draws eight training units (``[seed, step, 0]``), for each unit m cells from its control pool
 (``[seed, step, slot, 1]``) and the carrier's technical draws (``[seed, step, slot, 2]``); the batch content
-does not depend on the number of worker threads. ``lr_at`` warms up linearly over 1,000 updates and decays
-by a cosine to 10% of the peak at ``TOTAL`` updates (the built models' schedule).
+does not depend on the number of worker threads. ``lr_at`` is the built models' schedule: a linear warm-up
+over 1,000 updates, then a cosine that would reach 10% of the peak at ``TOTAL`` = 160,000 updates; the paper reads
+the built models out after 40,000 updates of it.
 """
 from concurrent.futures import ThreadPoolExecutor
 import math
@@ -11,7 +12,7 @@ import time
 import h5py
 import numpy as np
 from ..carrier import make
-TOTAL=40000
+TOTAL=160000
 
 class NaturalData:
     def __init__(self, directory):

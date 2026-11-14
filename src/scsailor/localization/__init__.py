@@ -31,8 +31,11 @@ Code names and the paper's terms (saved files keep the code names):
 =========================================================  ==========================================================
 Code                                                       Paper
 =========================================================  ==========================================================
+map                                                        the full grid of cuts, starting points and learning rates
 cut                                                        cut
+junction cut                                               designated cut (of the fixed intervention)
 arm, start                                                 starting point
+stage ``pilot``; stage ``time``                            feasibility run; separate trajectory
 arm ``a``; ``a`` at the cut ``input``                      fine-tuning; whole network
 arm ``f``, ``e``, ``d``                                    back reset, front reset, embedding reset
 arm ``fresh``                                              from scratch
@@ -46,8 +49,10 @@ bits 0, 1, 5, 6                                            shared shift, selecti
                                                            spread tests
 Q                                                          recovery
 parent                                                     original model
-half ``synthetic`` / ``natural``                           model trained on the synthetic task / on real responses
+half ``synthetic`` / ``natural``                           model trained on the synthetic task / on measured responses
 time axis                                                  training longer
+presence profile                                           cue profile
+background, bag                                            context, input set
 model ``summary``, ``deepsets``, ``attention_model``       summary-statistics model, DeepSets model, attention model
 model ``state``, ``cpa``, ``prepr``                        State, CPA, PrePR-CT
 drug embedding (``backbone.pert``)                         perturbation embedding

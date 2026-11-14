@@ -29,13 +29,17 @@ information-localization-light	The light information localization on GSE306429, 
 information-localization-maps-fold-1	Information localization maps of the summary-statistics and DeepSets models on Tahoe-100M fold 1
 information-localization-maps-fold-2	Information localization maps of the summary-statistics and DeepSets models on Tahoe-100M fold 2
 information-localization-maps-fold-3	Information localization maps of the summary-statistics and DeepSets models on Tahoe-100M fold 3
-information-localization-published-models	Information localization map tables of CPA and PrePR-CT on Tahoe-100M fold 1
+information-localization-planted-faults-deepsets	Information localization of the DeepSets model's planted faults and its unfaulted control, Tahoe-100M fold 1: the map runs' records and map tables
+information-localization-planted-faults-variance	Information localization of the summary-statistics model's planted fault on the shared spread, Tahoe-100M fold 1: the map runs' records and map tables
+information-localization-published-models	Information localization of CPA and PrePR-CT on Tahoe-100M fold 1: the map runs' records (cpa/map/, prepr/map/) and map tables
 information-localization-replogle-nadig	Information localization on Replogle-Nadig folds 1-2: map tables and evaluations, the runs of the restoring changes, the fold data
 information-localization-runs-fold-1	The natural runs of the summary-statistics and DeepSets models' restoring changes, Tahoe-100M fold 1: start and end predictions and records
 information-localization-runs-fold-2	The same on Tahoe-100M fold 2
 information-localization-runs-fold-3	The same on Tahoe-100M fold 3
 information-localization-state	Information localization of State on Tahoe-100M fold 1: the natural runs of the restoring changes and the map evaluations
+information-localization/presence	Cue profiles of the built models' parents and planted faults on Tahoe-100M fold 1 (profiles/) and their tables
 information-localization/recovery-by-training-length	Recovery of planted responses along training (TIME_AXIS.csv)
+information-localization/recovery-by-training-length/checkpoint-scores	The scores of the parents' later checkpoints that TIME_AXIS.csv is built from
 information-localization/state-correction-amounts	State's correction amounts on the natural task
 information-localization/statistic-swap	The statistic-swap scores of the changes
 jiang-correction-alignment	Jiang et al.'s context-level correction readings per fit and fold (OFFSET_READINGS.csv)

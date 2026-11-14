@@ -1,0 +1,9 @@
+# The results tables, on a CPU, Python 3.11: the versions with which the saved tables were computed.
+numpy==2.4.6
+scipy==1.17.1
+h5py==3.16.0
+pandas==2.3.3
+pyarrow==25.0.0
+pytest==9.1.1
+# Supplementary Data 3's workbook only
+openpyxl==3.1.5

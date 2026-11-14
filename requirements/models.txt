@@ -1,0 +1,12 @@
+# Training and forward passes of the built and published models, Python 3.11; torch from the CUDA 12.8 or the CPU index.
+numpy==2.1.2
+scipy==1.17.1
+h5py==3.16.0
+torch==2.8.0
+pyyaml==6.0.3
+lightning==2.6.6
+torchmetrics==1.9.0
+transformers==5.20.2
+geomloss==0.3.1
+POT==0.9.4
+torch_geometric==2.6.1

@@ -26,6 +26,7 @@ Models that predict how cells respond to a perturbation usually receive a set of
 | `reproduce/published_models/` | Training, prediction and scoring of the published models State, CPA and PrePR-CT on both tasks | Apache-2.0 |
 | `reproduce/origin_resolution/` | Origin resolution's results tables, rebuilt from the deposited predictions and compared with the tables record | Apache-2.0 |
 | `reproduce/data/` | The deposit's folders and their contents | Apache-2.0 |
+| `requirements/` | The package versions with which the tables were computed (`analysis.txt`) and the models trained (`models.txt`) | Apache-2.0 |
 | `third_party/` | Unchanged upstream code of State (with its CPA implementation) and PrePR-CT, used to reproduce the published-model results | Each directory's own licence |
 
 ## Installation
@@ -126,6 +127,28 @@ A model's prediction is its anchor (the control mean plus the transferred respon
 4. **The held-out check** reports the same differences on held-out lines, which take no part in any choice.
 
 `scsailor.resolution` follows these steps: `il_cells` for recovery and cost; `attribution`, `origins`, `references` and `probes` for attribution; `slopes`, `policies`, `card`, `menu` and `net_cost` for calibration, with `planted` for its known-answer test on planted changes; and `comparison` for the held-out check. `stages` runs them over one dataset's case, whose contract it states. A dataset's facts, such as the names of its replicate plates, are passed in as arguments. The paper's terms are listed in [`src/scsailor/resolution/__init__.py`](src/scsailor/resolution/__init__.py).
+
+## Reproducing the paper
+
+Every results table of the paper is rebuilt from the deposited data by one command per part of the paper. Each command reads the data root given by `--data` ([`reproduce/data/FOLDERS.tsv`](reproduce/data/FOLDERS.tsv) lists its folders), writes its tables under `--out`, and with `--compare ROOT` prints `equal`, `DIFFERS` or `not deposited` for every table against the deposited one at the same path, cell for cell. On another CPU the last digits of a value can differ; a `DIFFERS` is then checked numerically.
+
+| Part of the paper | Command | Rebuilt from | Time on a CPU |
+|---|---|---|---|
+| Results 1-2: the information ladder (Figs. 1-2, Supplementary Fig. 1, Supplementary Data 1-2) | `python -m reproduce.ladder.tables` | the saved per-fit scores and the fold data | under a minute |
+| Results 3: the synthetic-answer assay (Fig. 3) | `python -m reproduce.assay.tables` | the saved per-fit synthetic scores and the instances | about 25 minutes |
+| Results 4: information localization on Tahoe-100M (Fig. 4) | `python -m reproduce.information_localization.tables` | the saved run records | minutes |
+| Results 5-6: origin resolution (Figs. 5 and 6a,b, Supplementary Data 3) | `python -m reproduce.origin_resolution.results --row all` | the saved predictions | about 11 hours |
+| Results 7: memorization and readers (Fig. 6c-g) | `python -m reproduce.memorization.tables` | the saved predictions | about 25 minutes |
+
+One case of origin resolution runs in minutes on a laptop from a subset of the data under 1 GB: `python -m reproduce.origin_resolution.one_case`. Each folder's README gives its tables, the printed results they hold, its inputs and what it does not include (the retraining runs).
+
+The tables were computed with the versions in `requirements/analysis.txt`:
+
+```bash
+pip install -e ".[test]" -r requirements/analysis.txt
+```
+
+Training and forward passes use `requirements/models.txt`. The built models are trained with the package (`scsailor.models`, `scsailor.assay.train`, `scsailor.natural`) under the settings of `reproduce/assay/study.py` and `reproduce/information_localization/`; the published models with `reproduce/published_models/`. Training on a GPU does not repeat bit for bit.
 
 ## Third-party code
 

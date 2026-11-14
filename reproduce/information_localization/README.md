@@ -7,7 +7,7 @@ The settings, parents and run entries of the paper's information-localization ru
 | `tahoe.py` | Settings (the parents' learning rate, the training-stream and re-initialization seeds, the panels), parent loading, and one map run, feasibility run or separate trajectory from a row |
 | `planted_faults.py` | Builds the five planted-fault parents and the two unfaulted controls |
 | `time_and_presence.py` | The cue profile of one parent; the score of one of a parent's later checkpoints (training longer) |
-| `tables.py` | Rebuilds the tables from the saved run records |
+| `tables.py` | Rebuilds the tables from the saved run records and cue profiles |
 
 Not included yet: the restoring changes re-run on measured responses (`scsailor.localization.real_task`), the published models' runs (State, CPA, PrePR-CT), the runs on the other screens, the retraining of the summary-statistics donor of the planted faults, and the DeepSets model's and State's training-longer scores and the later-checkpoint cue profiles.
 
@@ -17,9 +17,19 @@ Not included yet: the restoring changes re-run on measured responses (`scsailor.
 python -m reproduce.information_localization.tables --data DATA --out OUT --compare DATA
 ```
 
-`DATA` is the data root ([`../data/FOLDERS.tsv`](../data/FOLDERS.tsv)). For each map folder in `tables.MAPS`, the runs under `<folder>/map/` are read by `scsailor.localization.readings` with the paper's settings (`tables.READINGS`): the map's seeds 31002 and 31003, seed 31004 for the restoring changes only, each model's designated cut and the planted faults. Each folder is read for the selective shift (bit 1) and, where `MAPS` lists them, the shared shift (bit 0) and the shared spread (bit 5). Training longer reads `information-localization/recovery-by-training-length/checkpoint-scores/`, and the cue profiles read `information-localization/presence/profiles/`. `--compare` prints `equal`, `DIFFERS` or `not deposited` for each table against the saved one at the same path; it leaves out the `run` column and the saved rows of fold 1's finer DeepSets cut, which is not one of the map's cuts. The tables take about two minutes on a CPU, with NumPy only.
+`DATA` is the data root ([`../data/FOLDERS.tsv`](../data/FOLDERS.tsv)). For each map folder in `tables.MAPS`, the runs under `<folder>/map/` are read by `scsailor.localization.readings` with the paper's settings (`tables.READINGS`): the map's seeds 31002 and 31003, seed 31004 for the restoring changes only, each model's designated cut and the planted faults. Each folder is read for the selective shift (bit 1) and, where `MAPS` lists them, the shared shift (bit 0) and the shared spread (bit 5). Training longer reads `information-localization/recovery-by-training-length/checkpoint-scores/`, and the cue profiles read `information-localization/presence/profiles/`. `--compare` prints `equal`, `DIFFERS` or `not deposited` for each table against the saved one at the same path; it leaves out the `run` column and the saved rows of fold 1's finer DeepSets cut, which is not one of the map's cuts. The tables take about three minutes on a CPU, most of it reading the run records.
 
-The saved files, and so the tables, name the attention model `state` and State `official_state`.
+Three more tables hold the other numbers of Supplementary Notes S8.5-S8.7, Supplementary Tables 12 and 15, Fig. 4d and Supplementary Fig. 2:
+
+| Table | One row per | Read from |
+|---|---|---|
+| `information-localization/presence/ONSET_TABLE.csv` | built model, seed, checkpoint, support and key cut: the energy coefficients of the selective-shift cue, the shared-shift cue and the null test of the shift cue, the selective one divided by the other two (`selective_to_shared`, `selective_to_null`, the quotients of `PRESENCE_TABLE`'s `ratio_to_learned` and `ratio_to_null` at full precision), and the checkpoint's selective-shift recovery | the synthetic-trained parents' profiles at 40,000 updates (`profiles/`), the later checkpoints' (`checkpoint-profiles/PRESENCE_synthetic_<model>_<seed>_step<updates>.json`) and `TIME_AXIS.csv` |
+| `information-localization/planted-faults/PLANTED_FAULTS_TABLE.csv` | planted fault or unfaulted control and starting point: held-out recovery of the original model and after retraining, the lowest rate whose best reached 0.25, the rates run, and `asterisk` (run only at ×1 and ×30) | the rebuilt `MAP_CELLS` tables and the runs' `EVAL_PARENT.json` |
+| `information-localization/light-version/LIGHT_VERSION_GPU_HOURS.csv` | model and fold of the Tahoe-100M maps: the GPU (`tables.GPU`, a stated table: the run records do not name it); the full procedure's runs at the map seeds and their recorded hours; the light runs (the light menu and its second-seed checks), those present in the map and their recorded hours; hours only where every run had a GPU to itself. For the built models, whose runs shared one workstation GPU: the median hours per run (training seconds over the runs sharing the GPU) and that median times the light runs, an estimate | the runs' `RUN_RECORD.json`, `EXECUTION.json` and `EVAL.json` in the nine Tahoe-100M map folders (fold 1's finer DeepSets cut left out), and `scsailor.localization.light` |
+
+Fig. 4d's cue ratio is 100 × `selective_to_shared` on the held-out support at the inner cuts (`tables.INNER_CUTS`: the attention model's blocks 0, 3 and 7 and head input; the summary-statistics model's mean projection, two branch hidden representations and two output projections). Supplementary Note S8.5's ratio at the first trained layer (2.6-27%) reads `tables.FIRST_TRAINED_LAYER` at 40,000 updates on both supports.
+
+The saved files, and so the map, training-longer and cue-profile tables, name the attention model `state` and State `official_state`; the three tables above print the paper's names.
 
 ## Runs
 

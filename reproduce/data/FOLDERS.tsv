@@ -17,7 +17,7 @@ cost-readings-attention-model	Cost and alignment readings of the attention model
 cost-readings-attention-model-jiang	Cost and alignment readings of the attention model's changes on Jiang et al.
 cost-readings-built-models	Cost and alignment readings of the built models' changes on GSE306429 and Parse PBMC
 cost-readings-state	Cost and alignment readings of State's changes on the screens other than Tahoe-100M
-figure-tables	The tables behind Figs. 5 and 6
+figure-tables	The tables behind Figs. 5 and 6a,b and Supplementary Fig. 4b (reproduce/origin_resolution; FIG5_C_CORRECTION_BY_SCREEN.csv CC BY-NC 4.0)
 genetic-screens-held-out-references	Held-out contrast errors of no change and of the baseline, and noise floors, of the Replogle-Nadig (folds 1-4) and Jiang et al. (folds 1-6) natural task
 genetic-screens-predictions	The five models' +Var natural-task predictions on Replogle-Nadig folds 1-4 and Jiang et al. folds 1-6 (<screen>/<fold>/<model>_<seed>_L2/PREDICTIONS.npz; model codes summary, deepsets, attention_model, state, cpa; three seeds), the held-out truth and unit reliability
 genetic-screens-runs	The built models on Replogle-Nadig folds 1-2 and Jiang et al. folds 4-5: nested parents, the restoring changes and continued training (predictions and run records), with the fold data
@@ -38,7 +38,10 @@ information-localization-runs-fold-1	The natural runs of the summary-statistics 
 information-localization-runs-fold-2	The same on Tahoe-100M fold 2
 information-localization-runs-fold-3	The same on Tahoe-100M fold 3
 information-localization-state	Information localization of State on Tahoe-100M fold 1: the natural runs of the restoring changes and the map evaluations
+information-localization/light-version	GPU hours of the light version and the full procedure on Tahoe-100M (Supplementary Note S8.7)
+information-localization/planted-faults	Recovery after planted faults and in the unfaulted controls, by starting point (Supplementary Fig. 2)
 information-localization/presence	Cue profiles of the built models' parents and planted faults on Tahoe-100M fold 1 (profiles/) and their tables
+information-localization/presence/checkpoint-profiles	Cue profiles of the attention and summary-statistics models' later checkpoints on Tahoe-100M fold 1
 information-localization/recovery-by-training-length	Recovery of planted responses along training (TIME_AXIS.csv)
 information-localization/recovery-by-training-length/checkpoint-scores	The scores of the parents' later checkpoints that TIME_AXIS.csv is built from
 information-localization/state-correction-amounts	State's correction amounts on the natural task

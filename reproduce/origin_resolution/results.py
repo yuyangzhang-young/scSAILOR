@@ -62,6 +62,9 @@ GENETIC_CELLS = (('jiang', 'F4', 'deepsets', 'phi/a/x1'), ('jiang', 'F4', 'summa
                  ('replogle', 'F2', 'summary', 'projections/e/x1'), ('replogle', 'F2', 'summary', 'projections/e/x30'))
 
 
+TAHOE_OUTER = tuple(f'il-cells-outer-{f}' for f in ('F1', 'F2', 'F3'))   # the restoring changes' readings per seed
+
+
 def saved(folder, *names):
     return {name: f'{folder}/{name.split("/")[-1]}' for name in names}
 
@@ -172,6 +175,14 @@ STEPS = {
     'weight-decay-reading': step('weight_decay', '--stage', 'reading', needs=['weight-decay-select'], threads=1, outputs=saved(JA, 'WEIGHT_DECAY_READING.csv')),
     'coverage': step('coverage', '--stage', 'coverage', threads=3, outputs=saved(RA, 'COVERAGE.csv')),
     **{f'ridge-{f}': step('coverage', '--stage', 'ridge', '--fold', f, threads=3, outputs=saved(RA, f'RIDGE_COMMON_{f}.json')) for f in ('F1', 'F2', 'F3')},
+    # the figure tables no other stage writes (Figs. 5b-c, Supplementary Fig. 4b)
+    'heldout-parts': step('figure_tables', '--stage', 'heldout-parts', needs=['net-cost-calibration', 'net-cost-tables'],
+                          outputs=saved(FM5, 'CHANGE_PARTS_HELDOUT.csv', 'CLOSEST_REFERENCE_HELDOUT.csv')),
+    'figure5b': step('figure_tables', '--stage', 'figure5b', needs=['net-cost-tables', 'heldout-parts', *TAHOE_OUTER, 'weight-decay-reading'],
+                     outputs=saved(FM5, 'FIG5_B_CHANGES_AND_COMPARATORS.csv')),
+    'figure5c': step('figure_tables', '--stage', 'figure5c', needs=['net-cost-tables'], outputs=saved(FM5, 'FIG5_C_CORRECTION_BY_SCREEN.csv')),
+    'kept-fraction': step('figure_tables', '--stage', 'kept-fraction', needs=['net-cost-calibration', 'net-cost-tables', 'heldout-parts', *TAHOE_OUTER],
+                          outputs=saved(FM6, 'KEPT_FRACTION_INCREMENT.csv')),
 }
 
 CARDS = [f'card-{f}-{m}-attribution' for f in ('F1', 'F2', 'F3') for m in ('summary', 'deepsets', 'attention', 'official_state')]
@@ -272,8 +283,10 @@ ROWS = {
     'R6P3': ['net-cost-tables'],
     'R6P4': ['figure6c', 'margins', 'net-cost-tables', 'rule'],
     'R6P5': ['net-cost-tables'],
-    'Fig5': ['net-cost-tables'],
-    'Fig6': ['figure5', 'net-cost-tables'],
+    # with the tables of the drawn values other steps write: the recommendations (b), the common shares (c), the control
+    # use (d); Fig. 6a's calibrated originals, Fig. 6b's change share and Supplementary Fig. 4b's recovery (RECOVERY_CARDS.csv)
+    'Fig5': ['net-cost-tables', 'figure5b', 'figure5c', 'common-share', 'control-built', 'control-state', 'rule'],
+    'Fig6': ['figure5', 'net-cost-tables', 'figure6c', 'rule', 'kept-fraction'],
     'ST19': ['common-share', 'net-cost-tables', 'rule'],
     # the map's numbers that left Results 5-6 for the Supplementary Information's notes (its rows with no place)
     'SI': CARDS + ['baselines', 'by-change', 'common-share', 'control-built', 'control-state', 'figure5', 'fractions', 'geometry', 'net-cost-tables',

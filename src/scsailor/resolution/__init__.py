@@ -59,6 +59,7 @@ repair, IL cell, cell                                           restoring change
 ``handed_on_by``, ``carried*``, ``MAP_CARRIED*``                the planted targets, settings and kinds for which
                                                                 information localization names a restoring change
 kind 'control', ``control``, ``*_own_control``                  fixed intervention (negative control)
+Type 'intervention recovering nothing' in saved tables          negative control
 continuation, ``continued_*``, ``input/a/x1``                   continued training
 ``training_longer``, ``longer_*``                               training longer
 extra or second seed, ``extra_seed*``, ``second_design``        second training run

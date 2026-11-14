@@ -38,6 +38,7 @@ into ``--out``:
   beside origin resolution's action, training coverage, the metrics other than squared error, recovery read from IL's
   run records, and weight decay as a comparator;
 * ``paper_tables``: the paper's tables of the matched comparisons and the Supplementary Data 3 workbook.
+* ``figure_tables``: the figure tables no other stage writes (Figs. 5b-c, Supplementary Fig. 4b).
 
 ``results`` runs the stages behind each Results row, in order, into one folder; ``one_case`` runs one card from its 18
 deposited inputs and compares it with ``one_case_expected/``. The dataset references the stages read, the nested

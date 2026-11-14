@@ -11,7 +11,7 @@ Summary-statistics model (``summary_parents``). The donor is the summary-statist
 its interaction branch and perturbation embedding were retrained at 3e-3 for 8,000 updates of 64 input sets (a
 retraining these commands do not include); it has learned the selective shift.
 
-- ``solved``: the donor as it is (the negative control);
+- ``solved``: the donor as it is (an unfaulted control);
 - ``dead-interaction``: every hidden unit of the interaction branch switched off by a bias of -1000, so that no
   gradient reaches that branch. The obstacle is behind the cut ``projections``;
 - ``blocked-mean-cue``: the mean projection's weights on the target's two cue genes (2 and 3; bit a's cue is written
@@ -26,7 +26,7 @@ retraining these commands do not include); it has learned the selective shift.
 DeepSets model (``deepsets_parents``). The donor is the map run that learned the selective shift
 (``map-deepsets-synthetic-31002-input-a-x3``, ``tahoe.run``: the whole network at x3).
 
-- ``ds-solved``: the donor as it is (the negative control);
+- ``ds-solved``: the donor as it is (an unfaulted control);
 - ``ds-dead-back``: every hidden unit of ``rho`` switched off by a bias of -1000 on ``rho.0`` (ReLU), so that no
   gradient reaches the back or anything before it. The obstacle is behind the cut ``phi``;
 - ``ds-blocked-cue``: the per-cell encoder's weights on the target's two cue genes (2 and 3) set to zero.

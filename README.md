@@ -67,7 +67,7 @@ The data are downloaded from Zenodo, checked against the MD5 checksums Zenodo pu
 python -m reproduce.fetch --root DATA
 ```
 
-`--records` downloads only some of the five records (below); `--archives` only the archives whose names start with the given names, for example `--records inputs --archives replogle-nadig-jiang-one-case` for the one case of origin resolution. The manifest lists every deposited file with its size, checksum, archive, record and licence.
+`--records` downloads only some of the five records (below); `--archives` only the archives whose names start with the given names, for example `--records inputs --archives replogle-nadig-jiang-one-case` for the one case of origin resolution. Archives already downloaded by hand, for example from the share link of a record not yet published, are unpacked and checked without downloading anything: save them in one folder and add `--local FOLDER` to the same command. The manifest lists every deposited file with its size, checksum, archive, record and licence.
 
 Every results table of the paper is rebuilt from the deposited data by one command per part of the paper. Each command reads the data root given by `--data` ([`reproduce/data/FOLDERS.tsv`](reproduce/data/FOLDERS.tsv) lists its folders), writes its tables under `--out`, and with `--compare ROOT` prints `equal`, `DIFFERS` or `not deposited` for every table against the deposited one at the same path, cell for cell. On another CPU the last digits of a value can differ; a `DIFFERS` is then checked numerically.
 

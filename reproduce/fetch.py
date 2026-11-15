@@ -1,6 +1,6 @@
 """Download the paper's data records from Zenodo, check them and unpack them under one data root.
 
-    python -m reproduce.fetch --root DATA [--records NAME ...] [--archives NAME ...] [--keep-archives] [--draft]
+    python -m reproduce.fetch --root DATA [--records NAME ...] [--archives NAME ...] [--keep-archives] [--local DIR]
 
 Each record holds archives (``*.tar.zst``) of files under the data root. The tables record holds the tables by licence
 (``tables-cc-by-4.0``, ``tables-cc-by-nc-4.0``). The inputs record holds the inputs by licence (``inputs-cc-by-4.0``,
@@ -15,19 +15,19 @@ SHA-256: every one of them when the whole record was fetched; with ``--archives`
 whose names start with one of the given names (``replogle-nadig-jiang-one-case``, ``gse306429``), those that are under
 the data root. ``zstd`` (1.4 or later) and ``tar`` must be on the path; unpacking takes up to 2 GB of memory.
 
-``--draft`` reads the records before they are published: their drafts, shared with the reader's Zenodo account, through
-a personal access token of that account in the environment variable ``ZENODO_TOKEN``.
+``--local DIR`` downloads nothing: it unpacks and checks the archives already saved in ``DIR``, for example those
+downloaded by hand from a record's page or from the share link of a record not yet published. Which archives belong to
+a record is read from the manifest; an archive missing from ``DIR`` stops the command, and the archives are kept.
 """
 import argparse
 import csv
 import hashlib
 import json
-import os
 import subprocess
 import urllib.request
 from pathlib import Path
 
-__all__ = ["RECORDS", "MANIFEST", "record_files", "download", "unpack", "check", "main"]
+__all__ = ["RECORDS", "MANIFEST", "record_files", "manifest_archives", "download", "unpack", "check", "main"]
 
 # record name -> the Zenodo id of the version the paper describes
 RECORDS = {"tables": 23997774, "inputs": 24210211, "other-screens": 24212188,
@@ -37,20 +37,21 @@ API = "https://zenodo.org/api/records/{}"
 CHUNK = 1 << 24
 
 
-def request(url, token=None):
-    """A GET request, with the access token when one is given."""
-    return urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"} if token else {})
+def manifest_rows():
+    with open(MANIFEST, newline="") as f:
+        return list(csv.DictReader(f, delimiter="\t"))
 
 
-def record_files(record_id, token=None):
-    """(name, size, md5, url) of every file of a Zenodo record, or of its draft when a ``token`` is given."""
-    if token is None:
-        with urllib.request.urlopen(request(API.format(record_id))) as response:
-            files = json.load(response)["files"]
-        return [(f["key"], f["size"], f["checksum"].removeprefix("md5:"), f["links"]["self"]) for f in files]
-    with urllib.request.urlopen(request(API.format(record_id) + "/draft/files", token)) as response:
-        files = json.load(response)["entries"]
-    return [(f["key"], f["size"], f["checksum"].removeprefix("md5:"), f["links"]["content"]) for f in files]
+def record_files(record_id):
+    """(name, size, md5, url) of every file of a published Zenodo record."""
+    with urllib.request.urlopen(API.format(record_id)) as response:
+        files = json.load(response)["files"]
+    return [(f["key"], f["size"], f["checksum"].removeprefix("md5:"), f["links"]["self"]) for f in files]
+
+
+def manifest_archives(record):
+    """The names of the archives the manifest lists for ``record``."""
+    return sorted({r["archive"] for r in manifest_rows() if r["record"] == record})
 
 
 def digest(path, algorithm):
@@ -61,10 +62,10 @@ def digest(path, algorithm):
     return h.hexdigest()
 
 
-def download(url, target, md5, token=None):
+def download(url, target, md5):
     """Download ``url`` to ``target`` and check its MD5; the file appears under its name only when it matches."""
     part = target.with_name(target.name + ".part")
-    with urllib.request.urlopen(request(url, token)) as response, open(part, "wb") as f:
+    with urllib.request.urlopen(url) as response, open(part, "wb") as f:
         while block := response.read(CHUNK):
             f.write(block)
     if digest(part, "md5") != md5:
@@ -84,8 +85,7 @@ def unpack(archive, root):
 def check(root, record, whole=True):
     """The files the manifest lists for ``record``, by size and SHA-256: all of them, or with ``whole=False`` those under
     ``root``; returns the number checked."""
-    with open(MANIFEST, newline="") as f:
-        rows = [r for r in csv.DictReader(f, delimiter="\t") if r["record"] == record and (whole or (root / r["path"]).exists())]
+    rows = [r for r in manifest_rows() if r["record"] == record and (whole or (root / r["path"]).exists())]
     bad = [r["path"] for r in rows if not (root / r["path"]).is_file() or (root / r["path"]).stat().st_size != int(r["bytes"])
            or digest(root / r["path"], "sha256") != r["sha256"]]
     if bad:
@@ -99,26 +99,32 @@ def main(argv=None):
     parser.add_argument("--records", nargs="+", choices=list(RECORDS), default=list(RECORDS))
     parser.add_argument("--archives", nargs="+", help="only the archives whose names start with one of these")
     parser.add_argument("--keep-archives", action="store_true")
-    parser.add_argument("--draft", action="store_true", help="read the unpublished drafts (token in ZENODO_TOKEN)")
+    parser.add_argument("--local", type=Path, metavar="DIR",
+                        help="download nothing; unpack and check the archives already saved in DIR")
     args = parser.parse_args(argv)
-    token = os.environ["ZENODO_TOKEN"] if args.draft else None
-    archives = args.root / "archives"
-    archives.mkdir(parents=True, exist_ok=True)
+    args.root.mkdir(parents=True, exist_ok=True)
+    archives = args.local or args.root / "archives"
+    archives.mkdir(exist_ok=True)
     fetched = 0
     for record in args.records:
-        files = [f for f in record_files(RECORDS[record], token)
-                 if not args.archives or f[0].startswith(tuple(args.archives))]
+        if args.local:
+            files = [(name, None, None, None) for name in manifest_archives(record)]
+        else:
+            files = record_files(RECORDS[record])
+        files = [f for f in files if not args.archives or f[0].startswith(tuple(args.archives))]
         if not files:
             continue
         fetched += len(files)
         for name, size, md5, url in files:
             target = archives / name
             if not target.exists():
+                if args.local:
+                    parser.error(f"{record}: {name} is not in {archives}")
                 print(f"{record}: downloading {name} ({size / 1e9:.1f} GB)", flush=True)
-                download(url, target, md5, token)
+                download(url, target, md5)
             if name.endswith(".tar.zst"):
                 unpack(target, args.root)
-                if not args.keep_archives:
+                if not (args.keep_archives or args.local):
                     target.unlink()
         print(f"{record}: {check(args.root, record, whole=not args.archives)} files checked", flush=True)
     if not fetched:

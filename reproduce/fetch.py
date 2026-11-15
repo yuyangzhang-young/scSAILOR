@@ -7,9 +7,9 @@ Each record holds archives (``*.tar.zst``) of files under the data root. The tab
 ``inputs-2-cc-by-nc-4.0``, ...), one archive per synthetic-answer instance (``assay-instance-tahoe-100m-F1``, ...), the
 information ladder's saved scores (``tahoe-100m-ladder-01``, ``parse-pbmc-ladder-01``, ...), the run records of
 information localization (``information-localization-run-records``) and the one case of origin resolution
-(``replogle-nadig-jiang-one-case``). The saved predictions are in three records, in archives named after the screen
-they hold (``gse306429-01``, ``genetic-screens-predictions-01``, ``tahoe-100m-probes-01``, ``tahoe-100m-repairs-01``,
-...). An archive is checked against the MD5 that Zenodo publishes for it, unpacked with ``zstd -d --long=31`` into
+(``replogle-nadig-jiang-one-case``). The saved predictions are in four records, in archives named after what they
+hold (``gse306429-01``, ``genetic-screens-predictions-01``, ``tahoe-100m-probes-01``, ``tahoe-100m-repairs-01``,
+``tahoe-100m-retraining-01``, ...). An archive is checked against the MD5 that Zenodo publishes for it, unpacked with ``zstd -d --long=31`` into
 ``tar``, and deleted unless ``--keep-archives`` is given. Then the files the manifest lists for the record are checked for their size and
 SHA-256: every one of them when the whole record was fetched; with ``--archives``, which fetches only the archives
 whose names start with one of the given names (``replogle-nadig-jiang-one-case``, ``gse306429``), those that are under
@@ -31,7 +31,8 @@ __all__ = ["RECORDS", "MANIFEST", "record_files", "manifest_archives", "download
 
 # record name -> the Zenodo id of the version the paper describes
 RECORDS = {"tables": 23997774, "inputs": 24210211, "other-screens": 24212188,
-           "tahoe-100m-control-use-and-probes": 24212190, "tahoe-100m-repairs": 24212192}
+           "tahoe-100m-control-use-and-probes": 24212190, "tahoe-100m-repairs": 24212192,
+           "tahoe-100m-retraining": 24238767}
 MANIFEST = Path(__file__).with_name("data") / "MANIFEST.tsv"
 API = "https://zenodo.org/api/records/{}"
 CHUNK = 1 << 24

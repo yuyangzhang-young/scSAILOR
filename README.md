@@ -67,7 +67,7 @@ The data are downloaded from Zenodo, checked against the MD5 checksums Zenodo pu
 python -m reproduce.fetch --root DATA
 ```
 
-`--records` downloads only some of the five records (below); `--archives` only the archives whose names start with the given names, for example `--records inputs --archives replogle-nadig-jiang-one-case` for the one case of origin resolution. Archives already downloaded by hand, for example from the share link of a record not yet published, are unpacked and checked without downloading anything: save them in one folder and add `--local FOLDER` to the same command. The manifest lists every deposited file with its size, checksum, archive, record and licence.
+`--records` downloads only some of the six records (below); `--archives` only the archives whose names start with the given names, for example `--records inputs --archives replogle-nadig-jiang-one-case` for the one case of origin resolution. Archives already downloaded by hand, for example from the share link of a record not yet published, are unpacked and checked without downloading anything: save them in one folder and add `--local FOLDER` to the same command. The manifest lists every deposited file with its size, checksum, archive, record and licence.
 
 Every results table of the paper is rebuilt from the deposited data by one command per part of the paper. Each command reads the data root given by `--data` ([`reproduce/data/FOLDERS.tsv`](reproduce/data/FOLDERS.tsv) lists its folders), writes its tables under `--out`, and with `--compare ROOT` prints `equal`, `DIFFERS` or `not deposited` for every table against the deposited one at the same path, cell for cell. On another CPU the last digits of a value can differ; a `DIFFERS` is then checked numerically.
 
@@ -101,7 +101,7 @@ The raw datasets are not redistributed. Their sources:
 | Replogle–Nadig | figshare+ doi:10.25452/figshare.plus.20029387.v1 (K562, RPE1; Replogle et al., Cell 2022, doi:10.1016/j.cell.2022.05.013); GEO GSE264667 (HepG2, Jurkat; Nadig et al., Nat Genet 2025, doi:10.1038/s41588-025-02169-3) | CC BY 4.0; GEO terms |
 | Jiang et al. | Zenodo doi:10.5281/zenodo.14035992 (v2.0); Jiang et al., Nat Cell Biol 2025, doi:10.1038/s41556-025-01622-z | CC BY 4.0 |
 
-What the study derived from them is deposited on Zenodo in five records:
+What the study derived from them is deposited on Zenodo in six records:
 
 | Record | Contents | DOI |
 |---|---|---|
@@ -110,6 +110,7 @@ What the study derived from them is deposited on Zenodo in five records:
 | `other-screens` | The models' saved predictions on GSE306429, Parse PBMC and the genetic screens | [10.5281/zenodo.24212188](https://doi.org/10.5281/zenodo.24212188) |
 | `tahoe-100m-control-use-and-probes` | The models' saved predictions on Tahoe-100M: control use and fixed-weight probes | [10.5281/zenodo.24212190](https://doi.org/10.5281/zenodo.24212190) |
 | `tahoe-100m-repairs` | The models' saved predictions on Tahoe-100M: the restoring changes | [10.5281/zenodo.24212192](https://doi.org/10.5281/zenodo.24212192) |
+| `tahoe-100m-retraining` | The models' saved predictions on Tahoe-100M: retraining with replaced targets (Results 7) | [10.5281/zenodo.24238767](https://doi.org/10.5281/zenodo.24238767) |
 
 [`reproduce/data/FOLDERS.tsv`](reproduce/data/FOLDERS.tsv) lists the data root's folders. Each file is under the licence its sources allow: CC BY 4.0, and CC BY-NC 4.0 for everything derived from Parse PBMC. State's predictions are outputs of the State model; their records cite Adduri et al., Cell 2026, doi:10.1016/j.cell.2026.07.052, as its licence asks. The gene sets are MSigDB Hallmark 2025.1.Hs (Liberzon et al., Cell Systems 2015, doi:10.1016/j.cels.2015.12.004; CC BY 4.0), and the gene symbols are from HGNC (CC0).
 

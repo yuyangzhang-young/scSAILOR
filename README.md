@@ -79,7 +79,7 @@ Every results table of the paper is rebuilt from the deposited data by one comma
 | Results 5-6: origin resolution (Figs. 5 and 6a,b, Supplementary Data 3) | `python -m reproduce.origin_resolution.results --row all` | the saved predictions | about 11 hours |
 | Results 7: memorization and readers (Fig. 6c-g) | `python -m reproduce.memorization.tables` | the saved predictions | about 25 minutes |
 
-One case of origin resolution runs in minutes on a laptop from a subset of the data under 1 GB: `python -m reproduce.origin_resolution.one_case`. Each folder's README gives its tables, the printed results they hold, its inputs and what it does not include (the retraining runs).
+One case of origin resolution runs in minutes on a laptop from a subset of the data under 1 GB: `python -m reproduce.origin_resolution.one_case`. Each folder's README gives its tables, the printed results they hold, its inputs and what it does not include.
 
 The tables were computed with the versions in `requirements/analysis.txt`:
 
@@ -87,7 +87,7 @@ The tables were computed with the versions in `requirements/analysis.txt`:
 pip install -e ".[test]" -r requirements/analysis.txt
 ```
 
-Training and forward passes use `requirements/models.txt`. The built models are trained with the package (`scsailor.models`, `scsailor.assay.train`, `scsailor.natural`) under the settings of `reproduce/assay/study.py` and `reproduce/information_localization/`; the published models with `reproduce/published_models/`. Training on a GPU does not repeat bit for bit.
+Training and forward passes use `requirements/models.txt`. The built models are trained with the package (`scsailor.models`, `scsailor.assay.train`, `scsailor.natural`) under the settings of `reproduce/assay/study.py` and `reproduce/information_localization/`; the published models with `reproduce/published_models/`; the retraining runs of Results 7 with `reproduce/memorization/retraining.py` and `published_retraining.py`. Training on a GPU does not repeat bit for bit.
 
 ## Data
 

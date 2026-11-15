@@ -3,8 +3,9 @@
     python -m reproduce.memorization.tables --data DATA --out OUT [--compare ROOT] [--screens SCREEN ...]
 
 Each screen of ``SCREENS`` (all by default) writes its tables under ``OUT/memorization/<screen>/`` (``folder``) with
-``to_csv(**data.WRITE)``, in the order in which they depend on each other (``tahoe_tables``, ``parse.tables`` then
-``parse_interferon.tables``, ``genetic.tables``); a table computed from others reads them as written. ``--compare``
+``to_csv(**data.WRITE)``, in the order in which they depend on each other (``tahoe_tables`` then
+``retraining_tables``, ``parse.tables``, ``parse_interferon.tables`` then ``parse_retraining.tables``,
+``genetic.tables``); a table computed from others reads them as written. ``--compare``
 prints, for each table, ``equal`` or ``DIFFERS`` against the table at the same path under ROOT, cell for cell, or
 ``not deposited``.
 """
@@ -16,7 +17,7 @@ from pathlib import Path
 
 from ..compare import compare
 
-__all__ = ["SCREENS", "folder", "tahoe_tables", "screen_tables", "main"]
+__all__ = ["SCREENS", "folder", "tahoe_tables", "retraining_tables", "screen_tables", "main"]
 
 SCREENS = ('tahoe-100m', 'parse-pbmc', 'genetic-screens')
 
@@ -54,10 +55,26 @@ def tahoe_tables():
     yield 'TRAINING_LENGTH.csv', storage.training_length_table()
 
 
+def retraining_tables():
+    """(file name, table) of every Tahoe-100M table read from the retraining runs (``fits``)."""
+    from . import interventions, known_answers, published_tables, retrieval, two_phase
+    yield 'TARGET_INTERVENTIONS.csv', interventions.interventions_table()
+    yield 'TRAINING_PULL.csv', interventions.training_pull_table()
+    yield 'RETRIEVAL.csv', retrieval.retrieval_table()
+    yield 'TWO_PHASE.csv', two_phase.comparison_table()
+    yield 'TWO_PHASE_OUTPUT_ENERGY.csv', two_phase.output_energy_table()
+    yield 'KNOWN_ANSWERS.csv', known_answers.known_answers_table()
+    yield 'PUBLISHED_TARGET_INTERVENTIONS.csv', published_tables.interventions_table()
+    yield 'PUBLISHED_TWO_PHASE.csv', published_tables.two_phase_table()
+    yield 'PUBLISHED_TWO_PHASE_NINE_METRICS_GAINS.csv', published_tables.two_phase_metrics_table()
+    yield 'PUBLISHED_RETRIEVAL.csv', published_tables.retrieval_table()
+
+
 def screen_tables(screen):
     """(file name, table) of every table of one screen, in dependency order."""
-    from . import genetic, parse, parse_interferon
-    parts = {'tahoe-100m': [tahoe_tables], 'parse-pbmc': [parse.tables, parse_interferon.tables],
+    from . import genetic, parse, parse_interferon, parse_retraining
+    parts = {'tahoe-100m': [tahoe_tables, retraining_tables],
+             'parse-pbmc': [parse.tables, parse_interferon.tables, parse_retraining.tables],
              'genetic-screens': [genetic.tables]}[screen]
     return itertools.chain.from_iterable(part() for part in parts)
 

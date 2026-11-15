@@ -6,7 +6,10 @@ context's control cells that replace a model's context-level correction.
 ``readers`` fits the readers and builds the arms; ``calibration`` holds origin resolution's +Var cases and their
 calibration; ``arms``, ``metrics``, ``selection``, ``ranking``, ``storage`` and ``growth_genes`` compute the Tahoe-100M
 tables; ``parse`` and ``parse_interferon`` those of Parse PBMC (readers and error; interferon readings) and
-``genetic`` those of the genetic screens; ``tables`` writes them all (README.md).
+``genetic`` those of the genetic screens. ``retraining`` and ``published_retraining`` train the retraining runs
+(built and published models) on targets that ``planted`` and the designs replace, ``fits`` lays out their saved
+predictions, and ``interventions``, ``retrieval``, ``two_phase``, ``known_answers``, ``published_tables`` and
+``parse_retraining`` read them; ``tables`` writes them all (README.md).
 
 Code names and the paper's terms (the tables keep the code names, except their ``model`` and ``screen`` columns, which
 print the names of ``data.MODELS`` and ``genetic.NAMES``):
@@ -120,5 +123,55 @@ comparison 'A - B'; ``change``                             A vs B; A minus B, th
 ``cases_improved``, ``median_change``                      cases improved (lower MSE, higher otherwise); median
                                                            paired change
 ``median_first``, ``median_second``                        the two predictions' median MSE (or other metric)
+retraining runs (``fits``, ``retraining``)
+design 'original'; 'same-machine refits'                   the original recipe, trained again on the same machine as
+                                                           the other retraining runs
+fit 'original fits', 'original fit'                        the models' fits on the ladder
+``fit``; ``compared_with``                                 which fit a row reads; the original the two-phase run is
+                                                           compared with
+design 'input-relative'                                    input-relative targets: minus the pool-minus-input
+                                                           sampling difference
+design 'readable-only'                                     readable-only targets: minus the unreadable part of the
+                                                           context's offset
+design 'two-phase'                                         two-phase retraining (retrained networks)
+task ``c``, ``f``, ``fnull``                               planted null, readable shift, drug x line null (f')
+task 'carrier'; carriers                                   the planted interferon carrier task; the carrier donors
+``side``, ``original_fits``                                the lines a planted task is read on; the original fits
+                                                           read
+``method``, ``original``, ``kept``                         retained fraction of the retrained and of the original
+                                                           network; their ratio
+``train_growth_slope_unreadable``                          storage on the training lines' growth genes
+``pull_r``, ``targets_pull_slope``, ``targets_pull_r``     the pull's correlation; the training targets' pull slope
+                                                           and correlation
+``network_targets_r``                                      correlation of the network's and the targets' corrections
+``similarity``; ``fits``                                   the neighbours' similarity (input-set mean or growth
+                                                           level); the number of fits pooled
+``r_centred``, ``p_permutation``                           neighbour correlation (plate-centred), its permutation P
+``two_phase_*``, ``original_readers_*``                    the two-phase network, the original, each with Readers
+``delta_points``, ``delta_low``, ``delta_high``            two-phase minus original (points), its 95% line interval
+``supported_*``                                            on the calibration-supported units, in % of that set's
+                                                           design-aware baseline's total MSE
+``*_energy_e3``; ``ratio``                                 output energy (x 1,000); two-phase over original
+``seeds``                                                  the number of seeds of a seed mean
+set 'recipients, new'; ``fraction``                        held-out donors resembling the carriers; share of the
+                                                           planted change carried
+``program``; ``donors``                                    the program read (interferon alpha); the donors of the set
+``train_*``, ``heldout_*``; ``ifn``, ``other``             training, held-out contexts; interferon genes, the other
+                                                           genes
+``slope_readable``, ``slope_sampling``, ``r2``             the coefficients on the readable response and the sampling
+                                                           difference; R^2
+``pull_spearman``; ``measured_pull_slope``                 the pull's Spearman correlation; the pull slope of the
+                                                           measured change
+``ratio_predicted``, ``ratio_measured_*``                  correction (measured change) over control level, against
+                                                           the input or reference wells
+``high_contexts``                                          the number of interferon-high contexts of the resembling
+                                                           donors
+``total_error``, ``shared_error``, ``specific_error``      total MSE and its shared and cytokine-specific parts
+``pct_of_same_machine_refit``                              total MSE in % of the same-machine refit's
+``shared_points_vs_refit``, ``specific_points_vs_refit``   change of the shared, specific part in points of the
+                                                           refit's total MSE
+group 'G1+G3'; ``ranking_spearman_24``                     both groups; interferon-alpha ranking over their 24
+                                                           held-out contexts
+``ratio_g1_minus_g3``                                      group 1's predicted ratio minus group 3's
 =========================================================  ==========================================================
 """

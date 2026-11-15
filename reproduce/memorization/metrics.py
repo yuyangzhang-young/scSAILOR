@@ -102,12 +102,12 @@ def case_values(info, lines):
     return rows
 
 
-def case_gains(info, lines, n):
-    """One case's rows of the gains table: every contrast's gain per metric and seed, then their seed mean, with 90%
-    intervals over ``n`` held-out lines."""
+def case_gains(info, lines, n, contrasts=CONTRASTS):
+    """One case's rows of the gains table: each contrast's gain (``contrasts``: name -> (first, second) prediction) per
+    metric and seed, then their seed mean, with 90% intervals over ``n`` held-out lines."""
     K = draws(n)
     rows = []
-    for contrast, (first, second) in CONTRASTS.items():
+    for contrast, (first, second) in contrasts.items():
         for m in METRICS:
             seeds, boots = [], []
             for s in SEEDS:

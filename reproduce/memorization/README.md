@@ -17,6 +17,16 @@ The tables of the paper's Results 7, computed on a CPU from the models' saved pr
 | `parse.py` | Parse PBMC: the readers with cell-type centring, the arms and their calibration, total MSE by group and pooled over donors, and the nine metrics with donor intervals |
 | `parse_interferon.py` | Parse PBMC: the interferon programs against the reference wells (control levels, measured and predicted changes, rankings, ratios, split halves) and the programs' between-donor SDs |
 | `genetic.py` | The genetic screens: storage, the growth-program pull, Tahoe-100M's gene-wise readers, the gene-wise shrink and the nine metrics |
+| `fits.py` | The layout of the retraining runs' saved predictions under the data root |
+| `planted.py` | The planted tasks: the planted null, the readable shift and the drug x line null on Tahoe-100M fold 1, and the interferon carrier task on Parse PBMC groups 1 and 3 |
+| `retraining.py` | Trains the summary-statistics, DeepSets and attention models with replaced targets (original recipe, input-relative, readable-only, two-phase; planted tasks) and writes their prediction grids |
+| `published_retraining.py` | Trains State, CPA and PrePR-CT with the same replaced targets through `reproduce.published_models` |
+| `interventions.py` | The target interventions on the built models, and the pull read on the training lines |
+| `retrieval.py` | Retrieval of planted training values by new lines whose control cells resemble the training lines |
+| `two_phase.py` | The two-phase retraining of the built models against the original networks, both with the readers |
+| `known_answers.py` | The planted-null and planted-response checks of the two-phase retraining |
+| `published_tables.py` | The published models' target interventions, State's two-phase retraining with its nine metrics, and retrieval |
+| `parse_retraining.py` | Parse PBMC: the planted interferon response carried to held-out donors, and the input-relative fits |
 | `tables.py` | Writes every table of every screen |
 
 ## Environment
@@ -61,6 +71,23 @@ Each training seed is scored alone; a seed mean is the mean of the seeds' values
 | `STORAGE.csv` | fold, model, side and gene set: the storage coefficient | Supplementary Data 4 (Storage) |
 | `TRAINING_LENGTH.csv` | model, training length and seed (and seed mean): control-level memory on fold 1's training lines | Supplementary Table 23 |
 
+The tables read from the retraining runs (`fits`; fold 1 unless a fold is named). The built models are trained at Mean for 40,000 updates; State at +Var (and Mean) for 5,000, PrePR-CT at Mean for 10,000 and CPA at Mean for 140,000 (Supplementary Note S11.2). The two-phase runs train on the measured targets for the first half of their updates and on targets without the control sampling difference and the source context response for the second (Supplementary Note S11.3).
+
+| Table | One row per | Printed in the paper |
+|---|---|---|
+| `TARGET_INTERVENTIONS.csv` | built model, design (original, input-relative, readable-only) and seed (and seed mean): storage on the training lines' growth genes, control-level memory at program level, pull, line ranking and total error in % of the design-aware baseline's | Results 7; Supplementary Note S11.2; Supplementary Table 22; Supplementary Fig. 6a; Supplementary Data 4 (Built_interventions) |
+| `TRAINING_PULL.csv` | same-machine refit of a built model: the pull read on fold 1's training lines, of the network and of its targets, and their correlation | Supplementary Note S11.1 (the six training-side fits) |
+| `RETRIEVAL.csv` | built model and similarity: the pooled plate-centred correlation of the planted-null change with the neighbours' cue, and its permutation probability | Supplementary Note S11.1; Supplementary Table 20; Supplementary Data 4 (Retrieval) |
+| `TWO_PHASE.csv` | fold, built model and seed (and seed mean): the two-phase network and the original, both with the readers, in % of the design-aware baseline's total MSE, their difference with its 95% line interval; on the calibration-supported units, the calibrated original and the two-phase network with the readers | Results 7; Supplementary Note S11.3; Supplementary Table 25; Supplementary Fig. 6d; Supplementary Data 4 (Retrain_original, Retrain_calibrated) |
+| `TWO_PHASE_OUTPUT_ENERGY.csv` | fold, built model and seed (and seed mean): the output energy of the two-phase and the original network, and their ratio | Supplementary Note S11.3 (0.95-1.02) |
+| `KNOWN_ANSWERS.csv` | model (built models at Mean, State at +Var) and planted task: the retained fraction of the two-phase network (`method`), of the original (`original`), and `kept` | Results 7; Supplementary Note S11.3; Supplementary Table 24; Supplementary Fig. 6c; Supplementary Data 4 (Context_null, Selective_tests) |
+| `PUBLISHED_TARGET_INTERVENTIONS.csv` | published model, level, fit (original fits, same-machine refits, input-relative, readable-only) and seed (and seed mean): the readings of `TARGET_INTERVENTIONS.csv` | Results 7; Supplementary Note S11.2; Supplementary Table 22; Supplementary Fig. 6a; Supplementary Data 4 (Published_interventions) |
+| `PUBLISHED_TWO_PHASE.csv` | fold, original compared with (`compared_with`: original fits, same-machine refits) and seed (and seed mean): State's two-phase run and the original, as in `TWO_PHASE.csv` | Results 7; Supplementary Note S11.3; Supplementary Table 25; Supplementary Fig. 6d; Supplementary Data 4 (Retrain_refits) |
+| `PUBLISHED_TWO_PHASE_NINE_METRICS_GAINS.csv` | fold, original compared with (`compared_with`), metric and seed (and seed mean): the gain of State's two-phase run with the readers over the original with the readers, with its 90% line interval | Supplementary Note S11.3; Supplementary Fig. 6f; Supplementary Data 4 (State_metric_changes) |
+| `PUBLISHED_RETRIEVAL.csv` | published model (State, PrePR-CT) and similarity: as `RETRIEVAL.csv` | Supplementary Note S11.1; Supplementary Table 20 |
+
+`KNOWN_ANSWERS.csv` computes `kept`, and State's planted-null `original` (the mean of three seeds' retained fractions), from unrounded retained fractions. The paper's values of these were computed from the fractions written at six significant digits, so 8 of the 12 `kept` values and that one `original` differ from the paper's by one or two units in the sixth significant digit; every printed value is the same.
+
 The two growth-gene correction tables' `systema_pearson_delta_observed_unweighted` and `pearson_delta_unweighted` are the nine metrics' `systema_pearson_delta_observed` and `pearson_delta` read without weights (the context's unweighted mean truth, and the plain mean over units); the nine metrics' `systema_pearson_delta` subtracts the pool mean plus the mean training response instead. `NINE_METRICS_SUMMARY.csv` gives a count in every cell, where Supplementary Table 21 and Supplementary Fig. 5d leave `weighted_r2_contrast` blank (a dash) in the contrasts `readers - original`, `readers - constant`, `calibrated + readers - calibrated`, `removal - original` and `constant - original`: their two predictions share each context's drug differences before clipping, so the count there comes from clipping alone.
 
 ### Parse PBMC
@@ -81,6 +108,8 @@ The calibrated arm (summary-statistics model and DeepSets) is the shared calibra
 | `INTERFERON_SPLIT_HALVES.csv` | cytokine split: Donor3's ratio and that of Donors 1, 4 and 10 in each half (half 1 against the input wells, half 2 against the reference wells) | Supplementary Note S11.4 (Donor3's ratio above the others' in both halves of all 200 partitions) |
 | `CONTROL_WELLS.csv` | interferon program: the Pearson correlation over the 36 held-out contexts of the control level from the input wells (H7-H9) and from the reference wells (H10-H12) | Supplementary Note S11.4 (0.982/0.979) |
 | `PROGRAM_SDS.csv` | Hallmark program with at least ten panel genes in every group: the SD of its control level over each group's eight training donors, averaged over cell types and groups | Supplementary Note S11.4 (0.230/0.203; the largest other, 0.071) |
+| `PLANTED_CARRIER.csv` | group, model and set (the carriers' training contexts, the held-out donors resembling the carriers, the other held-out contexts): the share of the planted interferon-alpha change that the fits carry, seed mean of three seeds | Results 7 (0.43, 1.13–1.77, −0.045 to 0.179); Supplementary Note S11.4; Fig. 6g |
+| `INPUT_RELATIVE.csv` | group, model and fit (same-machine refit, original fit, input-relative; and the G1+G3 rows): storage, pull, interferon ratios and total MSE in % of the same-machine refit's, seed means | Results 7; Supplementary Note S11.2 (87.9%, 92.5%, 101.2%, 105.2%); Supplementary Fig. 6b; Supplementary Data 4 (Parse_input_relative) |
 
 ### Genetic screens
 
@@ -94,6 +123,17 @@ The tables under `memorization/genetic-screens/`, from the +Var fits of the five
 | `NINE_METRICS_VALUES.csv` | screen, fold, model, seed and prediction (original, removal, gene-wise shrink, removal + readers, no change): the nine metrics, `mse` in % of the baseline's total MSE | Supplementary Note S11.5 (the summary-statistics and DeepSets cases on Replogle-Nadig folds 1-3 and Jiang et al. folds 1, 4 and 5: the removal's seed-mean squared error below the original's in 9 of 12, above it for DeepSets on K562 and both models on RPE1, where removal + readers is above it too; the baseline below no change on RPE1, HepG2 and HT29) |
 | `NINE_METRICS_CHANGES.csv` | screen, fold, model, seed, comparison (gene-wise shrink - original; removal + readers - removal) and metric: the first prediction's value minus the second's | through `NINE_METRICS_SUMMARY.csv` |
 | `NINE_METRICS_SUMMARY.csv` | comparison and metric: the 50 cases, those whose seed-mean change improves (lower squared error, higher otherwise), the median seed-mean change, and the median seed-mean values of the two predictions | Results 7, Discussion and Supplementary Note S11.5 (removal + readers below removal in 0/50); Supplementary Note S11.5 (median MSE 109.2% to 80.1% of the baseline's; median paired change −31.1); Supplementary Table 28; Supplementary Data 4 (Genetic_metrics) |
+
+## Training
+
+The retraining runs are trained with the models' natural-task recipes, unchanged except for the targets (on a GPU; the tables above need only their saved predictions):
+
+```bash
+python -m reproduce.memorization.retraining --dataset tahoe --fold F1 --design two-phase --model deepsets --seed 31002 --out OUT
+python -m reproduce.memorization.published_retraining --model state --design two-phase --fold FOLD_DIR --level L2 --seed 31002 --output OUT
+```
+
+`retraining` takes `--dataset tahoe` (folds F1-F3) or `parse` (groups G1, G3), `--design` (`original`, `input-relative`, `readable-only`, `two-phase`) and `--task` (`natural`, the planted tasks `c`, `f`, `fnull` on Tahoe-100M fold 1, or `carrier` on Parse PBMC); it writes the weights, `predictions.npz` and `RUN.json`. `published_retraining` trains through `reproduce.published_models` (see its README for the environments and the fold directory) and takes `--model` (`state`, `cpa`, `prepr`), `--design` and `--task` (`natural`, `c`, `f`, `fnull`); it writes `PREDICTIONS_step<N>.npz`. The tables read each run's predictions file (either layout; `scsailor.resolution.grids.load`) at the path `fits` gives it: `tahoe-100m-retraining/<design>/<fold>/<task>/<model>_<seed>_<level>.npz` or `parse-pbmc-retraining/<group>/<design>/<task>/<model>_<seed>_L1.npz`, design `original` for the original recipe.
 
 ## Inputs
 
@@ -113,13 +153,15 @@ For Parse PBMC (CC BY-NC 4.0):
 - `parse-pbmc-reference-wells/`: the reference wells H10-H12, 256 control cells per donor and cell type that no model received (`UNIT_INDEX.csv`, raw counts in compressed rows: `CELL_INDPTR.npy`, `GENE_INDEX.npy`, `RAW_COUNT.npy`, `RAW_TOTAL.npy`), and `GENE_REGISTRY.csv`, which maps their genes to the panels;
 - `msigdb-hallmark/` as above.
 
+For the tables read from the retraining runs:
+
+- `tahoe-100m-retraining/<design>/<fold>/<task>/<model>_<seed>_<level>.npz` and `parse-pbmc-retraining/<group>/<design>/<task>/<model>_<seed>_L1.npz` (`fits`): each run's raw predictions (and, where read, its anchors) on the training and held-out units, only the arrays the tables read;
+- State's fold-1 Mean fits, `tahoe-100m-ladder/F1/state_<seed>_L1.npz`, and the training controls of Parse PBMC groups 1 and 3 in `training-arrays-parse-pbmc-tahoe-100m/`;
+- the planted tasks are built from the fold files by `planted`.
+
 For the genetic screens:
 
 - `replogle-nadig-inputs/` (folds 1-4) and `jiang-inputs/` (folds 1-6): per fold `training-arrays/<fold>/train_targets.npz` and `controls.h5` (the training targets and control pools) and `inputs/<fold>/evaluation_inputs.h5`, `training_constants.npz` and `TARGET_GENE_MASK.csv` (input sets and pool means, the average training response, each knockdown's target gene on the panel);
 - `genetic-screens-predictions/<screen>/truth/<fold>_HELDOUT_TRUTH.npz` and `genetic-screens-predictions/<screen>/<fold>/<model>_<seed>_L2/PREDICTIONS.npz` (screen codes `replogle`, `jiang`; model codes as above; `L2`: +Var inputs): the fits' predictions on the training lines and the held-out line;
 - `replogle-nadig-gene-symbols/hgnc_replogle_panels.tsv`: the HGNC symbol of each Ensembl identifier on the Replogle-Nadig panels (from the HGNC complete set; HGNC data are CC0);
 - `msigdb-hallmark/` as above.
-
-## Not included
-
-The tables that need retraining runs: on Tahoe-100M the target interventions, the two-phase retraining, the planted tests and the retrieval of planted training responses; on Parse PBMC the planted interferon carrier (the transferred fractions 0.43, 1.13–1.77 and −0.045 to 0.179 of Results 7) and the input-relative fits of Supplementary Note S11.2.
